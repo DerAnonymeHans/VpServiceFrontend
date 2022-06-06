@@ -1,0 +1,40 @@
+@import "@/styles/_variables";
+
+.hamburger-icon{
+   aspect-ratio: 1;
+   height: 100%;
+
+   > div{
+      background-color: $bg-medium;
+      width: 100%;
+      height: 20%;
+      margin-bottom: 20%;
+      transition: all .5s ease;
+
+      &:last-child{
+         margin-bottom: 0;
+      }
+   }
+
+   &.close{
+      > div{
+         margin: 0;
+         &:last-child{
+            opacity: 0;
+         }
+         &:nth-child(2n){
+            transform: rotate(45deg) translate(20%, 100%);
+         }
+         &:nth-child(2n - 1){
+            transform: rotate(-45deg) translate(-30%, 150%);
+         }
+      }
+   }
+
+
+   &:hover{
+      > div{
+         background-color: $bg-light;
+      }
+   }
+}

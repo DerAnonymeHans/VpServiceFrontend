@@ -1,0 +1,50 @@
+@import "./variables";
+
+
+.btn{
+   background-color: $bg-dark;
+   color: $color-header-prim;
+   border: none;
+   border-radius: $border-radius;
+   padding: .5 * $padding;
+   transition: all .5s ease;
+   &:hover, &:focus{
+      cursor: pointer;
+      background-color: lighten($bg-dark, 15%);
+      box-shadow: 0px 0px 0px .5em rgba($bg-dark,0.2);
+      cursor: pointer;
+   }
+}
+
+
+.btn-focus{
+   background-color: $accent;
+   color: $color-header-prim;
+   padding: $padding $padding * 4;
+   border: none;
+   border-radius: $border-radius;
+   font-weight: bold;
+   letter-spacing: .2em;
+
+   transition: all .5s ease;
+
+   animation-name: beat;
+   animation-duration: 2s;
+   animation-timing-function: ease;
+   animation-iteration-count: infinite;
+   animation-fill-mode: forwards;
+
+
+   &:hover, &:focus{
+      background-color: lighten($accent, 5%);
+      box-shadow: 0px 0px 0px .5em rgba($accent,0.2);
+      cursor: pointer;
+      outline: none;
+   }
+}
+
+@keyframes beat{
+   0% { transform: scale(1)}
+   50% { transform: scale(1.05)}
+   100% { transform: scale(1)}
+}
