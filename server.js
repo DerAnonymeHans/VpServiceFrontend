@@ -4,9 +4,9 @@ const path = require('path');
 
 const app = express();
 
-app.use("/", serveStatic(path.join(__dirname, "./index.html")))
-app.use("/Statistiken", serveStatic(path.join(__dirname, "./index.html")))
-app.use("/Benachrichtigung", serveStatic(path.join(__dirname, "./index.html")))
+app.use("/", serveStatic(path.join(__dirname, "/")))
+app.use("/Statistiken", serveStatic(path.join(__dirname, "./")))
+app.use("/Benachrichtigung", serveStatic(path.join(__dirname, "/")))
 
 const port = process.env.PORT || 8080;
 app.listen(port);
