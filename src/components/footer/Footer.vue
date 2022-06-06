@@ -1,9 +1,4 @@
-<script setup>
-import { ref } from "vue";
-import Modal, { Button } from "@/components/modal/Modal.vue";
-const showModal = ref(false);
 
-</script>
 <template>
    <Modal :isOpen="showModal" @close="showModal=!showModal" :title="modalTitle" :content="modalContent" :buttons="[]"/> 
    <footer>
@@ -13,13 +8,15 @@ const showModal = ref(false);
    </footer>
 </template>
 <script>
-
+import { ref } from "vue";
+import Modal, { Button } from "@/components/modal/Modal.vue";
 export default {
    component: {
       Modal
    },
    setup() {
-      
+      const showModal = ref(false);
+      return { showModal }
    },
    methods: {
       openModal(type){
