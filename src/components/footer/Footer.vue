@@ -32,7 +32,7 @@ export default {
                this.modalContent = "Bitte nicht. <br><br> Aber wenn es unbedingt sein muss dann eine Email an 'vp.mailservice.kepler@gmail.com'. Antwort könnte eine Weile dauern"
                break;
             case "AGB":
-               this.modalContent = "Was ist das überhaupt"
+               this.modalContent = `Was ist das überhaupt <details><summary>Unwichtiges Zeug</summary>Durch abonnieren der Email übertrage ich jegliche Eigentumsrechte an meiner Seele an den Inhaber der Seite. Achja, und mein ganzes Geld ebenfalls. Ist ein fairer Deal, die Emails sind toll. Vertrau mir.</details>`
                break;
          }
          this.showModal = true;

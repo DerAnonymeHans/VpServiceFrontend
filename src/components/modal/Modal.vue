@@ -26,12 +26,31 @@ export default {
    data() {
       return {
          buttons: [...this.buttons, new Button("Schließen", "btn", this.close)],
+         clickCount: 0
       };
    },
-   beforeUpdate() {
-      console.log(this.isOpen);
+   updated() {
+      if(this.isOpen){
+         window.addEventListener("click", this.onClick)
+      }else{
+         window.removeEventListener("click", this.onClick)
+      }
    },
    methods: {
+      onClick(e){
+         if(this.clickCount === 0){
+            this.clickCount++;
+            return;
+         }
+         const isModal = (el) => {
+            if(el.classList.contains("modal-container")) return true;
+            if(el.id === "app") return false;
+            return isModal(el.parentElement);
+         }
+         if(isModal(e.target)) return;
+         this.clickCount = 0;
+         this.close();
+      },
       close(callback) {
          this.$emit("close");
       },

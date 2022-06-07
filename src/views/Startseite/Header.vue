@@ -14,7 +14,7 @@
       <div class="overlay" :class="mq.current">
          <div class="greeting">
             <h3>Hallo</h3>
-            <h1>Kepleraner.</h1>
+            <h1>{{greeting}}.</h1>
          </div>
 
          <div class="btn-container">
@@ -31,11 +31,21 @@
 <script>
 export default {
    inject: ['mq'],
-   methods: {
-      subscribe(){
-
+   data(){
+      return {
+         greeting: "Kepleraner"
       }
-   }
+   },
+   mounted(){
+      const query = new URLSearchParams(document.location.search);
+      const name = query.get("name")
+      if(typeof name === "string") {
+         this.greeting = name;
+         localStorage.setItem("greeting", name);
+         return;
+      }
+      if(typeof localStorage.getItem("greeting") === "string") this.greeting = localStorage.getItem("greeting");
+   },
 }
 </script>
 
