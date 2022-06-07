@@ -19,6 +19,8 @@ const showModal = ref(false);
 export default {
    methods: {
       openModal(type){
+         console.log(type)
+         debugger
          this.modalTitle = type;
          switch(type){
             case "Datenschutz":
