@@ -1,7 +1,7 @@
 <script setup>
 import { ref, reactive } from "vue";
 import Modal, { Button } from "@/components/modal/Modal.vue";
-const showModal = ref(false);
+// const showModal = ref(false);
 
 </script>
 <template>
@@ -10,17 +10,19 @@ const showModal = ref(false);
       <a @click="openModal('Datenschutz')">Datenschutz</a>
       <a @click="openModal('Kontakt')">Kontakt</a>
       <a @click="openModal('AGB')">AGB</a>
-      <div>{{showModal}}</div>
    </footer>
 </template>
 
 <script>
 
 export default {
+   data(){
+      return{ 
+         showModal: false
+      }
+   },
    methods: {
       openModal(type){
-         console.log(type)
-         debugger
          this.modalTitle = type;
          switch(type){
             case "Datenschutz":

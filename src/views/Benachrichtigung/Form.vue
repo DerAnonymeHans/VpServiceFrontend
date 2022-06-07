@@ -4,7 +4,6 @@ import Input from "@/components/input/Input.vue";
 import Modal from "@/components/modal/Modal.vue";
 import { fetchAPI } from "@/App.vue";
 
-const showModal = ref(false);
 </script>
 <template>
    <div class="form-container" :class="mq.current">
@@ -28,6 +27,7 @@ export default {
       return {
          modalTitle: "",
          modalContent: "",
+         showModal: false
       }
    },
    methods: {
