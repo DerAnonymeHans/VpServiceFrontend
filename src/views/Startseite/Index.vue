@@ -2,7 +2,6 @@
 <script setup>
 import Header from "./Header.vue";
 import Main from "./Main.vue";
-import Footer from "../../components/footer/Footer.vue";
 </script>
 
 <template>

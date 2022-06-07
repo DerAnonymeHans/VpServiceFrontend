@@ -1,23 +1,22 @@
+<script setup>
+import { ref, reactive } from "vue";
+import Modal, { Button } from "@/components/modal/Modal.vue";
+const showModal = ref(false);
 
+</script>
 <template>
-   <Modal :isOpen="showModal" @close="showModal=!showModal" :title="modalTitle" :content="modalContent" :buttons="[]"/> 
+   <Modal :isOpen="showModal" @close="showModal=!showModal" :title="modalTitle" :content="modalContent" :buttons="[]"></Modal> 
    <footer>
       <a @click="openModal('Datenschutz')">Datenschutz</a>
       <a @click="openModal('Kontakt')">Kontakt</a>
       <a @click="openModal('AGB')">AGB</a>
+      <div>{{showModal}}</div>
    </footer>
 </template>
+
 <script>
-import { ref } from "vue";
-import Modal, { Button } from "@/components/modal/Modal.vue";
+
 export default {
-   component: {
-      Modal
-   },
-   setup() {
-      const showModal = ref(false);
-      return { showModal }
-   },
    methods: {
       openModal(type){
          this.modalTitle = type;
@@ -46,6 +45,7 @@ footer{
    > a {
       margin: 0 $margin;
       cursor: pointer;
+      user-select: none;
    }
 }
 </style>

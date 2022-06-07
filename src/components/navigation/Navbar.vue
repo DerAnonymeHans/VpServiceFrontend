@@ -46,8 +46,7 @@ export default {
 nav {
    background-color: $bg-dark;
    display: flex;
-   height: 9vh;
-   width: 100%;
+   height: 9vh;   
    align-items: center;
    position: fixed;
    box-sizing: border-box;
@@ -62,6 +61,7 @@ nav {
 
    &.mobile {
       padding: $padding;
+      width: 100vw;
       .hamburger-container {
          width: max(5%, 2em);
          margin-left: auto;
@@ -94,6 +94,7 @@ nav {
 
    &.desktop, &.tablet {
       padding: $padding;
+      width: 100%;
       .nav-item-container {
          align-items: center;
 

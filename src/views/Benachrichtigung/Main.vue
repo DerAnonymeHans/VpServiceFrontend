@@ -29,10 +29,13 @@ main{
    margin: auto;   
    margin-top: 3em;
    text-align: center;
-   display: grid;
+   // box-sizing: border-box;
+   
    grid-gap: 2em;
+   justify-content: center;
 
    .text-container{
+      width: 100%;
       button{
          margin-bottom: 2em;
       }
@@ -40,11 +43,13 @@ main{
    }
 
    img{
+      width: 100%;
       margin-top: auto;
    }
       
 
    &.desktop{
+      display: grid;
       width: 60vw;
       grid-template-columns: 1fr 1fr;
       
@@ -55,7 +60,7 @@ main{
       
    }
    &.mobile{
-      width: 80vw;
+      width: 90vw;
       grid-template-columns: 1fr;
       
    }
