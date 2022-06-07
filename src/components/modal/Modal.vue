@@ -26,11 +26,12 @@ export default {
    data() {
       return {
          buttons: [...this.buttons, new Button("Schließen", "btn", this.close)],
-         clickCount: 0
+         clickTime: null
       };
    },
    updated() {
       if(this.isOpen){
+         this.clickTime = Date.now();
          window.addEventListener("click", this.onClick)
       }else{
          window.removeEventListener("click", this.onClick)
@@ -38,17 +39,18 @@ export default {
    },
    methods: {
       onClick(e){
-         if(this.clickCount === 0){
-            this.clickCount++;
+         if(this.clickTime === null){
+            this.clickTime = Date.now();
             return;
          }
+         if(this.clickTime > Date.now() - 10) return
          const isModal = (el) => {
             if(el.classList.contains("modal-container")) return true;
             if(el.id === "app") return false;
             return isModal(el.parentElement);
          }
          if(isModal(e.target)) return;
-         this.clickCount = 0;
+         this.clickTime = null;
          this.close();
       },
       close(callback) {
