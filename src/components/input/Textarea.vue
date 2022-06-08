@@ -1,7 +1,7 @@
 <template>
    <div :class="{invert: isInvert}">
       <label>{{label}}</label>
-      <input :type="type" :name="name">
+      <textarea :name="name" :rows="defaultRows"></textarea>
    </div>
 </template>
 <script>
@@ -14,7 +14,8 @@ export default {
          type: String, required: true
       },
       name: String,
-      isInvert: { type: Boolean, required: true }
+      isInvert: { type: Boolean, required: true },
+      defaultRows: Number
    },
    
 }
@@ -36,10 +37,12 @@ div{
          font-size: larger;
       }
    }
-   input{
+   textarea{
       border-radius: $border-radius;
       border: none;
       padding: $padding * .5;
+      resize: vertical;
+      font-family: Gadugi;
 
       &:focus{
          outline: none;
@@ -50,7 +53,7 @@ div{
       label{
          color: $bg-dark;
       }
-      input{
+      textarea{
          background-color: $bg-dark;
          color: $color-header-prim;
       }

@@ -10,7 +10,7 @@ app.use(Vue3Mq, {
    breakpoints: {
       mobile: 0,
       tablet: 500,
-      desktop: 1000
+      desktop: 1100
    }
 })
 
