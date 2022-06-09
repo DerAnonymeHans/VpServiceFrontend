@@ -28,7 +28,7 @@ html{
 }
 body{ 
   margin: 0;
-  height: 100%;
+  height: fit-content;
   font-family: 'Gadugi', sans-serif;
   // font-family: Arial;
 

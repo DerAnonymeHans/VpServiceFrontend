@@ -46,9 +46,9 @@ footer{
    background-color: $bg-dark;
    width: 100%;
    text-align: center;
-   position: fixed;
-   bottom: 0;
-   z-index: 500;
+   // position: fixed;
+   // bottom: 0;
+   // z-index: 500;
    > a {
       margin: 0 $margin;
       cursor: pointer;
