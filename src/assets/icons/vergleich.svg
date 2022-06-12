@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg version="1.1" viewBox="0 0 47 32" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+ <metadata>
+  <rdf:RDF>
+   <cc:Work rdf:about="">
+    <dc:format>image/svg+xml</dc:format>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:title/>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <g transform="matrix(.90231 0 0 .90231 -1766.3 -635.11)" stroke="#fff" stroke-linecap="round">
+  <path d="m1959.6 719.14h47.625" fill="none" stroke-width="2"/>
+  <g fill="currentColor" stroke-linejoin="round">
+   <rect x="1965.4" y="705.98" width="6.361" height="12.348" stroke-width="2" style="paint-order:stroke fill markers"/>
+   <rect x="1976.2" y="719.09" width="6.869" height="6.3641" stroke-width="1.4921" style="paint-order:stroke fill markers"/>
+   <rect x="1986.8" y="710.45" width="6.6804" height="8.3017" stroke-width="1.6806" style="paint-order:stroke fill markers"/>
+   <rect x="1998" y="719.52" width="6.538" height="9.9816" stroke-width="1.823" style="paint-order:stroke fill markers"/>
+  </g>
+ </g>
+</svg>
