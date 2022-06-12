@@ -24,5 +24,7 @@ export default {
 }
 </script>
 <style lang="scss">
-   
+   svg{
+      transition: all .5s ease;
+   }
 </style>

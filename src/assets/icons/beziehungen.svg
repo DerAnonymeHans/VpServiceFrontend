@@ -10,8 +10,8 @@
   </rdf:RDF>
  </metadata>
  <g transform="matrix(1.2025 0 0 1.2025 -2172.9 -846.1)">
-  <circle cx="1820.2" cy="716.87" r="10.914" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" style="paint-order:stroke fill markers"/>
-  <circle cx="1832.9" cy="716.87" r="10.914" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" style="paint-order:stroke fill markers"/>
+  <circle cx="1820.2" cy="716.87" r="10.914" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" style="paint-order:stroke fill markers"/>
+  <circle cx="1832.9" cy="716.87" r="10.914" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" style="paint-order:stroke fill markers"/>
   <path d="m1826.6 708.22-4.6963 5.2917 0.5292 7.9375 4.101 4.4979 4.4318-6.4161-0.463-6.4823z" fill="currentColor"/>
  </g>
 </svg>

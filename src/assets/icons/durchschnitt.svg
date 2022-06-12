@@ -9,7 +9,7 @@
    </cc:Work>
   </rdf:RDF>
  </metadata>
- <g stroke="#fff" stroke-linecap="round">
+ <g stroke="currentColor" stroke-linecap="round">
   <g transform="matrix(.90547 0 0 .90547 -1847.2 -640.14)">
    <path d="m2042.2 717.83h47.625" fill="none" stroke-width="2"/>
    <g fill="currentColor" stroke-linejoin="round">

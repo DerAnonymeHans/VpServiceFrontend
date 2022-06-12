@@ -10,9 +10,9 @@
   </rdf:RDF>
  </metadata>
  <g transform="matrix(1.0643 0 0 1.0643 -2003.9 -748.11)">
-  <rect x="1885" y="705.07" width="8.4089" height="25.506" ry="2.9884" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4488" style="paint-order:stroke fill markers"/>
+  <rect x="1885" y="705.07" width="8.4089" height="25.506" ry="2.9884" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4488" style="paint-order:stroke fill markers"/>
   <rect x="1884.8" y="720.13" width="8.7312" height="9.6221" ry="0" fill="currentColor" style="paint-order:stroke fill markers"/>
-  <rect x="1899.9" y="712.38" width="8.713" height="18.379" ry="2.1533" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.116" style="paint-order:stroke fill markers"/>
+  <rect x="1899.9" y="712.38" width="8.713" height="18.379" ry="2.1533" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.116" style="paint-order:stroke fill markers"/>
   <rect x="1899.8" y="717.71" width="9.047" height="12.453" ry="0" fill="currentColor" style="paint-order:stroke fill markers"/>
  </g>
 </svg>

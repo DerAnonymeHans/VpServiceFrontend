@@ -1,3 +1,4 @@
+@import "./variables";
 
 .center{
    width: 100%;
@@ -9,6 +10,14 @@
    margin: $margin 0;
 }
 
+.flex{
+   display: flex;
+}.flex-n-margin{
+   display: flex;
+   > * {
+      margin-inline: $margin * .5;
+   }
+}
 
 
 

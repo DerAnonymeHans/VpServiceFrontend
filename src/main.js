@@ -13,5 +13,6 @@ app.use(Vue3Mq, {
       desktop: 1100
    }
 })
+app.config.unwrapInjectedRef = true
 
 app.mount('#app')
