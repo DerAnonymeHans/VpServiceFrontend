@@ -18,7 +18,9 @@ export default {
 const URL = import.meta.env.VITE_API_URL;
 const fetchAPI = (path, obj={}) => fetch(URL + path, obj)
 
-export { fetchAPI }
+const sleep = (ms) => new Promise((resolve, reject) => setTimeout(resolve, ms))
+
+export { fetchAPI, sleep }
 </script>
 
 <style lang="scss">
