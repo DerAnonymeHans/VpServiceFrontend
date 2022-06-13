@@ -24,7 +24,6 @@ export default {
       default: String
    },
    mounted(){
-      console.log(this.default)
       const idx = this.items.findIndex(item => item.key === this.default)
       if(idx === -1) return;
       this.onClick(idx);
@@ -64,6 +63,7 @@ export { Item };
       align-items: center;
       box-sizing: border-box;
       margin-inline: $margin;
+      transition: all .5s ease;
 
       > * {
          &:last-child{
@@ -75,6 +75,7 @@ export { Item };
 
       &.selected{
          color: $accent;
+         background-color: rgba($bg-light, .2);
       }
    }
 

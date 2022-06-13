@@ -18,7 +18,13 @@ import ScrollSelector, { Item } from "./ScrollSelector.vue";
          />
       </div>
       <div class="scroll-selector vert-center">
-         <ScrollSelector @select="(item) => statistic = item.key" :default="statistic"
+         <ScrollSelector 
+            @select="
+               (item) => {
+                  statistic = item.key
+               }
+            " 
+            :default="statistic"
             :items="[
                new Item('Gesamtzahlen', 'gesamtzahlen'),
                new Item('Nach Zeit', 'zeit'),
