@@ -1,10 +1,11 @@
 <script setup>
 import Gesamtzahlen from "./gesamtzahlen/Gesamtzahlen.vue";
+import Zeit from "./zeit/Zeit.vue";
 </script>
 <template>
    <div>
       <Gesamtzahlen v-if="statistic === 'gesamtzahlen'"/>
-      <div v-else>Hallo</div>
+      <Zeit v-if="statistic === 'zeit'"/> 
    </div>
 </template>
 <script>
@@ -16,6 +17,11 @@ export default {
    }
 }
 </script>
-<style lang="">
-   
+<style lang="scss">
+@import "@/styles/_variables.scss";
+.statistic {
+   background-color: $bg-medium;
+   margin: $margin 0;
+   border-radius: $border-radius;
+}
 </style>

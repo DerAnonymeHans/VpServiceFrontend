@@ -1,5 +1,5 @@
 <template>
-   <div class="switch-container" :style="{'grid-template-columns': '1fr '.repeat(options.length)}" >
+   <div class="switch-container" :class="{invert: invert}" :style="{'grid-template-columns': '1fr '.repeat(options.length)}" >
       <div v-for="(option, idx) of options" :key="idx" :class="{selected: selected === idx}" @click="doSwitch(idx)">
          {{option}}
       </div>
@@ -12,7 +12,8 @@ export default {
       options: {
          type: Array, required: true
       },
-      default: String
+      default: String,
+      invert: Boolean
    },
    data(){
       return{
@@ -24,7 +25,6 @@ export default {
       const idx = this.options.indexOf(this.default)
       if(idx === -1) return;
       this.doSwitch(idx);
-      
    },
    methods: {
       doSwitch(idx){
@@ -42,6 +42,7 @@ export default {
 @import "@/styles/helper.scss";
 
 $trans-dura: .5s;
+
 .switch-container{
    background-color: $bg-light;
    width: fit-content;
@@ -66,6 +67,7 @@ $trans-dura: .5s;
    .selected{
       color: white;
    }
+   
 
    .switcher{
       position: absolute;
@@ -75,6 +77,18 @@ $trans-dura: .5s;
       border-radius: 9999px;
       margin: 0;
       transition: all $trans-dura ease;
+   }
+
+   &.invert{
+      background-color: black;
+      border-color: black;
+      color: white;
+      .selected{
+         color: black;
+      }
+      .switcher{
+         background-color: white;
+      }
    }
 }
 

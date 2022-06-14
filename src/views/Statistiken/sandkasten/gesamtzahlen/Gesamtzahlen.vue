@@ -1,17 +1,41 @@
+<!-- @format -->
+
+<script setup>
+import Statistic, { SwitchModel, Dataset } from "../../components/Statistic.vue";
+</script>
 <template>
-   <div>
-      Gesamtzahlen
-   </div>
+   <Statistic :getDatasets="getDatasets" :getLabels="getLabels" chartType="bar" :_switches="switches" />
 </template>
 <script>
 export default {
    inject: ["fetchStat"],
-   async mounted(){
-      const res = await this.fetchStat("/Names/0")
-      console.log(res);
-   }
-}
+   data(){
+      return{
+         switches: {sumMode: new SwitchModel(['getrennt', 'addieren'], 'getrennt')}
+      }
+   },
+   methods: {
+      getLabels(options){
+         const sumData = options.switches.sumMode === "addieren";
+         if(sumData) return [options.selectors.map((selector) => selector.name).join(", ")]
+         return options.selectors.map((selector) => selector.name)
+      },
+      async getDatasets(options) {
+         const sumData = options.switches.sumMode === "addieren";
+         const missed = new Dataset("Fehlstunden", options.selectors.length);
+         const subst = new Dataset("Vertretungsstunden", options.selectors.length);
+         for (let selector of options.selectors) {
+            if (typeof selector.name !== "string") continue;
+            const data = await this.fetchStat(`/CountOf/${encodeURIComponent(selector.name)}`);
+            missed.data.push(data.missed);
+            subst.data.push(data.substituted);
+         }
+         if(sumData){
+            missed.sumData();
+            subst.sumData();
+         }
+         return [missed, subst];
+      },
+   },
+};
 </script>
-<style lang="scss" scoped>
-   
-</style>

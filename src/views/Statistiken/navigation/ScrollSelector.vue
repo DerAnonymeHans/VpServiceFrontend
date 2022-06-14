@@ -77,6 +77,9 @@ export { Item };
          color: $accent;
          background-color: rgba($bg-light, .2);
       }
+      &:hover{
+         background-color: rgba($bg-light, .2);
+      }
    }
 
    &.desktop{

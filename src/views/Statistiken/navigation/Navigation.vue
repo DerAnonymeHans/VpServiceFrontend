@@ -25,14 +25,7 @@ import ScrollSelector, { Item } from "./ScrollSelector.vue";
                }
             " 
             :default="statistic"
-            :items="[
-               new Item('Gesamtzahlen', 'gesamtzahlen'),
-               new Item('Nach Zeit', 'zeit'),
-               new Item('Beziehungen', 'beziehungen'),
-               new Item('Relativ', 'relativ'),
-               new Item('Im Vergleich', 'vergleich'),
-               new Item('Durchschnitte', 'durchschnitt'),
-            ]"
+            :items="items"
          />
       </div>
    </div>
@@ -40,7 +33,18 @@ import ScrollSelector, { Item } from "./ScrollSelector.vue";
 <script>
 export default {
    inject: ["page", "statistic", "mq"],
-   methods: {},
+   data(){
+      return{
+         items: [
+               new Item('Gesamtzahlen', 'gesamtzahlen'),
+               new Item('Nach Zeit', 'zeit'),
+               new Item('Beziehungen', 'beziehungen'),
+               new Item('Relativ', 'relativ'),
+               new Item('Im Vergleich', 'vergleich'),
+               new Item('Durchschnitte', 'durchschnitt'),
+            ]
+      }
+   }
 };
 </script>
 <style lang="scss" scoped>

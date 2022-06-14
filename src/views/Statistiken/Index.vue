@@ -6,6 +6,7 @@ import Ranglisten from "./ranglisten/Ranglisten.vue";
 import Modal from "@/components/modal/Modal.vue";
 import DBStatus from "./functions/DBStatus.js";
 import { fetchAPI, sleep } from "@/App.vue";
+import EntityType from "./functions/EntityType.js";
 </script>
 
 <template>
@@ -54,16 +55,24 @@ export default {
                this.statistic = val;
             },
          }),
-         fetchStat: this.optionalFetch
+         fetchStat: this.fetchStat
       };
    },
    async beforeMount(){
       await this.dbSetup();
    },
+   mounted(){
+      this.preloadData()
+   },
    methods: {
+      inform(title, content){
+         this.modalTitle = title;
+         this.modalContent = content;
+         this.showModal = true;
+      },
       dbSetup(){
          return new Promise((resolve, reject) => {
-            sessionStorage.setItem("db-status", DBStatus.PENDING)
+            if(typeof window.statDB !== "object") sessionStorage.setItem("db-status", DBStatus.PENDING)
             if(!window.indexedDB){
                sessionStorage.setItem("db-status", DBStatus.ERROR);
                return resolve();
@@ -93,12 +102,7 @@ export default {
          })
 
       },
-      inform(title, content){
-         this.modalTitle = title;
-         this.modalContent = content;
-         this.showModal = true;
-      },
-      optionalFetch(path){
+      fetchStat(path){
          return new Promise(async (resolve, reject) => {
             const dbStatus = sessionStorage.getItem("db-status")
             for(let i=0; i<5; i++){
@@ -107,18 +111,9 @@ export default {
             }
             if(dbStatus === DBStatus.RUNNING){
                try{
-                  const res = await this.getFromDb(path)
+                  const res = await this.getFromDb(path)                  
                   return resolve(res);
-               }catch(e) {
-                  console.log("catched")
-               }
-               // .then(res => {
-               //    isDataInDb = true;
-               //    resolve(res)
-               // })
-               // .catch(() => {
-               //    isDataInDb = false;
-               // })
+               }catch(e) {}
             }
 
             let res;
@@ -162,6 +157,21 @@ export default {
          window.statDB.transaction(["cached-data"], "readwrite")
             .objectStore("cached-data")
             .add({data: value, path: path})         
+      },
+
+      async preloadData(){
+         try{
+            // fetch all names
+            for(let key of Object.keys(EntityType)){
+               await this.fetchStat(`/Names/${EntityType[key].idx}`)
+            }
+
+            await this.fetchStat("/RecordedDays/Count");
+
+         }catch(e) {
+            console.warn("Preload failed. " + e.message)
+         }
+         
       }
    }
 };
@@ -189,5 +199,30 @@ main{
          width: 95vw;         
       }
    }
+}
+</style>
+<style lang="scss">
+@import "@/styles/_variables.scss";
+main{
+   .statistic {
+      background-color: $bg-medium;
+      margin: $margin 0;
+      border-radius: $border-radius;
+   }
+   // &.desktop{
+   //    .statistic{
+   //       min-height: 60vh;
+   //    }
+   // }
+   // &.tablet{
+   //    .statistic{
+   //       min-height: 60vh;
+   //    }
+   // }
+   // &.mobile{
+   //    .statistic{
+   //       min-height: 80vh;
+   //    }
+   // }
 }
 </style>
