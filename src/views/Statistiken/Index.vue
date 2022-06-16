@@ -72,14 +72,13 @@ export default {
       },
       dbSetup(){
          return new Promise((resolve, reject) => {
-            if(typeof window.statDB !== "object") sessionStorage.setItem("db-status", DBStatus.PENDING)
+            if(sessionStorage.getItem("db-status") === null) sessionStorage.setItem("db-status", DBStatus.NEW_SESSION)
+            else if(typeof window.statDB !== "object") sessionStorage.setItem("db-status", DBStatus.PENDING)
+
             if(!window.indexedDB){
                sessionStorage.setItem("db-status", DBStatus.ERROR);
                return resolve();
             }
-            if(!sessionStorage.getItem("db-status") === DBStatus.RUNNING) {
-               indexedDB.deleteDatabase("statDB");
-            };
    
             let request = window.indexedDB.open("StatistikenDB", 1);
             request.onerror = e => {
@@ -88,8 +87,15 @@ export default {
             }
             request.onsuccess = e => {
                console.log("success")
+               window.statDB = e.target.result;
+               if(sessionStorage.getItem("db-status") === DBStatus.NEW_SESSION){
+                  console.log("clear")
+                  window.statDB.transaction(["cached-data"], "readwrite")
+                     .objectStore("cached-data")
+                     .clear()
+               }
                sessionStorage.setItem("db-status", DBStatus.RUNNING);
-               window.statDB = e.target.result;       
+
                return resolve()
             }
             request.onupgradeneeded = e => {
@@ -102,7 +108,7 @@ export default {
          })
 
       },
-      fetchStat(path){
+      fetchStat(path, isInform=true){
          return new Promise(async (resolve, reject) => {
             const dbStatus = sessionStorage.getItem("db-status")
             for(let i=0; i<5; i++){
@@ -122,12 +128,12 @@ export default {
                if(res.status !== 200) throw new Error();
                res = await res.json()   
             }catch(e){
-               this.inform("Problem", "Die von dir angefragten Statistiken wurden nicht gefunden.")
+               if(isInform) this.inform("Problem", "Die von dir angefragten Statistiken wurden nicht gefunden.")
                return reject();
             }
 
             if(!res.isSuccess){
-               this.inform("Information", res.message);
+               if(isInform) this.inform("Information", res.message);
                return reject();
             }
 

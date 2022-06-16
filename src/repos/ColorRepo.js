@@ -38,8 +38,8 @@ class ColorRepo{
       "#36454f",
    ]
    static get(count, offset=0){
-      if(count <= 2 && offset === 0){
-         return ["#ff8ded", "#000"].slice(0, count);
+      if(count + offset <= 2){
+         return ["#ff8ded", "#000"].slice(offset, count);
       }
       return ColorRepo.COLORS.slice(offset, offset + count)
    }

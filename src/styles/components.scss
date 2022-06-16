@@ -48,3 +48,19 @@
    50% { transform: scale(1.05)}
    100% { transform: scale(1)}
 }
+
+
+
+.select{
+   cursor: pointer;
+   border-radius: $border-radius;
+   padding-right: $padding;
+   border: 2px solid $bg-dark;
+   width: 100%;      
+   // appearance: none;
+   user-select: none;
+
+   &:focus, &:hover{
+      outline: none;
+   }
+}

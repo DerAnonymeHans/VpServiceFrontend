@@ -11,7 +11,10 @@ export default {
    inject: ["fetchStat"],
    data(){
       return{
-         switches: {sumMode: new SwitchModel(['getrennt', 'addieren'], 'getrennt')}
+         switches: {
+            attendance: new SwitchModel(['Fehlstunden', 'Vertretungsstunden', 'beides'], 'Fehlstunden'),
+            sumMode: new SwitchModel(['getrennt', 'addieren'], 'getrennt')
+         }
       }
    },
    methods: {
@@ -34,6 +37,8 @@ export default {
             missed.sumData();
             subst.sumData();
          }
+         if(options.switches.attendance === "Fehlstunden") return [missed];
+         if(options.switches.attendance === "Vertretungsstunden") return [subst];
          return [missed, subst];
       },
    },

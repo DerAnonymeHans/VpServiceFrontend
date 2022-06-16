@@ -16,6 +16,7 @@ import EntityType from "../functions/EntityType.js";
          <button class="name-selectors-add btn" @click="addSelector"></button>
 
       </div>
+      <slot></slot>
       <div class="submit-btn-container">
          <button class="btn-focus vert-center" @click="$emit('selector-change', selectors)">Diagramm erstellen</button> 
       </div>

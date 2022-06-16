@@ -10,8 +10,9 @@ import { sleep } from "@/App.vue";
 </script>
 <template>
    <div class="page" :class="mq.current">
-      <NameSelectorContainer @selector-change="(selectors) => selectorsChanged(selectors)" />
-
+      <NameSelectorContainer @selector-change="(selectors) => selectorsChanged(selectors)">
+         <slot></slot>
+      </NameSelectorContainer>
       <div class="statistic">
          <canvas id="mychart" ref="chart"></canvas>
       </div>
@@ -84,8 +85,8 @@ export default {
                responsive: true
             },
             data: {
-               labels: await this.getLabels(generationOptions),
                datasets: await this.getDatasets(generationOptions),
+               labels: await this.getLabels(generationOptions),
             }
          });
 

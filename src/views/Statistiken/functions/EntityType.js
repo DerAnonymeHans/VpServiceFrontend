@@ -1,7 +1,7 @@
 class Type{
-   constructor(idx, string, color, key){
+   constructor(idx, name, color, key){
       this.idx = idx;
-      this.string = string;
+      this.name = name;
       this.color = color;
       this.key = key;
    }
