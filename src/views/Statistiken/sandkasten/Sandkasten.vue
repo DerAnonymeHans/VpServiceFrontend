@@ -3,12 +3,14 @@ import { SwitchModel } from "../components/Statistic.vue"
 import Gesamtzahlen from "./gesamtzahlen/Gesamtzahlen.vue";
 import Zeit from "./zeit/Zeit.vue";
 import Beziehungen from "./beziehungen/Beziehungen.vue";
+import Relativ from "./relativ/Relativ.vue";
 </script>
 <template>
    <div>
       <Gesamtzahlen v-if="statistic === 'gesamtzahlen'"/>
       <Zeit v-if="statistic === 'zeit'"/> 
       <Beziehungen v-if="statistic === 'beziehungen'"/> 
+      <Relativ v-if="statistic === 'relativ'"/> 
    </div>
 </template>
 <script>

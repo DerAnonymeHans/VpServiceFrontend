@@ -132,8 +132,16 @@ class Dataset{
       this.key = "";
       this.tension;
    }
-   sumData(){
-      this.data = [this.data.reduce((prev, current) => prev + current, 0)]
+   sumData(mode="abs"){
+      switch(mode){
+         case "abs":
+            this.data = [this.data.reduce((prev, current) => prev + current, 0)]
+            break;
+         case "rel":
+            let oldLength = this.data.length;
+            this.data = [this.data.reduce((prev, current) => (prev + current), 0) / oldLength];
+            break;
+      }
       this.backgroundColor = ColorRepo.get(1)
    }
    newColor(count, offset=0){
