@@ -12,7 +12,19 @@
       cursor: pointer;
       background-color: lighten($bg-dark, 15%);
       box-shadow: 0px 0px 0px .5em rgba($bg-dark,0.2);
+   }
+}
+
+.btn-border{
+   background-color: $bg-light;
+   color: $bg-dark;
+   border: 2px $bg-dark solid;
+   border-radius: $border-radius;
+   padding: .5 * $padding;
+   transition: all .5s ease;
+   &:hover, &:focus{
       cursor: pointer;
+      box-shadow: 0px 0px 0px .5em rgba($bg-dark,0.2);
    }
 }
 
@@ -40,6 +52,27 @@
       box-shadow: 0px 0px 0px .5em rgba($accent,0.2);
       cursor: pointer;
       outline: none;
+   }
+}
+
+.btn-svg{
+   appearance: none;
+   border: none;
+   background: none;
+   outline: none;
+   transition: all .1s ease;
+   border-radius: $border-radius;
+   width: 3em;
+   color: rgba(0,0,0,0);
+   place-items: center;
+
+   svg {
+      width: 100%;
+   }
+
+   &:hover{
+      cursor: pointer;
+      color: $bg-dark;
    }
 }
 

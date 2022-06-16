@@ -1,9 +1,16 @@
 <script setup>
 import NameSelector from "./NameSelector.vue";
 import EntityType from "../functions/EntityType.js";
+import IconRepo from "@/repos/IconRepo.vue";
+import Modal from "@/components/modal/Modal.vue";
+import Bookmarks from "./BookMarks.vue";
 </script>
 <template>
    <div class="name-selectors-container" :class="mq.current">
+      <div class="actions">
+         <button class="btn-svg" @click="showBookmarks=true"><IconRepo name="save" /></button>
+         <button class="btn-svg" @click="deleteAll()"><IconRepo name="delete" /></button>
+      </div>
       <div class="selectors">
          <NameSelector 
             v-for="selector of selectors" :key="selector"
@@ -20,6 +27,9 @@ import EntityType from "../functions/EntityType.js";
       <div class="submit-btn-container">
          <button class="btn-focus vert-center" @click="$emit('selector-change', selectors)">Diagramm erstellen</button> 
       </div>
+      <Modal :isOpen="showBookmarks" @close="showBookmarks=!showBookmarks" :title="modalTitle" :content="''" :buttons="[]">
+         <Bookmarks @load="getSelectors()"/>
+      </Modal> 
    </div>
 </template>
 <script>
@@ -27,15 +37,20 @@ export default {
    inject: ["mq"],
    data(){
       return{
-         selectors: [new Selector(EntityType.TEACHER)]
+         selectors: [new Selector(EntityType.TEACHER)],
+         showBookmarks: false,
+         modalTitle: "Lesezeichen",
       }
    },
    beforeMount(){
-      const selectors = JSON.parse(sessionStorage.getItem("saved-selectors"))
-      if(!Array.isArray(selectors)) return
-      this.selectors = selectors
+      this.getSelectors()
    },
    methods: {
+      getSelectors(){
+         const selectors = JSON.parse(sessionStorage.getItem("cached-selectors"))
+         if(!Array.isArray(selectors)) return
+         this.selectors = selectors
+      },
       onSelect(selector, val){
          selector.name = val;
          this.selectorChange();
@@ -58,8 +73,12 @@ export default {
          this.selectors = this.selectors;
          this.selectorChange();
       },
+      deleteAll(){
+         this.selectors = [];
+         this.selectorChange();
+      },
       selectorChange(){
-         sessionStorage.setItem("saved-selectors", JSON.stringify(this.selectors))
+         sessionStorage.setItem("cached-selectors", JSON.stringify(this.selectors))
       }
    }
 }
@@ -81,11 +100,16 @@ class Selector{
    border-radius: $border-radius;
    box-sizing: border-box;
 
+   .actions{
+      width: fit-content;
+      margin-left: auto;
+   }
+
    .selectors{
       display: grid;
       grid-gap: $margin;
       grid-template-columns: repeat(auto-fit, max(10vw, 150px));
-      justify-content: center;    
+      // justify-content: center;    
       
       .name-selectors-add{
       width: 1em;

@@ -5,6 +5,7 @@
       <div v-show="isOpen" class="modal-container" :class="mq.current">
          <h3>{{ title }}</h3>
          <div v-html="content"></div>
+         <slot></slot>
          <div v-for="button in buttons" :key="button.name" class="button-container">
             <button :class="button.className" @click="close(button.onClick)">{{ button.text }}</button>
          </div>
