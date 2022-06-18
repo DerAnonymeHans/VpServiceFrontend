@@ -1,12 +1,14 @@
+<!-- @format -->
+
 <script setup>
 import { computed } from "vue";
-import Navigation from "./navigation/Navigation.vue";
+import Navigation from "./components/Navigation.vue";
 import Sandkasten from "./sandkasten/Sandkasten.vue";
 import Ranglisten from "./ranglisten/Ranglisten.vue";
 import Modal from "@/components/modal/Modal.vue";
-import DBStatus from "./functions/DBStatus.js";
+import DBStatus from "./enums/DBStatus.js";
 import { fetchAPI, sleep } from "@/App.vue";
-import EntityType from "./functions/EntityType.js";
+import EntityType from "./enums/EntityType.js";
 </script>
 
 <template>
@@ -14,11 +16,11 @@ import EntityType from "./functions/EntityType.js";
       <Navigation />
 
       <div class="content">
-         <Sandkasten v-if="page === 'Sandkasten'" :statistic="statistic"/>
-         <Ranglisten v-if="page === 'Ranglisten'"/>
+         <Sandkasten v-if="page === 'Sandkasten'" :statistic="statistic" />
+         <Ranglisten v-if="page === 'Ranglisten'" />
       </div>
    </main>
-   <Modal :isOpen="showModal" @close="showModal=!showModal" :title="modalTitle" :content="modalContent" :buttons="[]"></Modal> 
+   <Modal :isOpen="showModal" @close="showModal = !showModal" :title="modalTitle" :content="modalContent" :buttons="[]"></Modal>
 </template>
 
 <script>
@@ -37,179 +39,169 @@ export default {
       return {
          page: computed({
             get: () => {
-               if(typeof sessionStorage.getItem('stat-page') !== "string") return this.page;
-               return sessionStorage.getItem('stat-page')
+               if (typeof sessionStorage.getItem("stat-page") !== "string") return this.page;
+               return sessionStorage.getItem("stat-page");
             },
             set: (val) => {
-               sessionStorage.setItem("stat-page", val)
+               sessionStorage.setItem("stat-page", val);
                this.page = val;
             },
          }),
          statistic: computed({
             get: () => {
-               if(typeof sessionStorage.getItem('stat-name') !== "string") return this.statistic;
-               return sessionStorage.getItem('stat-name')
+               if (typeof sessionStorage.getItem("stat-name") !== "string") return this.statistic;
+               return sessionStorage.getItem("stat-name");
             },
             set: (val) => {
-               sessionStorage.setItem("stat-name", val)
+               sessionStorage.setItem("stat-name", val);
                this.statistic = val;
             },
          }),
-         fetchStat: this.fetchStat
+         fetchStat: this.fetchStat,
       };
    },
-   async beforeMount(){
+   async beforeMount() {
       await this.dbSetup();
    },
-   mounted(){
-      this.preloadData()
+   mounted() {
+      this.preloadData();
    },
    methods: {
-      inform(title, content){
+      inform(title, content) {
          this.modalTitle = title;
          this.modalContent = content;
          this.showModal = true;
       },
-      dbSetup(){
+      dbSetup() {
          return new Promise((resolve, reject) => {
-            if(sessionStorage.getItem("db-status") === null) sessionStorage.setItem("db-status", DBStatus.NEW_SESSION)
-            else if(typeof window.statDB !== "object") sessionStorage.setItem("db-status", DBStatus.PENDING)
+            if (sessionStorage.getItem("db-status") === null) sessionStorage.setItem("db-status", DBStatus.NEW_SESSION);
+            else if (typeof window.statDB !== "object") sessionStorage.setItem("db-status", DBStatus.PENDING);
 
-            if(!window.indexedDB){
+            if (!window.indexedDB) {
                sessionStorage.setItem("db-status", DBStatus.ERROR);
                return resolve();
             }
-   
+
             let request = window.indexedDB.open("StatistikenDB", 1);
-            request.onerror = e => {
+            request.onerror = (e) => {
                sessionStorage.setItem("db-status", DBStatus.ERROR);
-               return resolve()
-            }
-            request.onsuccess = e => {
-               console.log("success")
+               return resolve();
+            };
+            request.onsuccess = (e) => {
+               console.log("success");
                window.statDB = e.target.result;
-               if(sessionStorage.getItem("db-status") === DBStatus.NEW_SESSION){
-                  console.log("clear")
-                  window.statDB.transaction(["cached-data"], "readwrite")
-                     .objectStore("cached-data")
-                     .clear()
+               if (sessionStorage.getItem("db-status") === DBStatus.NEW_SESSION) {
+                  console.log("clear");
+                  window.statDB.transaction(["cached-data"], "readwrite").objectStore("cached-data").clear();
                }
                sessionStorage.setItem("db-status", DBStatus.RUNNING);
 
-               return resolve()
-            }
-            request.onupgradeneeded = e => {
-               sessionStorage.setItem("db-status", DBStatus.RUNNING);  
+               return resolve();
+            };
+            request.onupgradeneeded = (e) => {
+               sessionStorage.setItem("db-status", DBStatus.RUNNING);
                window.statDB = e.target.result;
-               const store = window.statDB.createObjectStore("cached-data", {keyPath: "path"})
-               store.createIndex("data", "data", {unique: false});
-               return resolve()
-            }
-         })
-
+               const store = window.statDB.createObjectStore("cached-data", { keyPath: "path" });
+               store.createIndex("data", "data", { unique: false });
+               return resolve();
+            };
+         });
       },
-      fetchStat(path, isInform=true){
+      fetchStat(path, isInform = true) {
          return new Promise(async (resolve, reject) => {
-            const dbStatus = sessionStorage.getItem("db-status")
-            for(let i=0; i<5; i++){
-               if(dbStatus === DBStatus.PENDING) await sleep(200)
+            const dbStatus = sessionStorage.getItem("db-status");
+            for (let i = 0; i < 5; i++) {
+               if (dbStatus === DBStatus.PENDING) await sleep(200);
                else break;
             }
-            if(dbStatus === DBStatus.RUNNING){
-               try{
-                  const res = await this.getFromDb(path)                  
+            if (dbStatus === DBStatus.RUNNING) {
+               try {
+                  const res = await this.getFromDb(path);
                   return resolve(res);
-               }catch(e) {}
+               } catch (e) {}
             }
 
             let res;
-            try{
-               res = await fetchAPI('/Statistic' + path)
-               if(res.status !== 200) throw new Error();
-               res = await res.json()   
-            }catch(e){
-               if(isInform) this.inform("Problem", "Die von dir angefragten Statistiken wurden nicht gefunden.")
+            try {
+               res = await fetchAPI("/Statistic" + path);
+               if (res.status !== 200) throw new Error();
+               res = await res.json();
+            } catch (e) {
+               if (isInform) this.inform("Problem", "Die von dir angefragten Statistiken wurden nicht gefunden.");
                return reject();
             }
 
-            if(!res.isSuccess){
-               if(isInform) this.inform("Information", res.message);
+            if (!res.isSuccess) {
+               if (isInform) this.inform("Information", res.message);
                return reject();
             }
 
-            if(dbStatus === DBStatus.RUNNING){
+            if (dbStatus === DBStatus.RUNNING) {
                this.insertInDb(path, res.body);
             }
 
             return resolve(res.body);
-         })
+         });
       },
-      getFromDb(path){
-         return new Promise(async(resolve, reject) => {
-            const request = await window.statDB.transaction(["cached-data"])
-            .objectStore("cached-data")
-            .get(path)
+      getFromDb(path) {
+         return new Promise(async (resolve, reject) => {
+            const request = await window.statDB.transaction(["cached-data"]).objectStore("cached-data").get(path);
 
-            request.onsuccess = e => {
-               if(e.target.result === undefined) return reject()
-               resolve(e.target.result.data)
-            }
-            request.onerror = e => {
+            request.onsuccess = (e) => {
+               if (e.target.result === undefined) return reject();
+               resolve(e.target.result.data);
+            };
+            request.onerror = (e) => {
                reject();
-            }
-         })
+            };
+         });
       },
-      insertInDb(path, value){
-         window.statDB.transaction(["cached-data"], "readwrite")
-            .objectStore("cached-data")
-            .add({data: value, path: path})         
+      insertInDb(path, value) {
+         window.statDB.transaction(["cached-data"], "readwrite").objectStore("cached-data").add({ data: value, path: path });
       },
 
-      async preloadData(){
-         try{
+      async preloadData() {
+         try {
             // fetch all names
-            for(let key of Object.keys(EntityType)){
-               await this.fetchStat(`/Names/${EntityType[key].idx}`)
+            for (let key of Object.keys(EntityType)) {
+               await this.fetchStat(`/Names/${EntityType[key].idx}`);
             }
 
             await this.fetchStat("/RecordedDays/Count");
-
-         }catch(e) {
-            console.warn("Preload failed. " + e.message)
+         } catch (e) {
+            console.warn("Preload failed. " + e.message);
          }
-         
-      }
-   }
+      },
+   },
 };
-
 </script>
 
 <style lang="scss" scoped>
 @import "@/styles/_variables.scss";
-main{
-   .content{
+main {
+   .content {
       margin: $margin auto;
    }
-   &.desktop{
-      .content{
+   &.desktop {
+      .content {
          width: 60vw;
       }
    }
-   &.tablet{
-      .content{
+   &.tablet {
+      .content {
          width: 70vw;
       }
    }
-   &.mobile{
-      .content{
-         width: 95vw;         
+   &.mobile {
+      .content {
+         width: 95vw;
       }
    }
 }
 </style>
 <style lang="scss">
 @import "@/styles/_variables.scss";
-main{
+main {
    .statistic {
       background-color: $bg-medium;
       margin: $margin 0;

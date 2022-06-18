@@ -18,12 +18,12 @@ import ScrollSelector, { Item } from "./ScrollSelector.vue";
          />
       </div>
       <div class="scroll-selector vert-center">
-         <ScrollSelector 
+         <ScrollSelector
             @select="
                (item) => {
-                  statistic = item.key
+                  statistic = item.key;
                }
-            " 
+            "
             :default="statistic"
             :items="items"
          />
@@ -33,18 +33,17 @@ import ScrollSelector, { Item } from "./ScrollSelector.vue";
 <script>
 export default {
    inject: ["page", "statistic", "mq"],
-   data(){
-      return{
+   data() {
+      return {
          items: [
-               new Item('Gesamtzahlen', 'gesamtzahlen'),
-               new Item('Nach Zeit', 'zeit'),
-               new Item('Beziehungen', 'beziehungen'),
-               new Item('Relativ', 'relativ'),
-               new Item('Im Vergleich', 'vergleich'),
-               new Item('Durchschnitte', 'durchschnitt'),
-            ]
-      }
-   }
+            new Item("Gesamtzahlen", "gesamtzahlen"),
+            new Item("Nach Zeit", "zeit"),
+            new Item("Beziehungen", "beziehungen"),
+            new Item("Relativ", "relativ"),
+            new Item("Im Vergleich", "vergleich"),
+         ],
+      };
+   },
 };
 </script>
 <style lang="scss" scoped>
