@@ -1,96 +1,95 @@
+<!-- @format -->
+
 <script setup>
 import { ref } from "vue";
 import Input from "@/components/input/Input.vue";
 import Modal from "@/components/modal/Modal.vue";
 import { fetchAPI } from "@/App.vue";
-
 </script>
 <template>
    <div class="form-container" :class="mq.current">
       <iframe id="dummy-frame" frameborder="0"></iframe>
       <form id="subscribe-form" @submit="submit" target="dummy-frame">
-         <Input type="text" label="Anrede/Name" name="name"/>
-         <Input type="text" label="Email" name="mail"/>
-         <Input type="number" label="Klassenstufe" name="grade"/>
+         <Input type="text" label="Anrede/Name" name="name" />
+         <Input type="text" label="Email" name="mail" />
+         <Input type="number" label="Klassenstufe" name="grade" />
          <button class="btn-focus" type="submit">Los gehts!</button>
       </form>
-      <Modal :isOpen="showModal" @close="showModal=!showModal" :title="modalTitle" :content="modalContent" :buttons="[]"/>
+      <Modal :isOpen="showModal" @close="showModal = !showModal" :title="modalTitle" :content="modalContent" :buttons="[]" />
    </div>
 </template>
 <script>
 export default {
-   inject: ['mq'],
+   inject: ["mq"],
    component: {
-      Input
+      Input,
    },
-   data(){
+   data() {
       return {
          modalTitle: "",
          modalContent: "",
-         showModal: false
-      }
+         showModal: false,
+      };
    },
    methods: {
-      submit(e){
+      submit(e) {
          e.preventDefault();
          const formdata = new FormData(e.target);
-         fetchAPI("/Subscribe", {method: "POST", body: formdata})
-         .then(res => res.json())
-         .then(res => {
-            if(res.isSuccess) {
-               this.modalTitle = "Erfolg"
-               e.target.reset();
-            }
-            else this.modalTitle = "Fehlschlag"
+         fetchAPI("/Subscribe", { method: "POST", body: formdata })
+            .then((res) => res.json())
+            .then((res) => {
+               if (res.isSuccess) {
+                  this.modalTitle = "Erfolg";
+                  e.target.reset();
+               } else this.modalTitle = "Fehlschlag";
 
-            this.modalContent = res.message;
-            this.showModal = true;
-         })
-      }
-   }
-}
+               this.modalContent = res.message;
+               this.showModal = true;
+            });
+      },
+   },
+};
 </script>
 <style lang="scss">
 @import "@/styles/_variables.scss";
 
-.form-container{
+.form-container {
    width: 100%;
-   background-color: $bg-dark;
+   background-color: $col-dark;
 
-   form{
+   form {
       display: flex;
       flex-direction: column;
       margin: auto;
       padding: $padding * 2 0;
 
-      > *{
-         margin: $margin * .5 0;
+      > * {
+         margin: $margin * 0.5 0;
       }
-      button{
+      button {
          width: 50%;
          margin: $margin auto;
       }
    }
 
-
-   &.desktop{
-      form{
+   &.desktop {
+      form {
          width: 30vw;
       }
    }
-   &.tablet{
-      form{
+   &.tablet {
+      form {
          width: 60vw;
       }
    }
-   &.mobile{
-      form{
+   &.mobile {
+      form {
          width: 80vw;
       }
    }
 }
 
-#dummy-frame{
+#dummy-frame {
    display: none;
    opacity: 0;
 }

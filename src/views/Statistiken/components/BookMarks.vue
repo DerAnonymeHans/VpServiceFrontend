@@ -130,8 +130,8 @@ class Option {
       align-items: center;
       .select-container {
          width: 100%;
-         background-color: $bg-dark;
-         color: $bg-light;
+         background-color: $col-dark;
+         color: $col-light;
          border-radius: $border-radius;
          display: flex;
          flex-direction: column;
@@ -147,7 +147,7 @@ class Option {
             &:hover,
             &:focus,
             &.selected {
-               background-color: lighten($bg-dark, 20%);
+               background-color: lighten($col-dark, 20%);
             }
          }
       }

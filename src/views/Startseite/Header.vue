@@ -14,7 +14,7 @@
       <div class="overlay" :class="mq.current">
          <div class="greeting">
             <h3>Hallo</h3>
-            <h1>{{greeting}}.</h1>
+            <h1>{{ greeting }}.</h1>
          </div>
 
          <div class="btn-container">
@@ -22,31 +22,30 @@
             <RouterLink to="/Benachrichtigung" class="btn-focus">Abonnieren</RouterLink>
          </div>
 
-         <img class="kepler-img" v-if="mq.desktop" src="@/assets/kepler_circles.png" alt="Kepler">
-
+         <img class="kepler-img" v-if="mq.desktop" src="@/assets/kepler_circles.png" alt="Kepler" />
       </div>
    </header>
 </template>
 
 <script>
 export default {
-   inject: ['mq'],
-   data(){
+   inject: ["mq"],
+   data() {
       return {
-         greeting: "Kepleraner"
-      }
+         greeting: "Kepleraner",
+      };
    },
-   mounted(){
+   mounted() {
       const query = new URLSearchParams(document.location.search);
-      const name = query.get("name")
-      if(typeof name === "string") {
+      const name = query.get("name");
+      if (typeof name === "string") {
          this.greeting = name;
          localStorage.setItem("greeting", name);
          return;
       }
-      if(typeof localStorage.getItem("greeting") === "string") this.greeting = localStorage.getItem("greeting");
+      if (typeof localStorage.getItem("greeting") === "string") this.greeting = localStorage.getItem("greeting");
    },
-}
+};
 </script>
 
 <style scoped lang="scss">
@@ -54,103 +53,100 @@ export default {
 @import "@/styles/components.scss";
 .shape-bg {
    width: 100%;
-	color: $bg-dark;
+   color: $col-dark;
 }
-.overlay{
-	position: absolute;
-	width: 100%;
-	height: fit-content;   
-	top: 8vh;
+.overlay {
+   position: absolute;
+   width: 100%;
+   height: fit-content;
+   top: 8vh;
 
-   .greeting{
-      h3{
+   .greeting {
+      h3 {
          color: $accent;
          font-weight: lighter;
          margin: 0;
       }
-      h1{
-         color: $color-header-prim;
+      h1 {
+         color: $col-light;
          margin: 0;
       }
    }
-   .btn-container{
+   .btn-container {
       width: 100%;
       place-items: center;
       display: flex;
       justify-content: center;
 
-      a{
-         color: $color-header-prim;
+      a {
+         color: $col-light;
       }
    }
-   &.mobile{
-      .greeting{
+   &.mobile {
+      .greeting {
          margin-left: $margin * 2;
          margin-top: 10vh;
-         h3{
+         h3 {
             font-size: 10vw;
             line-height: 10vw;
          }
-         h1{
+         h1 {
             font-size: 15vw;
             line-height: 15vw;
          }
       }
       .btn-container {
          margin-top: 15vw;
-         button{
+         button {
             font-size: 4vw;
          }
       }
    }
-   &.tablet{
-      .greeting{
+   &.tablet {
+      .greeting {
          margin-left: 10vw;
          margin-top: 12vw;
-         h3{
+         h3 {
             font-size: 7vw;
             line-height: 7vw;
          }
-         h1{
+         h1 {
             font-size: 10vw;
             line-height: 10vw;
          }
       }
       .btn-container {
          margin-top: 12vw;
-         button{
+         button {
             font-size: 2vw;
          }
       }
    }
-   &.desktop{
-      .greeting{
+   &.desktop {
+      .greeting {
          margin-left: 10vw;
          margin-top: 6vw;
-         h3{
+         h3 {
             font-size: 5vw;
             line-height: 5vw;
          }
-         h1{
+         h1 {
             font-size: 8vw;
             line-height: 8vw;
-
          }
       }
       .btn-container {
          margin-top: 10vw;
-         button{
+         button {
             font-size: 1vw;
          }
       }
-      .kepler-img{
+      .kepler-img {
          width: 15vw;
          position: absolute;
          right: 5vw;
          top: 12vw;
       }
    }
-
-
 }
 </style>

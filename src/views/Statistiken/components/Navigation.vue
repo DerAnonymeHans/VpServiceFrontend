@@ -47,12 +47,12 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-@import "@/styles/_variables.scss";
 @import "@/styles/helper.scss";
+@import "@/styles/variables.scss";
 .nav-container {
    padding-top: 12vh;
    padding-bottom: $padding;
-   background-color: $bg-dark;
+   background-color: $col-dark;
 
    .scroll-selector {
       margin: $margin auto;

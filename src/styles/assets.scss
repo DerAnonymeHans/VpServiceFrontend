@@ -1,40 +1,46 @@
+/** @format */
+
 @import "@/styles/_variables";
 
-.hamburger-icon{
+.hamburger-icon {
    aspect-ratio: 1;
    height: 100%;
 
-   > div{
-      background-color: $bg-medium;
+   > div {
+      background-color: $col-medium;
       width: 100%;
       height: 20%;
       margin-bottom: 20%;
-      transition: all .5s ease;
+      transition: all 0.5s ease;
 
-      &:last-child{
+      &:last-child {
          margin-bottom: 0;
       }
    }
 
-   &.close{
-      > div{
+   &.close {
+      > div {
          margin: 0;
-         &:last-child{
+         &:last-child {
             opacity: 0;
          }
-         &:nth-child(2n){
+         &:nth-child(2n) {
             transform: rotate(45deg) translate(20%, 100%);
          }
-         &:nth-child(2n - 1){
+         &:nth-child(2n - 1) {
             transform: rotate(-45deg) translate(-30%, 150%);
          }
       }
    }
 
-
-   &:hover{
-      > div{
-         background-color: $bg-light;
+   &:hover {
+      > div {
+         background-color: $col-light;
       }
    }
+}
+
+.box {
+   background-color: $col-medium;
+   border-radius: $border-radius;
 }

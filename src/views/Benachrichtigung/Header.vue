@@ -1,3 +1,5 @@
+<!-- @format -->
+
 <script setup>
 import { fetchAPI } from "@/App.vue";
 </script>
@@ -5,7 +7,7 @@ import { fetchAPI } from "@/App.vue";
 <template>
    <header class="head" :class="mq.current">
       <h1 class="heading">
-         <span class="user-count">{{userCount}}</span>
+         <span class="user-count">{{ userCount }}</span>
          <span class="user"> Nutzer</span>
       </h1>
       <h4 class="heading-explanation">vertrauen auf vp.mailservice.kepler@gmail.com</h4>
@@ -13,67 +15,67 @@ import { fetchAPI } from "@/App.vue";
 </template>
 <script>
 export default {
-   inject: ['mq'],
-   data(){
-      return{
-         userCount: '#'
-      }
+   inject: ["mq"],
+   data() {
+      return {
+         userCount: "#",
+      };
    },
-   mounted(){
+   mounted() {
       fetchAPI("/GetUserCount")
-      .then(res => res.json())
-      .then(res => {
-         if(res.isSuccess) this.userCount = res.body;
-         else this.userCount = "#";
-      })
-   }
+         .then((res) => res.json())
+         .then((res) => {
+            if (res.isSuccess) this.userCount = res.body;
+            else this.userCount = "#";
+         });
+   },
 };
 </script>
 <style scoped lang="scss">
 @import "@/styles/_variables.scss";
 header {
-   background-color: $bg-dark;
+   background-color: $col-dark;
    padding: $padding * 2;
    margin-top: 8vh;
    text-align: center;
 
-   .heading{
+   .heading {
       margin: 0;
 
-      .user-count{
+      .user-count {
          color: $accent;
       }
-      .user{
-         color: $color-header-prim;
+      .user {
+         color: $col-light;
          font-weight: lighter;
       }
    }
-   h4{
-      color: $color-header-sec;
+   h4 {
+      color: $col-text-sec;
       margin: 0;
    }
 
-   &.desktop{
-      .heading{
+   &.desktop {
+      .heading {
          font-size: 5vw;
       }
    }
-   &.tablet{
-      .heading{
+   &.tablet {
+      .heading {
          font-size: 8vw;
       }
    }
-   &.mobile{
-      .heading{
+   &.mobile {
+      .heading {
          display: flex;
          flex-direction: column;
          justify-content: center;
 
-         .user-count{
+         .user-count {
             font-size: 30vw;
             line-height: 30vw;
          }
-         .user{
+         .user {
             margin-bottom: 1em;
          }
       }

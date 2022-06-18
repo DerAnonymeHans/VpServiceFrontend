@@ -44,13 +44,13 @@ export default {
 @import "@/styles/_variables.scss";
 @import "@/styles/assets.scss";
 nav {
-   background-color: $bg-dark;
+   background-color: $col-dark;
    display: flex;
-   height: 9vh;   
+   height: 9vh;
    align-items: center;
    position: fixed;
    box-sizing: border-box;
-   transition: height .5s ease;
+   transition: height 0.5s ease;
    z-index: 1000;
    top: 0;
 
@@ -65,16 +65,16 @@ nav {
       .hamburger-container {
          width: max(5%, 2em);
          margin-left: auto;
-         transition: all .8s ease;
+         transition: all 0.8s ease;
       }
 
-      .nav-item-container{
+      .nav-item-container {
          flex-direction: column;
          text-align: center;
          opacity: 0;
-         transition: opacity .5s ease;
+         transition: opacity 0.5s ease;
 
-         > div{
+         > div {
             margin-bottom: $margin;
             font-size: x-large;
          }
@@ -82,17 +82,17 @@ nav {
 
       &.nav-open {
          height: 50vh;
-         .hamburger-container{
+         .hamburger-container {
             transform: rotate(270deg);
          }
-         .nav-item-container{
-            opacity: 1;            
+         .nav-item-container {
+            opacity: 1;
          }
       }
-
    }
 
-   &.desktop, &.tablet {
+   &.desktop,
+   &.tablet {
       padding: $padding;
       width: 100%;
       .nav-item-container {
@@ -101,9 +101,9 @@ nav {
          > div {
             margin: 0 $margin;
 
-            &:last-child{
-               border: 1px solid $bg-medium;
-               padding: $padding * .3;
+            &:last-child {
+               border: 1px solid $col-medium;
+               padding: $padding * 0.3;
                border-radius: $border-radius;
                margin-left: auto;
             }

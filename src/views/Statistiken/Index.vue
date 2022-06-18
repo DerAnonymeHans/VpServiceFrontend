@@ -203,7 +203,7 @@ main {
 @import "@/styles/_variables.scss";
 main {
    .statistic {
-      background-color: $bg-medium;
+      background-color: $col-medium;
       margin: $margin 0;
       border-radius: $border-radius;
    }

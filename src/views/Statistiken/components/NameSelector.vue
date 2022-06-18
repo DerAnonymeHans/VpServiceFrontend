@@ -66,7 +66,7 @@ export default {
 @import "@/styles/_variables.scss";
 $border-width: 2px;
 .name-select-container {
-   border: $border-width solid $bg-dark;
+   border: $border-width solid $col-dark;
    display: flex;
    width: 100%;
    align-items: center;
@@ -75,10 +75,10 @@ $border-width: 2px;
    overflow: hidden;
 
    .name-select-delete {
-      border-right: $border-width solid $bg-dark;
+      border-right: $border-width solid $col-dark;
       height: 100%;
       aspect-ratio: 1 / 1;
-      background-color: $bg-dark;
+      background-color: $col-dark;
       position: relative;
       display: flex;
       flex-direction: column;
@@ -89,7 +89,7 @@ $border-width: 2px;
       &::before {
          content: "";
          position: absolute;
-         background-color: $bg-light;
+         background-color: $col-light;
          height: 20%;
          width: 80%;
          border-radius: $border-radius;
@@ -98,12 +98,12 @@ $border-width: 2px;
 
    .select-wrapper {
       position: relative;
-      color: $bg-light;
+      color: $col-light;
       background-color: currentColor;
       padding: $padding * 0.2;
       width: 100%;
       &:hover {
-         color: darken($bg-light, 10%);
+         color: darken($col-light, 10%);
       }
       select {
          cursor: pointer;
@@ -124,7 +124,7 @@ $border-width: 2px;
    }
 
    .name-select-type-change {
-      border-left: $border-width solid $bg-dark;
+      border-left: $border-width solid $col-dark;
       height: 100%;
       aspect-ratio: 1 / 1;
       background-color: red;
@@ -139,7 +139,7 @@ $border-width: 2px;
       @mixin arrow-part {
          content: "";
          position: absolute;
-         background-color: $bg-dark;
+         background-color: $col-dark;
          width: 10%;
          height: 50%;
       }

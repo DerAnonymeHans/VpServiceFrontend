@@ -15,17 +15,16 @@
    </div>
 </template>
 <script>
-export default {
-};
+export default {};
 </script>
 <style lang="scss">
 @import "@/styles/_variables.scss";
 a {
-   color: $color-header-sec;
+   color: $col-text-sec;
    text-decoration: none;
 }
 
 .router-link-active {
-   color: $color-header-prim;
+   color: $col-light;
 }
 </style>

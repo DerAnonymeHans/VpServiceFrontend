@@ -82,10 +82,10 @@ export { Button };
    position: fixed;
    height: fit-content;
    z-index: 500;
-   background-color: $bg-light;
+   background-color: $col-light;
    border-radius: $border-radius;
    padding: $padding;
-   box-shadow: 0px 0px 0.5em 0.5em rgba($bg-dark, 0.1);
+   box-shadow: 0px 0px 0.5em 0.5em rgba($col-dark, 0.1);
    border-top: 1em solid $accent;
    box-sizing: border-box;
 

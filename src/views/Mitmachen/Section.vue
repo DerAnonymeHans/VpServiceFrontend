@@ -1,20 +1,22 @@
+<!-- @format -->
+
 <template>
    <section :class="[mq.current, invert]">
       <div class="heading-container">
          <div v-for="titleObj of title" :key="titleObj">
-            <h2 v-if="titleObj.isColored" class="colored">{{titleObj.value}}</h2>
-            <h2 v-else>{{titleObj.value}}</h2>
+            <h2 v-if="titleObj.isColored" class="colored">{{ titleObj.value }}</h2>
+            <h2 v-else>{{ titleObj.value }}</h2>
          </div>
       </div>
       <div class="content-container" v-if="isInvert && mq.desktop">
          <slot></slot>
          <article>
-            {{text}}
+            {{ text }}
          </article>
       </div>
       <div class="content-container" v-else>
          <article>
-            {{text}}
+            {{ text }}
          </article>
          <slot></slot>
       </div>
@@ -22,85 +24,84 @@
 </template>
 <script>
 export default {
-   inject: ['mq'],
+   inject: ["mq"],
    props: {
       title: {
-         type: Object, required: true
+         type: Object,
+         required: true,
       },
       isInvert: Boolean,
-      text: String
+      text: String,
    },
-   data(){
-      return{
-         invert: this.isInvert ? "invert" : ""
-      }
-   }
-}
+   data() {
+      return {
+         invert: this.isInvert ? "invert" : "",
+      };
+   },
+};
 </script>
 <style lang="scss">
 @import "@/styles/variables";
 @import "@/styles/helper";
-section{
+section {
    margin-bottom: $margin * 5;
-   .heading-container{
+   .heading-container {
       display: flex;
-      background-color: $bg-dark;
+      background-color: $col-dark;
       justify-content: flex-end;
       padding: $padding;
       border-radius: 0 0 $border-radius 0;
-      h2{
-         color: $color-header-prim;
+      h2 {
+         color: $col-light;
          margin: 0;
       }
-      .colored{
+      .colored {
          color: $accent;
       }
    }
 
-   .content-container{
+   .content-container {
       margin: $margin * 2 auto;
-      
    }
 
-   &.invert{
-      .heading-container{
+   &.invert {
+      .heading-container {
          justify-content: flex-start;
          margin-left: auto;
          border-radius: 0 0 0 $border-radius;
       }
    }
 
-
-   &.desktop{
-      .heading-container{
+   &.desktop {
+      .heading-container {
          width: 75vw;
          font-size: 2vw;
          line-height: 2vw;
       }
-      .content-container{
+      .content-container {
          width: 60vw;
          display: grid;
          grid-template-columns: 1fr 1fr;
          grid-gap: $margin * 3;
       }
    }
-   &.tablet{
-      .heading-container{
+   &.tablet {
+      .heading-container {
          width: 80vw;
          font-size: 3vw;
          line-height: 3vw;
       }
-      .content-container{
+      .content-container {
          width: 80vw;
       }
    }
-   &.mobile{
-      .heading-container{
+   &.mobile {
+      .heading-container {
          width: 70vw;
          font-size: 5vw;
          line-height: 5vw;
       }
-      .content-container{
+      .content-container {
          width: 90vw;
       }
    }

@@ -97,7 +97,7 @@ class Selector {
 @import "@/styles/helper.scss";
 .name-selectors-container {
    width: 100%;
-   background-color: $bg-medium;
+   background-color: $col-medium;
    padding: $padding;
    border-radius: $border-radius;
    box-sizing: border-box;
@@ -126,7 +126,7 @@ class Selector {
             position: absolute;
             width: 3px;
             height: 60%;
-            background-color: $bg-light;
+            background-color: $col-light;
             border-radius: $border-radius;
          }
 

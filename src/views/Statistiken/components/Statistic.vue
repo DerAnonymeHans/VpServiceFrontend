@@ -6,7 +6,6 @@ import Chart from "chart.js/auto";
 import ColorRepo from "@/repos/ColorRepo.js";
 import Switch from "@/components/switch/Switch.vue";
 import { sleep } from "@/App.vue";
-
 </script>
 <template>
    <div class="page" :class="mq.current">
@@ -18,13 +17,17 @@ import { sleep } from "@/App.vue";
       </div>
 
       <div class="switches">
-         <Switch v-for="(_switch, key) in _switches" :key="key" 
+         <Switch
+            v-for="(_switch, key) in _switches"
+            :key="key"
             :invert="true"
-            :options="_switch.options" 
-            :default="_switch.value" 
+            :options="_switch.options"
+            :default="_switch.value"
             @switch="(to) => switchMode(key, to)"
          />
       </div>
+
+      <div class="explanation"></div>
    </div>
 </template>
 <script>
@@ -32,17 +35,21 @@ export default {
    inject: ["fetchStat", "mq"],
    props: {
       getDatasets: {
-         type: Function, required: true
+         type: Function,
+         required: true,
       },
       getLabels: {
-         type: Function, required: true
+         type: Function,
+         required: true,
       },
       chartType: {
-         type: String, required: true
+         type: String,
+         required: true,
       },
       _switches: {
-         type: Object, required: true // {sumMode: new SwitchModel(['getrennt', 'addieren'], 'getrennt')}
-      }
+         type: Object,
+         required: true, // {sumMode: new SwitchModel(['getrennt', 'addieren'], 'getrennt')}
+      },
    },
    data() {
       return {
@@ -51,14 +58,14 @@ export default {
          isMounted: false,
       };
    },
-   created(){
-      this.switchSessionHandler("load")
+   created() {
+      this.switchSessionHandler("load");
    },
-   mounted(){
+   mounted() {
       this.isMounted = true;
    },
-   beforeUnmount(){
-      if(this.chart !== undefined) this.chart.destroy();
+   beforeUnmount() {
+      if (this.chart !== undefined) this.chart.destroy();
       this.isMounted = false;
    },
    methods: {
@@ -68,42 +75,42 @@ export default {
          this.$refs.chart.scrollIntoView({ behavior: "smooth" });
       },
       async redraw() {
-         if(!this.isMounted) return;
+         if (!this.isMounted) return;
          let doc = document.documentElement;
-         let top = (window.pageYOffset || doc.scrollTop)  - (doc.clientTop || 0);
-         
-         const switchVals = {};
-         for(let key in this._switches) switchVals[key] = this._switches[key].value;
-         const generationOptions = new GenerationOptions(this.selectors, switchVals)
+         let top = (window.pageYOffset || doc.scrollTop) - (doc.clientTop || 0);
 
-         if(this.chart !== undefined) this.chart.destroy();
+         const switchVals = {};
+         for (let key in this._switches) switchVals[key] = this._switches[key].value;
+         const generationOptions = new GenerationOptions(this.selectors, switchVals);
+
+         if (this.chart !== undefined) this.chart.destroy();
 
          this.chart = new Chart(this.$refs.chart, {
-            type: this.chartType,         
+            type: this.chartType,
             options: {
                maintainAspectRatio: false,
-               responsive: true
+               responsive: true,
             },
             data: {
                datasets: await this.getDatasets(generationOptions),
                labels: await this.getLabels(generationOptions),
-            }
+            },
          });
 
-         window.scrollTo(0, top)
+         window.scrollTo(0, top);
       },
-      async switchMode(key, value){
+      async switchMode(key, value) {
          this._switches[key].value = value;
-         if(this.isMounted) this.switchSessionHandler("save");
+         if (this.isMounted) this.switchSessionHandler("save");
          await this.redraw();
       },
-      switchSessionHandler(action){
-         for(let key in this._switches){
-            if(action === "save"){
-               sessionStorage.setItem("switch-"+key, this._switches[key].value);
-            }else if(action === "load"){
-               const saved = sessionStorage.getItem("switch-"+key);
-               if(saved === undefined || saved === null) continue;
+      switchSessionHandler(action) {
+         for (let key in this._switches) {
+            if (action === "save") {
+               sessionStorage.setItem("switch-" + key, this._switches[key].value);
+            } else if (action === "load") {
+               const saved = sessionStorage.getItem("switch-" + key);
+               if (saved === undefined || saved === null) continue;
                this._switches[key].value = saved;
             }
          }
@@ -111,20 +118,20 @@ export default {
    },
 };
 
-class SwitchModel{
-   constructor(options, _default){
+class SwitchModel {
+   constructor(options, _default) {
       this.options = options;
       this.value = _default;
    }
 }
-class GenerationOptions{
-   constructor(selectors, _switches){
+class GenerationOptions {
+   constructor(selectors, _switches) {
       this.selectors = selectors;
       this.switches = _switches;
    }
 }
-class Dataset{
-   constructor(label="", dataCount=0){
+class Dataset {
+   constructor(label = "", dataCount = 0) {
       this.label = label;
       this.data = [];
       this.backgroundColor = ColorRepo.get(dataCount);
@@ -132,59 +139,58 @@ class Dataset{
       this.key = "";
       this.tension;
    }
-   sumData(mode="abs"){
-      switch(mode){
+   sumData(mode = "abs") {
+      switch (mode) {
          case "abs":
-            this.data = [this.data.reduce((prev, current) => prev + current, 0)]
+            this.data = [this.data.reduce((prev, current) => prev + current, 0)];
             break;
          case "rel":
             let oldLength = this.data.length;
-            this.data = [this.data.reduce((prev, current) => (prev + current), 0) / oldLength];
+            this.data = [this.data.reduce((prev, current) => prev + current, 0) / oldLength];
             break;
       }
-      this.backgroundColor = ColorRepo.get(1)
+      this.backgroundColor = ColorRepo.get(1);
    }
-   newColor(count, offset=0){
+   newColor(count, offset = 0) {
       this.backgroundColor = ColorRepo.get(count, offset);
    }
-   setBorder(offset=0){
-      this.borderColor = this.backgroundColor[offset]
+   setBorder(offset = 0) {
+      this.borderColor = this.backgroundColor[offset];
    }
 }
 
-export { SwitchModel, Dataset }
-
+export { SwitchModel, Dataset };
 </script>
 <style lang="scss" scoped>
-@import "@/styles/_variables.scss";
 @import "@/styles/helper.scss";
+@import "@/styles/variables.scss";
 
-.page{
-   .statistic{   
-      canvas{
+.page {
+   .statistic {
+      canvas {
          height: 100%;
       }
    }
-   .switches{
-      > *{
+   .switches {
+      > * {
          margin: $margin;
       }
    }
-   &.desktop{
-      .statistic{
+   &.desktop {
+      .statistic {
          height: 70vh;
       }
-      .switches{
+      .switches {
          display: flex;
       }
    }
-   &.tablet{
-      .statistic{
+   &.tablet {
+      .statistic {
          height: 80vh;
       }
    }
-   &.mobile{
-      .statistic{
+   &.mobile {
+      .statistic {
          height: 80vh;
       }
    }
