@@ -190,7 +190,9 @@ export { SwitchModel, Dataset, DatasetGroup };
 @import "@/styles/helper.scss";
 @import "@/styles/assets.scss";
 @import "@/styles/variables.scss";
-
+#mychart {
+   width: 0;
+}
 .page {
    .statistic {
       canvas {

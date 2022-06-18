@@ -7,15 +7,7 @@ import ScrollSelector, { Item } from "./ScrollSelector.vue";
 <template>
    <div class="nav-container" :class="mq.current">
       <div class="center">
-         <Switch
-            :options="['Sandkasten', 'Ranglisten']"
-            :default="page"
-            @switch="
-               (newpage) => {
-                  page = newpage;
-               }
-            "
-         />
+         <Switch :options="['Sandkasten', 'Ranglisten']" :default="page" @switch="changePage" />
       </div>
       <div class="scroll-selector vert-center">
          <ScrollSelector
@@ -35,14 +27,34 @@ export default {
    inject: ["page", "statistic", "mq"],
    data() {
       return {
-         items: [
-            new Item("Gesamtzahlen", "gesamtzahlen"),
-            new Item("Nach Zeit", "zeit"),
-            new Item("Beziehungen", "beziehungen"),
-            new Item("Relativ", "relativ"),
-            new Item("Im Vergleich", "vergleich"),
-         ],
+         itemsContainer: {
+            Sandkasten: [
+               new Item("Gesamtzahlen", "gesamtzahlen"),
+               new Item("Nach Zeit", "zeit"),
+               new Item("Beziehungen", "beziehungen"),
+               new Item("Relativ", "relativ"),
+               new Item("Im Vergleich", "vergleich"),
+               // new Item("Durchschnitte", "durchschnitt"),
+            ],
+            Ranglisten: [
+               new Item("Gesamtzahlen", "gesamtzahlen"),
+               new Item("Nach Zeit", "zeit"),
+               new Item("Beziehungen", "beziehungen"),
+               new Item("Relativ", "relativ"),
+            ],
+         },
+         items: [],
       };
+   },
+   mounted() {
+      this.changePage(this.page);
+   },
+   methods: {
+      changePage(newPage) {
+         this.page = newPage;
+         console.log(newPage);
+         this.items = this.itemsContainer[newPage];
+      },
    },
 };
 </script>

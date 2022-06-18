@@ -29,13 +29,13 @@ export default {
          const subst = new Dataset("Vertretungsstunden", options.selectors.length);
          for (let selector of options.selectors) {
             if (typeof selector.name !== "string") continue;
-            const data = await this.fetchStat(`/RelativeOf/${encodeURIComponent(selector.name)}/InComparison`);
-            missed.data.push(data.missed * 100);
-            subst.data.push(data.substituted * 100);
+            const data = await this.fetchStat(`/CountOf/${encodeURIComponent(selector.name)}`);
+            missed.data.push(data.missed);
+            subst.data.push(data.substituted);
          }
          if (sumData) {
-            missed.sumData("rel");
-            subst.sumData("rel");
+            missed.sumData();
+            subst.sumData();
          }
          if (options.switches.attendance === "Fehlstunden") return [missed];
          if (options.switches.attendance === "Vertretungsstunden") return [subst];
@@ -43,11 +43,10 @@ export default {
       },
       async getExplanation(options, chart) {
          const attendance = options.switches.attendance === "beides" ? "Fehl- und Vertretungsstunden" : options.switches.attendance;
-         const recordedDays = await this.fetchStat(`/RecordedDays/Count`);
-         return `Das Diagramm zeigt die ${attendance} verglichen mit der durchschnittlichen Anzahl an ${attendance} des Typs - die Angaben sind also in Prozent. Das bedeutet: Es werden die relativen ${attendance} (siehe Statistik 'relativ') genommen und diese mit der durchschnitlichen relativen Zahl an ${attendance} des Typs (Lehrer, Klassen, Kurse, ...) ins Verhältnis genommen. Hohe Werte bedeuten also, das der Name verglichen mit seinem Typ sehr viel ${attendance} hat. 
+         return `Das Diagramm zeigt die Gesamtheit aller ${attendance}.
          ${
             options.switches.sumMode === "addieren"
-               ? `Die Daten aller ausgewählten Namen werden hierbei relativ addiert (es wird das arithmetische Mittel der Prozente gebildet), so dass die Summe ihrer ${attendance} sichtbar ist.`
+               ? `Die Daten aller ausgewählten Namen werden hierbei addiert, so dass die Summe ihrer ${attendance} sichtbar ist.`
                : ""
          }
          `;

@@ -202,11 +202,6 @@ main {
 <style lang="scss">
 @import "@/styles/_variables.scss";
 main {
-   .statistic {
-      background-color: $col-medium;
-      margin: $margin 0;
-      border-radius: $border-radius;
-   }
    // &.desktop{
    //    .statistic{
    //       min-height: 60vh;
