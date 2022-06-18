@@ -8,7 +8,7 @@ import Modal from "@/components/modal/Modal.vue";
 import Bookmarks from "./BookMarks.vue";
 </script>
 <template>
-   <div class="name-selectors-container" :class="mq.current">
+   <div class="name-selectors-container box" :class="mq.current">
       <div class="actions">
          <button class="btn-svg" @click="showBookmarks = true"><IconRepo name="save" /></button>
          <button class="btn-svg" @click="deleteAll()"><IconRepo name="delete" /></button>
@@ -94,11 +94,10 @@ class Selector {
 <style lang="scss" scoped>
 @import "@/styles/_variables.scss";
 @import "@/styles/components.scss";
+@import "@/styles/assets.scss";
 @import "@/styles/helper.scss";
 .name-selectors-container {
    width: 100%;
-   background-color: $col-medium;
-   padding: $padding;
    border-radius: $border-radius;
    box-sizing: border-box;
 

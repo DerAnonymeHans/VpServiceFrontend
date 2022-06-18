@@ -5,7 +5,7 @@ import Statistic, { SwitchModel, Dataset } from "../../components/Statistic.vue"
 import TimeType from "../../enums/TimeType.js";
 </script>
 <template>
-   <Statistic :getDatasets="getDatasets" :getLabels="getLabels" chartType="line" :_switches="switchModel" />
+   <Statistic :getDatasets="getDatasets" :getLabels="getLabels" :getExplanation="getExplanation" chartType="line" :_switches="switchModel" />
 </template>
 <script>
 export default {
@@ -60,7 +60,7 @@ export default {
                set.setBorder();
                set.tension = 0.5;
                // shift month to start in august
-               set.data = timeType === TimeType.MONTH ? [...data[key].slice(6, Infinity), ...data[key].slice(0, 6)] : data[key];
+               set.data = timeType === TimeType.MONTH ? [...data[key].slice(7, Infinity), ...data[key].slice(0, 7)] : data[key];
                set.key = key;
 
                if (sumData) {
@@ -77,30 +77,18 @@ export default {
                datasets.push(set);
             }
          }
-         // if (sumData) {
-         //    const set1 = new Dataset("", 0)
-         //    set1.newColor(1)
-         //    const set2 = new Dataset("", 0)
-         //    set2.newColor(1, 1)
-         //    for(let set of datasets){
-         //       let newSet = set1;
-         //       if(set.key === "substituted") {
-         //          newSet = set2;
-         //       }
-         //       for(let i = 0; i < set.data.length; i++){
-         //          if(typeof newSet.data[i] !== "number") {
-         //             newSet.data.push(set.data[i])
-         //             continue
-         //          }
-         //          newSet.data[i] += set.data[i]
-         //       }
-         //    }
-         //    if(set1.data.length > 0 && set2.data.length > 0) return [set1, set2];
-         //    if(set1.data.length > 0) return set1;
-         //    return set2;
-         // }
-         console.log(datasets);
          return datasets;
+      },
+      async getExplanation(options, chart) {
+         const attendance = options.switches.attendance === "beides" ? "Fehl- und Vertretungsstunden" : options.switches.attendance;
+         const timeType = options.switches.timeType;
+         return `Das Diagramm zeigt die ${attendance} je nach ${timeType.slice(0, timeType.length - 1)}.
+         ${
+            options.switches.sumMode === "addieren"
+               ? `Die Daten aller ausgewählten Namen werden hierbei addiert, so dass die Summe ihrer ${attendance} sichtbar ist.`
+               : ""
+         }
+         `;
       },
    },
 };

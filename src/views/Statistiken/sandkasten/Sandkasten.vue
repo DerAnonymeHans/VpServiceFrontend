@@ -32,9 +32,4 @@ export default {
 </script>
 <style lang="scss">
 @import "@/styles/_variables.scss";
-.statistic {
-   background-color: $col-medium;
-   margin: $margin 0;
-   border-radius: $border-radius;
-}
 </style>

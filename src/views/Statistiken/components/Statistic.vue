@@ -12,7 +12,7 @@ import { sleep } from "@/App.vue";
       <NameSelectorContainer @selector-change="(selectors) => selectorsChanged(selectors)">
          <slot></slot>
       </NameSelectorContainer>
-      <div class="statistic">
+      <div class="statistic box">
          <canvas id="mychart" ref="chart"></canvas>
       </div>
 
@@ -27,7 +27,7 @@ import { sleep } from "@/App.vue";
          />
       </div>
 
-      <div class="explanation"></div>
+      <div class="explanation box" v-html="explanation"></div>
    </div>
 </template>
 <script>
@@ -42,6 +42,10 @@ export default {
          type: Function,
          required: true,
       },
+      getExplanation: {
+         type: Function,
+         required: true,
+      },
       chartType: {
          type: String,
          required: true,
@@ -50,12 +54,14 @@ export default {
          type: Object,
          required: true, // {sumMode: new SwitchModel(['getrennt', 'addieren'], 'getrennt')}
       },
+      options: Object,
    },
    data() {
       return {
          selectors: [],
          mychart: null,
          isMounted: false,
+         explanation: "",
       };
    },
    created() {
@@ -90,12 +96,20 @@ export default {
             options: {
                maintainAspectRatio: false,
                responsive: true,
+               ...(typeof this.options === "object" ? this.options : {}),
             },
             data: {
                datasets: await this.getDatasets(generationOptions),
                labels: await this.getLabels(generationOptions),
             },
          });
+
+         this.explanation =
+            (await this.getExplanation(generationOptions, this.chart)) +
+            "<br /><br />" +
+            `
+               Der beobachtete Zeitraum beträgt ${await this.fetchStat("/RecordedDays/Count")} Tage. Alle Angaben sind ohne Gewähr.
+            `;
 
          window.scrollTo(0, top);
       },
@@ -138,6 +152,7 @@ class Dataset {
       this.borderColor = "";
       this.key = "";
       this.tension;
+      this.stack;
    }
    sumData(mode = "abs") {
       switch (mode) {
@@ -151,18 +166,29 @@ class Dataset {
       }
       this.backgroundColor = ColorRepo.get(1);
    }
-   newColor(count, offset = 0) {
+   newColor(count, offset = 0, isArray = true) {
       this.backgroundColor = ColorRepo.get(count, offset);
+      if (!isArray) this.backgroundColor = this.backgroundColor[0];
    }
    setBorder(offset = 0) {
       this.borderColor = this.backgroundColor[offset];
    }
 }
-
-export { SwitchModel, Dataset };
+class DatasetGroup {
+   constructor(name) {
+      this.name = name;
+      this.sets = [];
+   }
+   add(dataset) {
+      dataset.stack = this.name;
+      this.sets.push(dataset);
+   }
+}
+export { SwitchModel, Dataset, DatasetGroup };
 </script>
 <style lang="scss" scoped>
 @import "@/styles/helper.scss";
+@import "@/styles/assets.scss";
 @import "@/styles/variables.scss";
 
 .page {
@@ -176,6 +202,11 @@ export { SwitchModel, Dataset };
          margin: $margin;
       }
    }
+
+   .explanation {
+      color: $col-text;
+   }
+
    &.desktop {
       .statistic {
          height: 70vh;

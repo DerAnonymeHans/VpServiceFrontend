@@ -1,12 +1,19 @@
 <!-- @format -->
 
 <script setup>
-import Statistic, { SwitchModel, Dataset } from "../../components/Statistic.vue";
+import Statistic, { SwitchModel, Dataset, DatasetGroup } from "../../components/Statistic.vue";
 import EntityType from "../../enums/EntityType.js";
 import NameSelector from "../../components/NameSelector.vue";
 </script>
 <template>
-   <Statistic :getDatasets="getDatasets" :getLabels="getLabels" chartType="bar" :_switches="switches">
+   <Statistic
+      :getDatasets="getDatasets"
+      :getLabels="getLabels"
+      chartType="bar"
+      :getExplanation="getExplanation"
+      :_switches="switches"
+      :options="chartOptions"
+   >
       <div class="compare-with-container">
          <h4>mit</h4>
          <NameSelector @change="(e) => changeCompareWith(e.target.value)" />
@@ -23,22 +30,32 @@ export default {
          },
          otherName: "Arb",
          labels: [],
+         chartOptions: {
+            scales: {
+               x: {
+                  stacked: true,
+               },
+               y: {
+                  stacked: true,
+               },
+            },
+            interaction: {
+               intersect: false,
+            },
+         },
       };
    },
    methods: {
       changeCompareWith(name) {
-         console.log(name);
          this.otherName = name;
       },
       getLabels(options) {
-         return this.labels;
+         return ["Fehlstunden", "Vertretungsstunden"];
       },
       async getDatasets(options) {
          options.switches.otherType = this.otherType;
 
-         this.labels = [];
-         const missed = new Dataset("Fehlstunden", 1);
-         const subst = new Dataset("Vertretungsstunden", 1);
+         const sets = [];
 
          for (let selector of options.selectors) {
             if (typeof selector.name !== "string") continue;
@@ -48,31 +65,22 @@ export default {
             } catch {
                continue;
             }
-            const missedObj = {
-               name: data.otherName,
-               count: data.missed,
-            };
-            const substObj = {
-               name: data.otherName,
-               count: data.substituted,
-            };
-            let idx = missed.data.findIndex((el) => el.name === missedObj.name);
-            idx = idx === -1 ? subst.data.findIndex((el) => el.name === substObj.name) : idx;
-            if (idx === -1) {
-               if (missedObj.count === 0 && substObj.count === 0) continue;
-               missed.data.push(missedObj);
-               subst.data.push(substObj);
-               this.labels.push(missedObj.name);
-               continue;
-            }
-            missed.data[idx].count += missedObj.count;
-            subst.data[idx].count += substObj.count;
+
+            const set = new Dataset(data.name);
+
+            set.data = [data.missed, data.substituted];
+
+            set.newColor(1, sets.length, false);
+
+            sets.push(set);
          }
-         missed.data = missed.data.map((el) => el.count);
-         missed.newColor(1);
-         subst.data = subst.data.map((el) => el.count);
-         subst.newColor(1, 1);
-         return [missed, subst];
+
+         return sets;
+      },
+      async getExplanation(options, chart) {
+         return `Das Diagramm zeigt die Schnittmenge an Fehl- und Vertretungsstunden zwischen ${
+            options.selectors.length === 1 ? options.selectors[0].name : "den gewählten Namen"
+         } und ${this.otherName}, also welche Beziehung die Namen bezüglich der Fehl- und Vertretungsstunden miteinander haben.`;
       },
    },
 };

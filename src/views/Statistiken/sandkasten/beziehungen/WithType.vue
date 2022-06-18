@@ -5,7 +5,7 @@ import Statistic, { SwitchModel, Dataset } from "../../components/Statistic.vue"
 import EntityType from "../../enums/EntityType.js";
 </script>
 <template>
-   <Statistic :getDatasets="getDatasets" :getLabels="getLabels" chartType="pie" :_switches="switches">
+   <Statistic :getDatasets="getDatasets" :getLabels="getLabels" :getExplanation="getExplanation" chartType="pie" :_switches="switches">
       <div class="compare-with-container">
          <h4>mit</h4>
          <select class="select" @input="(e) => changeCompareWith(e.target.value)">
@@ -61,6 +61,11 @@ export default {
          set.newColor(set.data.length);
          set.borderColor = "#fff";
          return [set];
+      },
+      async getExplanation(options, chart) {
+         return `Das Diagramm zeigt wie sich die ${options.switches.attendance} ${
+            options.selectors.length === 1 ? "von " + options.selectors[0].name : "der Namen"
+         } auf die verschiedenen ${EntityType[Object.keys(EntityType)[parseInt(this.otherType)]].name} aufteilen.`;
       },
    },
 };
