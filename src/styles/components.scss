@@ -1,44 +1,46 @@
+/** @format */
+
 @import "./variables";
 
-
-.btn{
+.btn {
    background-color: $bg-dark;
    color: $color-header-prim;
    border: none;
    border-radius: $border-radius;
-   padding: .5 * $padding;
-   transition: all .5s ease;
-   &:hover, &:focus{
+   padding: 0.5 * $padding;
+   transition: all 0.5s ease;
+   &:hover,
+   &:focus {
       cursor: pointer;
       background-color: lighten($bg-dark, 15%);
-      box-shadow: 0px 0px 0px .5em rgba($bg-dark,0.2);
+      box-shadow: 0px 0px 0px 0.5em rgba($bg-dark, 0.2);
    }
 }
 
-.btn-border{
+.btn-border {
    background-color: $bg-light;
    color: $bg-dark;
    border: 2px $bg-dark solid;
    border-radius: $border-radius;
-   padding: .5 * $padding;
-   transition: all .5s ease;
-   &:hover, &:focus{
+   padding: 0.5 * $padding;
+   transition: all 0.5s ease;
+   &:hover,
+   &:focus {
       cursor: pointer;
-      box-shadow: 0px 0px 0px .5em rgba($bg-dark,0.2);
+      box-shadow: 0px 0px 0px 0.5em rgba($bg-dark, 0.2);
    }
 }
 
-
-.btn-focus{
+.btn-focus {
    background-color: $accent;
    color: $color-header-prim;
    padding: $padding $padding * 4;
    border: none;
    border-radius: $border-radius;
    font-weight: bold;
-   letter-spacing: .2em;
+   letter-spacing: 0.2em;
 
-   transition: all .5s ease;
+   transition: all 0.5s ease;
 
    animation-name: beat;
    animation-duration: 2s;
@@ -46,54 +48,60 @@
    animation-iteration-count: infinite;
    animation-fill-mode: forwards;
 
-
-   &:hover, &:focus{
+   &:hover,
+   &:focus {
       background-color: lighten($accent, 5%);
-      box-shadow: 0px 0px 0px .5em rgba($accent,0.2);
+      box-shadow: 0px 0px 0px 0.5em rgba($accent, 0.2);
       cursor: pointer;
       outline: none;
    }
 }
 
-.btn-svg{
+.btn-svg {
    appearance: none;
    border: none;
    background: none;
    outline: none;
-   transition: all .1s ease;
+   transition: all 0.1s ease;
    border-radius: $border-radius;
-   width: 3em;
-   color: rgba(0,0,0,0);
+   width: 2em;
+   color: rgba(0, 0, 0, 0);
    place-items: center;
+   padding: 0;
 
    svg {
       width: 100%;
    }
 
-   &:hover{
+   &:hover {
       cursor: pointer;
       color: $bg-dark;
    }
 }
 
-@keyframes beat{
-   0% { transform: scale(1)}
-   50% { transform: scale(1.05)}
-   100% { transform: scale(1)}
+@keyframes beat {
+   0% {
+      transform: scale(1);
+   }
+   50% {
+      transform: scale(1.05);
+   }
+   100% {
+      transform: scale(1);
+   }
 }
 
-
-
-.select{
+.select {
    cursor: pointer;
    border-radius: $border-radius;
    padding-right: $padding;
    border: 2px solid $bg-dark;
-   width: 100%;      
+   width: 100%;
    // appearance: none;
    user-select: none;
 
-   &:focus, &:hover{
+   &:focus,
+   &:hover {
       outline: none;
    }
 }

@@ -1,9 +1,14 @@
 <!-- @format -->
-
+<script setup>
+import IconRepo from "@/repos/IconRepo.vue";
+</script>
 <template>
    <Transition name="modal">
       <div v-show="isOpen" class="modal-container" :class="mq.current">
-         <h3>{{ title }}</h3>
+         <div class="flex head">
+            <h3>{{ title }}</h3>
+            <button class="btn-svg" @click="close(close)"><IconRepo name="close" /></button>
+         </div>
          <div v-html="content"></div>
          <slot></slot>
          <div v-for="button in buttons" :key="button.name" class="button-container">
@@ -23,34 +28,34 @@ export default {
          required: true,
       },
    },
-   inject: ['mq'],
+   inject: ["mq"],
    data() {
       return {
-         buttons: [...this.buttons, new Button("Schließen", "btn", this.close)],
-         clickTime: null
+         buttons: [...this.buttons],
+         clickTime: null,
       };
    },
    updated() {
-      if(this.isOpen){
+      if (this.isOpen) {
          this.clickTime = Date.now();
-         window.addEventListener("click", this.onClick)
-      }else{
-         window.removeEventListener("click", this.onClick)
+         window.addEventListener("click", this.onClick);
+      } else {
+         window.removeEventListener("click", this.onClick);
       }
    },
    methods: {
-      onClick(e){
-         if(this.clickTime === null){
+      onClick(e) {
+         if (this.clickTime === null) {
             this.clickTime = Date.now();
             return;
          }
-         if(this.clickTime > Date.now() - 10) return
+         if (this.clickTime > Date.now() - 10) return;
          const isModal = (el) => {
-            if(el.classList.contains("modal-container")) return true;
-            if(el.id === "app") return false;
+            if (el.classList.contains("modal-container")) return true;
+            if (el.id === "app") return false;
             return isModal(el.parentElement);
-         }
-         if(isModal(e.target)) return;
+         };
+         if (isModal(e.target)) return;
          this.clickTime = null;
          this.close();
       },
@@ -72,9 +77,10 @@ export { Button };
 <style lang="scss">
 @import "@/styles/variables";
 @import "@/styles/components";
+@import "@/styles/helper";
 .modal-container {
-   position: fixed;   
-   height: fit-content;   
+   position: fixed;
+   height: fit-content;
    z-index: 500;
    background-color: $bg-light;
    border-radius: $border-radius;
@@ -83,39 +89,41 @@ export { Button };
    border-top: 1em solid $accent;
    box-sizing: border-box;
 
+   .head {
+      :last-child {
+         margin-left: auto;
+      }
+   }
+
    .button-container {
       margin-top: $margin;
    }
 
    &.modal-enter-active,
    &.modal-leave-active {
-      transition: all .3s ease;
+      transition: all 0.3s ease;
    }
 
    &.modal-enter-from,
    &.modal-leave-to {
       opacity: 0;
-      transform: translateY(50px)
+      transform: translateY(50px);
    }
 
-   &.desktop{
+   &.desktop {
       width: 40vw;
       top: 20vh;
       left: 30vw;
    }
-   &.tablet{
+   &.tablet {
       width: 70vw;
       top: 30vh;
       left: 15vw;
    }
-   &.mobile{
+   &.mobile {
       width: 90vw;
       bottom: 5vh;
       left: 5vw;
    }
 }
-
-
-
-
 </style>

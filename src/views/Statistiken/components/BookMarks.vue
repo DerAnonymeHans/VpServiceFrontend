@@ -13,7 +13,7 @@ import Input from "@/components/input/Input.vue";
       <div class="load-container">
          <div class="select-container">
             <div v-for="option in options" :key="option" :class="{ selected: option.name === selectedOption }" @click="selectOption(option.name)">
-               {{ option.name }}
+               {{ decodeURIComponent(option.name) }}
             </div>
          </div>
          <div class="flex-n-margin buttons">
@@ -33,8 +33,16 @@ export default {
                `[{"type":{"idx":3,"name":"Klassenstufe","color":"#005cff","key":"GRADE"},"name":"5"},{"type":{"idx":3,"name":"Klassenstufe","color":"#005cff","key":"GRADE"},"name":"6"},{"type":{"idx":3,"name":"Klassenstufe","color":"#005cff","key":"GRADE"},"name":"7"},{"type":{"idx":3,"name":"Klassenstufe","color":"#005cff","key":"GRADE"},"name":"8"},{"type":{"idx":3,"name":"Klassenstufe","color":"#005cff","key":"GRADE"},"name":"9"},{"type":{"idx":3,"name":"Klassenstufe","color":"#005cff","key":"GRADE"},"name":"10"},{"type":{"idx":3,"name":"Klassenstufe","color":"#005cff","key":"GRADE"},"name":"11"},{"type":{"idx":3,"name":"Klassenstufe","color":"#005cff","key":"GRADE"},"name":"12"}]`
             ),
             new Option(
-               "Hauptfächer",
+               encodeURIComponent("Hauptfächer"),
                `[{"type":{"idx":1,"name":"Fach","color":"#ff007a","key":"SUBJECT"},"name":"MA"},{"type":{"idx":1,"name":"Fach","color":"#ff007a","key":"SUBJECT"},"name":"DE"},{"type":{"idx":1,"name":"Fach","color":"#ff007a","key":"SUBJECT"},"name":"EN"},{"type":{"idx":1,"name":"Fach","color":"#ff007a","key":"SUBJECT"},"name":"GE"},{"type":{"idx":1,"name":"Fach","color":"#ff007a","key":"SUBJECT"},"name":"BIO"},{"type":{"idx":1,"name":"Fach","color":"#ff007a","key":"SUBJECT"},"name":"CH"},{"type":{"idx":1,"name":"Fach","color":"#ff007a","key":"SUBJECT"},"name":"PH"}]`
+            ),
+            new Option(
+               encodeURIComponent("Nebenfächer"),
+               `[{"type":{"idx":1,"name":"Fach","color":"#ff007a","key":"SUBJECT"},"name":"ERE"},{"type":{"idx":1,"name":"Fach","color":"#ff007a","key":"SUBJECT"},"name":"ETH"},{"type":{"idx":1,"name":"Fach","color":"#ff007a","key":"SUBJECT"},"name":"GEO"},{"type":{"idx":1,"name":"Fach","color":"#ff007a","key":"SUBJECT"},"name":"GRW"},{"type":{"idx":1,"name":"Fach","color":"#ff007a","key":"SUBJECT"},"name":"INF"},{"type":{"idx":1,"name":"Fach","color":"#ff007a","key":"SUBJECT"},"name":"KU"},{"type":{"idx":1,"name":"Fach","color":"#ff007a","key":"SUBJECT"},"name":"MU"},{"type":{"idx":1,"name":"Fach","color":"#ff007a","key":"SUBJECT"},"name":"SPO"},{"type":{"idx":1,"name":"Fach","color":"#ff007a","key":"SUBJECT"},"name":"REE"}]`
+            ),
+            new Option(
+               encodeURIComponent("Leistungskurse 11"),
+               `[{"type":{"idx":2,"name":"Kurs","color":"#7800ff","key":"KURS"},"name":"JG11/ BIO123"},{"type":{"idx":2,"name":"Kurs","color":"#7800ff","key":"KURS"},"name":"JG11/ DE123"},{"type":{"idx":2,"name":"Kurs","color":"#7800ff","key":"KURS"},"name":"JG11/ DE223"},{"type":{"idx":2,"name":"Kurs","color":"#7800ff","key":"KURS"},"name":"JG11/ EN123"},{"type":{"idx":2,"name":"Kurs","color":"#7800ff","key":"KURS"},"name":"JG11/ EN223"},{"type":{"idx":2,"name":"Kurs","color":"#7800ff","key":"KURS"},"name":"JG11/ GE123"},{"type":{"idx":2,"name":"Kurs","color":"#7800ff","key":"KURS"},"name":"JG11/ MA123"},{"type":{"idx":2,"name":"Kurs","color":"#7800ff","key":"KURS"},"name":"JG11/ MA223"},{"type":{"idx":2,"name":"Kurs","color":"#7800ff","key":"KURS"},"name":"JG11/ PH123"}]`
             ),
          ],
          selectedOption: "",
@@ -61,8 +69,9 @@ export default {
          this.selectedOption = key;
       },
       saveOption() {
-         const name = [...document.getElementsByName("save-selector-name")][0].value;
+         let name = [...document.getElementsByName("save-selector-name")][0].value;
          if (name.length === 0) return;
+         name = encodeURIComponent(name);
          const keys = this.optionKeys();
          keys.push(name);
          localStorage.setItem("saved-selector-keys", keys.join("|"));
@@ -75,11 +84,12 @@ export default {
          this.$emit("load");
       },
       deleteOption() {
-         const name = [...document.getElementsByName("save-selector-name")][0].value;
          const keys = this.optionKeys();
-         keys.splice(keys.indexOf(this.selectedOption), 1);
+         const idx = keys.indexOf(this.selectedOption);
+         if (idx === -1) return;
+         keys.splice(idx, 1);
          localStorage.setItem("saved-selector-keys", keys.join("|"));
-         localStorage.removeItem("saved-selector-" + name);
+         localStorage.removeItem("saved-selector-" + this.selectedOption);
          this.getAllOptions();
       },
    },
@@ -97,8 +107,8 @@ class Option {
 @import "@/styles/helper.scss";
 
 .bookmarks {
-   max-height: 50vh;
-   overflow-y: auto;
+   // max-height: 50vh;
+   // overflow-y: auto;
    .save-container {
       display: flex;
       justify-content: center;
@@ -125,7 +135,7 @@ class Option {
          border-radius: $border-radius;
          display: flex;
          flex-direction: column;
-         max-height: 40vh;
+         max-height: min(30vh, 200px);
          overflow-y: auto;
 
          > div {
