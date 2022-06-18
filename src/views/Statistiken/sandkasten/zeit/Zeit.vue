@@ -1,8 +1,9 @@
 <!-- @format -->
 
 <script setup>
-import Statistic, { SwitchModel, Dataset } from "../../components/Statistic.vue";
+import Statistic, { Dataset } from "../../components/Statistic.vue";
 import TimeType from "../../enums/TimeType.js";
+import { SwitchModel } from "@/components/switch/Switch.vue";
 </script>
 <template>
    <Statistic :getDatasets="getDatasets" :getLabels="getLabels" :getExplanation="getExplanation" chartType="line" :_switches="switchModel" />

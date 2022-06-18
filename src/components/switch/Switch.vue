@@ -39,6 +39,15 @@ export default {
       },
    },
 };
+
+class SwitchModel {
+   constructor(options, _default) {
+      this.options = options;
+      this.value = _default;
+   }
+}
+
+export { SwitchModel };
 </script>
 <style lang="scss" scoped>
 @import "@/styles/helper.scss";

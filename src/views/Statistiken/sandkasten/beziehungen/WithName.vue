@@ -1,9 +1,10 @@
 <!-- @format -->
 
 <script setup>
-import Statistic, { SwitchModel, Dataset, DatasetGroup } from "../../components/Statistic.vue";
+import Statistic, { Dataset, DatasetGroup } from "../../components/Statistic.vue";
 import EntityType from "../../enums/EntityType.js";
 import NameSelector from "../../components/NameSelector.vue";
+import { SwitchModel } from "@/components/switch/Switch.vue";
 </script>
 <template>
    <Statistic

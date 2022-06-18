@@ -4,7 +4,7 @@
 import NameSelectorContainer from "@/views/Statistiken/components/NameSelectorContainer.vue";
 import Chart from "chart.js/auto";
 import ColorRepo from "@/repos/ColorRepo.js";
-import Switch from "@/components/switch/Switch.vue";
+import Switch, { SwitchModel } from "@/components/switch/Switch.vue";
 import { sleep } from "@/App.vue";
 </script>
 <template>
@@ -132,12 +132,6 @@ export default {
    },
 };
 
-class SwitchModel {
-   constructor(options, _default) {
-      this.options = options;
-      this.value = _default;
-   }
-}
 class GenerationOptions {
    constructor(selectors, _switches) {
       this.selectors = selectors;
@@ -184,7 +178,7 @@ class DatasetGroup {
       this.sets.push(dataset);
    }
 }
-export { SwitchModel, Dataset, DatasetGroup };
+export { Dataset, DatasetGroup };
 </script>
 <style lang="scss" scoped>
 @import "@/styles/helper.scss";

@@ -17,7 +17,7 @@ import EntityType from "./enums/EntityType.js";
 
       <div class="content">
          <Sandkasten v-if="page === 'Sandkasten'" :statistic="statistic" />
-         <Ranglisten v-if="page === 'Ranglisten'" />
+         <Ranglisten v-if="page === 'Ranglisten'" :statistic="statistic" />
       </div>
    </main>
    <Modal :isOpen="showModal" @close="showModal = !showModal" :title="modalTitle" :content="modalContent" :buttons="[]"></Modal>

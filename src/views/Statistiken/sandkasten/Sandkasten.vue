@@ -1,7 +1,6 @@
 <!-- @format -->
 
 <script setup>
-import { SwitchModel } from "../components/Statistic.vue";
 import Gesamtzahlen from "./gesamtzahlen/Gesamtzahlen.vue";
 import Zeit from "./zeit/Zeit.vue";
 import Beziehungen from "./beziehungen/Beziehungen.vue";
