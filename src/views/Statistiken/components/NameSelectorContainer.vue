@@ -30,7 +30,7 @@ import Bookmarks from "./BookMarks.vue";
          <button class="btn-focus vert-center" @click="$emit('selector-change', selectors)">Diagramm erstellen</button>
       </div>
       <Modal :isOpen="showBookmarks" @close="showBookmarks = !showBookmarks" :title="modalTitle" :content="''" :buttons="[]">
-         <Bookmarks @load="getSelectors()" />
+         <Bookmarks @load="load()" />
       </Modal>
    </div>
 </template>
@@ -48,6 +48,10 @@ export default {
       this.getSelectors();
    },
    methods: {
+      load() {
+         this.getSelectors();
+         this.showBookmarks = false;
+      },
       getSelectors() {
          const selectors = JSON.parse(sessionStorage.getItem("cached-selectors"));
          if (!Array.isArray(selectors)) return;

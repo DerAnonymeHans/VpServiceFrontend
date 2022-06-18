@@ -12,7 +12,18 @@ import Input from "@/components/input/Input.vue";
       <hr />
       <div class="load-container">
          <div class="select-container">
-            <div v-for="option in options" :key="option" :class="{ selected: option.name === selectedOption }" @click="selectOption(option.name)">
+            <div
+               v-for="option in options"
+               :key="option"
+               :class="{ selected: option.name === selectedOption }"
+               @click="selectOption(option.name)"
+               @dblclick="
+                  () => {
+                     selectOption(option.name);
+                     load();
+                  }
+               "
+            >
                {{ decodeURIComponent(option.name) }}
             </div>
          </div>
