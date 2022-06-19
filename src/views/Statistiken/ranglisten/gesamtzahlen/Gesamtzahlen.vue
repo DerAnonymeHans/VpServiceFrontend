@@ -9,7 +9,7 @@ import EntityType from "../../enums/EntityType.js";
    <div>
       <Ranking :_switches="switches" :getRanklist="getRanklist" :getExplanation="getExplanation">
          <div class="flex">
-            <select class="select" @input="(e) => (includeWho = e.target.value)">
+            <select class="select" @input="(e) => changeType(e.target.value)" :value="includeWho">
                <option v-for="key in Object.keys(EntityType)" :key="key" :value="EntityType[key].idx">{{ EntityType[key].name }}</option>
             </select>
          </div>
@@ -25,6 +25,9 @@ export default {
          includeWho: "0",
       };
    },
+   mounted() {
+      this.changeType(sessionStorage.getItem("cached-type-selector"));
+   },
    methods: {
       async getRanklist(options) {
          const res = await this.fetchStat(`/SortCountsOf/${this.includeWho}/By/${options.switches.sortBy}`);
@@ -39,6 +42,11 @@ export default {
          const type = EntityType[Object.keys(EntityType)[this.includeWho]];
          let sortBy = sortByToSentence(options.switches.sortBy);
          return `Die Statistik zeigt die ${type.name} mit den ${sortBy}.`;
+      },
+      changeType(newType) {
+         if (parseInt(newType) != newType) return;
+         this.includeWho = newType;
+         sessionStorage.setItem("cached-type-selector", newType);
       },
    },
 };

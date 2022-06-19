@@ -102,7 +102,7 @@ export default {
    mounted() {
       this.isMounted = true;
       this._switches.sortBy = new SwitchModel(["Top-Fehl", "Top-Ver", "Flop-Fehl", "Flop-Ver"], "Top-Fehl");
-      // this.redraw();
+      this.switchSessionHandler("load");
    },
    methods: {
       async switchMode(key, value) {

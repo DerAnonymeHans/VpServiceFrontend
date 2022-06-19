@@ -16,6 +16,7 @@ export default {
    data() {
       return {
          selected: 0,
+         mydefault: this.default,
       };
    },
    inject: ["mq"],
@@ -27,13 +28,24 @@ export default {
       default: String,
    },
    mounted() {
-      const idx = this.items.findIndex((item) => item.key === this.default);
-      if (idx === -1) return;
-      this.onClick(idx);
+      setTimeout(() => {
+         const idx = this.items.findIndex((item) => item.key === this.mydefault);
+         if (idx === -1) return;
+         this.onClick(idx);
+      }, 0);
+   },
+
+   updated() {
+      const idx = this.items.findIndex((item) => item.key === this.mydefault);
+      if (idx === -1) {
+         this.onClick(0);
+         return;
+      }
    },
    methods: {
       onClick(idx) {
          this.selected = idx;
+         this.mydefault = this.items[this.selected].key;
          this.$emit("select", this.items[this.selected]);
       },
    },

@@ -9,7 +9,7 @@ import EntityType from "../../enums/EntityType.js";
    <div>
       <Ranking :_switches="switches" :getRanklist="getRanklist" :getExplanation="getExplanation">
          <div class="flex">
-            <select class="select" @input="(e) => (includeWho = e.target.value)">
+            <select class="select" @input="(e) => changeType(e.target.value)" :value="includeWho">
                <option v-for="key in Object.keys(EntityType)" :key="key" :value="EntityType[key].idx">{{ EntityType[key].name }}</option>
             </select>
          </div>
@@ -24,6 +24,9 @@ export default {
          switches: {},
          includeWho: "0",
       };
+   },
+   mounted() {
+      this.changeType(sessionStorage.getItem("cached-type-selector"));
    },
    methods: {
       async getRanklist(options) {
@@ -43,6 +46,11 @@ export default {
          } mit den ${sortBy} relativ gesehen. Diese Statistik hat die meiste Aussagekraft wenn man Ausfall und Vertretung von ${
             type.name.slice(type.name.length - 1) === "n" ? type.name : type.name + "n"
          } bewerten will, da sie die Gesamtsunden mit in Betracht bezieht.`;
+      },
+      changeType(newType) {
+         if (parseInt(newType) != newType) return;
+         this.includeWho = newType;
+         sessionStorage.setItem("cached-type-selector", newType);
       },
    },
 };

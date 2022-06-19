@@ -9,7 +9,7 @@ import { SwitchModel } from "@/components/switch/Switch.vue";
    <Statistic :getDatasets="getDatasets" :getLabels="getLabels" :getExplanation="getExplanation" chartType="pie" :_switches="switches">
       <div class="compare-with-container">
          <h4>mit</h4>
-         <select class="select" @input="(e) => changeCompareWith(e.target.value)">
+         <select class="select" @input="(e) => changeType(e.target.value)" :value="otherType">
             <option v-for="key in Object.keys(EntityType)" :key="key" :value="EntityType[key].idx">{{ EntityType[key].name }}</option>
          </select>
       </div>
@@ -27,9 +27,14 @@ export default {
          labels: [],
       };
    },
+   mounted() {
+      this.changeType(sessionStorage.getItem("cached-type-selector"));
+   },
    methods: {
-      changeCompareWith(type) {
-         this.otherType = type;
+      changeType(newType) {
+         if (parseInt(newType) != newType) return;
+         this.otherType = newType;
+         sessionStorage.setItem("cached-type-selector", newType);
       },
       getLabels(options) {
          return this.labels;
@@ -42,7 +47,12 @@ export default {
 
          for (let selector of options.selectors) {
             if (typeof selector.name !== "string") continue;
-            const data = await this.fetchStat(`/Compare/${encodeURIComponent(selector.name)}/WithType/${encodeURIComponent(this.otherType)}`);
+            let data;
+            try {
+               data = await this.fetchStat(`/Compare/${encodeURIComponent(selector.name)}/WithType/${encodeURIComponent(this.otherType)}`, false);
+            } catch {
+               continue;
+            }
             for (const statistic of data) {
                const obj = {
                   name: statistic.otherName,
@@ -50,12 +60,18 @@ export default {
                };
                const idx = set.data.findIndex((el) => el.name === obj.name);
                if (idx === -1) {
-                  if (obj.count === 0) continue;
                   set.data.push(obj);
                   this.labels.push(obj.name);
                   continue;
                }
                set.data[idx].count += obj.count;
+            }
+         }
+         for (let i = 0; i < set.data.length; i++) {
+            if (set.data[i].count <= 0) {
+               this.labels.splice(i, 1);
+               set.data.splice(i, 1);
+               i--;
             }
          }
          set.data = set.data.map((el) => el.count);

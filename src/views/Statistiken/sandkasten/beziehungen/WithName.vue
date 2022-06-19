@@ -46,8 +46,10 @@ export default {
          },
       };
    },
+   mounted() {},
    methods: {
       changeCompareWith(name) {
+         if (name === null) return;
          this.otherName = name;
       },
       getLabels(options) {

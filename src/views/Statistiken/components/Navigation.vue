@@ -52,7 +52,6 @@ export default {
    methods: {
       changePage(newPage) {
          this.page = newPage;
-         console.log(newPage);
          this.items = this.itemsContainer[newPage];
       },
    },

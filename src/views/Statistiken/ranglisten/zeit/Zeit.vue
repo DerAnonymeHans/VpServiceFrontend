@@ -10,10 +10,10 @@ import { Months, Weekdays, Lessons } from "../../enums/TimeType.js";
    <div>
       <Ranking :_switches="switches" :getRanklist="getRanklist" :getExplanation="getExplanation">
          <div class="flex-n-margin">
-            <select class="select" @input="(e) => (includeWho = e.target.value)">
+            <select class="select" @input="(e) => changeType(e.target.value)" :value="includeWho">
                <option v-for="key in Object.keys(EntityType)" :key="key" :value="EntityType[key].idx">{{ EntityType[key].name }}</option>
             </select>
-            <select class="select" @input="(e) => (timeName = e.target.value)">
+            <select class="select" @input="(e) => changeTime(e.target.value)" :value="timeName">
                <optgroup label="Monate">
                   <option v-for="month in Months" :key="month" :value="month.key">{{ month.name }}</option>
                </optgroup>
@@ -39,6 +39,10 @@ export default {
          includeWho: "0",
          timeName: "january",
       };
+   },
+   mounted() {
+      this.changeType(sessionStorage.getItem("cached-type-selector"));
+      this.changeTime(sessionStorage.getItem("cached-time-selector"));
    },
    methods: {
       async getRanklist(options) {
@@ -68,6 +72,16 @@ export default {
             // wenn Stunde
             if (timeType.length === 8) return `der ${timeType[idx].name}n Stunde`;
          }
+      },
+      changeType(newType) {
+         if (parseInt(newType) != newType) return;
+         this.includeWho = newType;
+         sessionStorage.setItem("cached-type-selector", newType);
+      },
+      changeTime(newTime) {
+         if (newTime === null) return;
+         this.timeName = newTime;
+         sessionStorage.setItem("cached-time-selector", newTime);
       },
    },
 };

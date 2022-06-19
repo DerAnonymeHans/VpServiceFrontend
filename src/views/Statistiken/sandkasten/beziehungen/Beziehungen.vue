@@ -9,7 +9,7 @@ import WithName from "./WithName.vue";
 <template>
    <div class="beziehungen-page" :class="mq.current">
       <div class="beziehungen-header">
-         <Switch :invert="true" :options="compareModeOptions" :default="compareModeValue" @switch="(to) => (compareModeValue = to)" />
+         <Switch :invert="true" :options="compareModeOptions" :default="compareModeValue" @switch="(to) => switchCompareMode(to)" />
       </div>
       <div class="beziehungen-main">
          <WithType v-if="compareModeValue === 'Typ'" />
@@ -27,13 +27,14 @@ export default {
          compareModeValue: "Name",
       };
    },
-   mounted() {
-      this.isMounted = true;
+   created() {
+      this.switchCompareMode(sessionStorage.getItem("switch-compare-mode"));
    },
    methods: {
       switchCompareMode(mode) {
-         if (!this.isMounted) return;
+         if (mode === null) return;
          this.compareModeValue = mode;
+         sessionStorage.setItem("switch-compare-mode", mode);
       },
    },
 };

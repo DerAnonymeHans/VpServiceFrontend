@@ -188,6 +188,10 @@ export { Dataset, DatasetGroup };
    width: 0;
 }
 .page {
+   > * {
+      margin-bottom: $margin;
+   }
+
    .statistic {
       canvas {
          height: 100%;
