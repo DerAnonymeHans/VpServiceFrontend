@@ -16,18 +16,8 @@ import { fetchAPI } from "@/App.vue";
 <script>
 export default {
    inject: ["mq"],
-   data() {
-      return {
-         userCount: "#",
-      };
-   },
-   mounted() {
-      fetchAPI("/GetUserCount")
-         .then((res) => res.json())
-         .then((res) => {
-            if (res.isSuccess) this.userCount = res.body;
-            else this.userCount = "#";
-         });
+   props: {
+      userCount: String,
    },
 };
 </script>

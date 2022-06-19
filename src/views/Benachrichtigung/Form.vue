@@ -41,6 +41,7 @@ export default {
                if (res.isSuccess) {
                   this.modalTitle = "Erfolg";
                   e.target.reset();
+                  this.$emit("newUser");
                } else this.modalTitle = "Fehlschlag";
 
                this.modalContent = res.message;
