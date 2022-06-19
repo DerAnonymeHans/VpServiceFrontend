@@ -24,12 +24,6 @@ import { sleep } from "@/App.vue";
       </div>
 
       <div class="podest-container box">
-         <!-- <div v-for="(place, idx) in places" :key="idx" :class="place.label" class="podest-item">
-            <div v-show="podest[`is${place.label}`]" class="name">{{ podest[place.label] }}</div>
-            <div class="podest">
-               <div class="label">{{ place.num }}</div>
-            </div>
-         </div> -->
          <div class="podest-item second">
             <div class="name">{{ podest.second }}</div>
             <div class="podest">
@@ -62,6 +56,10 @@ import { sleep } from "@/App.vue";
             </tr>
          </table>
       </div>
+
+      <div class="explanation box">
+         {{ explanation }}
+      </div>
    </div>
 </template>
 <script>
@@ -73,6 +71,10 @@ export default {
          required: true, // {sumMode: new SwitchModel(['getrennt', 'addieren'], 'getrennt')}
       },
       getRanklist: {
+         type: Function,
+         required: true,
+      },
+      getExplanation: {
          type: Function,
          required: true,
       },
@@ -94,6 +96,7 @@ export default {
             { label: "third", num: 3 },
          ],
          isMounted: false,
+         explanation: "",
       };
    },
    mounted() {
@@ -113,6 +116,7 @@ export default {
          const options = new GenerationOptions(switchVals);
          this.rankList = await this.getRanklist(options);
          this.doPodest();
+         this.explanation = await this.getExplanation(options);
       },
       doPodest() {
          this.podest.first = this.rankList[0].Name;
@@ -156,6 +160,21 @@ class GenerationOptions {
       }
    }
 }
+
+function sortByToSentence(sortBy) {
+   switch (sortBy) {
+      case "mm":
+         return "meisten Fehlstunden";
+      case "lm":
+         return "wenigsten Fehlstunden";
+      case "ms":
+         return "meisten Vertretungsstunden";
+      case "ls":
+         return "wenigsten Vertretungsstunden";
+   }
+}
+
+export { sortByToSentence };
 </script>
 <style lang="scss" scoped>
 @import "@/styles/helper.scss";
