@@ -41,8 +41,8 @@ export default {
 };
 </script>
 <style lang="scss">
-@import "@/styles/variables";
 @import "@/styles/helper";
+@import "@/styles/variables.scss";
 section {
    margin-bottom: $margin * 5;
    .heading-container {
