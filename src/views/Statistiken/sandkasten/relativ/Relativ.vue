@@ -59,7 +59,7 @@ export default {
          <br />
          <br />
          ${(() => {
-            let html = "<table><tr><th>Name</th><th>Wochenstunden</th><th>Gesamtstunden</th>";
+            let html = '<table style="text-align:center"><tr><th>Name</th><th>Wochenstunden</th><th>Gesamtstunden</th>';
             for (let i = 0; i < options.selectors.length; i++) {
                html += `<tr><td>${options.selectors[i].name}</td><td>${Math.round((this.expectedHours[i] / recordedDays) * 5)}</td><td>${Math.round(
                   this.expectedHours[i]

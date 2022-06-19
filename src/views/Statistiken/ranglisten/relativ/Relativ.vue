@@ -27,11 +27,11 @@ export default {
    },
    methods: {
       async getRanklist(options) {
-         const res = await this.fetchStat(`/SortCountsOf/${this.includeWho}/By/${options.switches.sortBy}`);
+         const res = await this.fetchStat(`/SortRelativesOf/${this.includeWho}/By/${options.switches.sortBy}`);
          const key = options.switches.sortBy.slice(1) === "m" ? "missed" : "substituted";
          const data = [];
          for (let item of res) {
-            data.push({ Name: item.name, Stundenzahl: item[key] });
+            data.push({ Name: item.name, "Stundenzahl in %": Math.round(item[key] * 100) });
          }
          return data;
       },

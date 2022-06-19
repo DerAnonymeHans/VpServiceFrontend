@@ -97,8 +97,9 @@
    padding-right: $padding;
    border: 2px solid $col-dark;
    width: 100%;
-   // appearance: none;
    user-select: none;
+   background-color: $col-dark;
+   color: $col-light;
 
    &:focus,
    &:hover {

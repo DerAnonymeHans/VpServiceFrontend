@@ -113,8 +113,7 @@ class Selector {
    .selectors {
       display: grid;
       grid-gap: $margin;
-      grid-template-columns: repeat(auto-fit, max(10vw, 150px));
-      // justify-content: center;
+      grid-template-columns: repeat(auto-fit, max(10vw, 140px));
 
       .name-selectors-add {
          width: 1em;
