@@ -7,7 +7,7 @@ import EntityType from "../enums/EntityType.js";
    <div class="name-select-container">
       <div class="name-select-delete" @click="deleteSelf()"></div>
       <div class="select-wrapper">
-         <select :value="defaultName !== undefined ? defaultName : options[0]" @input="onSelect">
+         <select :value="selectedName === undefined ? options[0] : selectedName" @input="onSelect">
             <option v-for="option in options" :key="option" :value="option">{{ option }}</option>
          </select>
       </div>
@@ -24,28 +24,31 @@ export default {
    data() {
       return {
          entityType: EntityType.TEACHER,
+         selectedName: null,
          options: [],
       };
    },
    mounted() {
-      if (typeof this.defaultType === "object") return this.changeEntityType(this.defaultType, false);
-      if (typeof sessionStorage.getItem("entity-type") !== "number") return this.changeEntityType(EntityType.TEACHER);
-
-      this.changeEntityType(sessionStorage.getItem("entity-type"));
+      if (typeof this.defaultType === "object") this.changeEntityType(this.defaultType, false);
+      else if (typeof sessionStorage.getItem("entity-type") !== "number") return this.changeEntityType(EntityType.TEACHER);
+      else this.changeEntityType(sessionStorage.getItem("entity-type"));
+      this.selectedName = this.defaultName;
    },
    methods: {
       async getOptions() {
          this.options = await this.fetchStat(`/Names/${this.entityType.idx}`);
-         if (isNaN(parseInt(this.options[0]))) {
-            this.options = this.options.sort();
-         } else {
+         // if only numbers
+         if (parseInt(this.options[0]) == this.options[0]) {
             this.options = this.options.sort((a, b) => a - b);
+         } else {
+            this.options = this.options.sort();
          }
-         this.onSelect({ target: { value: this.defaultName !== undefined ? this.defaultName : this.options[0] } });
+         this.onSelect({ target: { value: this.selectedName !== undefined ? this.selectedName : this.options[0] } });
       },
       changeEntityType(type, isUpdate = true) {
          this.entityType = type;
          this.getOptions();
+         this.selectedName = undefined;
          if (isUpdate) this.$emit("typeChange", this.entityType);
       },
       nextType() {
@@ -54,7 +57,8 @@ export default {
          this.changeEntityType(EntityType[keys[this.entityType.idx + 1 < keys.length ? this.entityType.idx + 1 : 0]]);
       },
       onSelect(e) {
-         this.$emit("select", e.target.value);
+         this.selectedName = e.target.value;
+         this.$emit("select", this.selectedName);
       },
       deleteSelf() {
          this.$emit("delete");

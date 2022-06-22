@@ -21,7 +21,7 @@ import Bookmarks from "./BookMarks.vue";
             :defaultName="selector.name"
             @select="(val) => onSelect(selector, val)"
             @delete="deleteSelector(selector)"
-            @typeChange="(type) => this.onTypeChange(selector, type)"
+            @typeChange="(type) => onTypeChange(selector, type)"
          />
          <button class="name-selectors-add btn" @click="addSelector"></button>
       </div>
