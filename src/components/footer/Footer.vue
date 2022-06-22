@@ -26,14 +26,13 @@ export default {
          this.modalTitle = type;
          switch (type) {
             case "Datenschutz":
-               this.modalContent = "Auf Vertrauensbasis";
+               this.modalContent = "Auf Vertrauensbasis ;)";
                break;
             case "Kontakt":
-               this.modalContent =
-                  "Bitte nicht. <br><br> Aber wenn es unbedingt sein muss dann eine Email an 'vp.mailservice.kepler@gmail.com'. Antwort könnte eine Weile dauern";
+               this.modalContent = "Wenn es unbedingt sein muss dann eine Email an 'vp.mailservice.kepler@gmail.com'";
                break;
             case "AGB":
-               this.modalContent = `Was ist das überhaupt <details><summary>Unwichtiges Zeug</summary>Durch abonnieren der Email übertrage ich jegliche Eigentumsrechte an meiner Seele an den Inhaber der Seite. Achja, und mein ganzes Geld ebenfalls. Ist ein fairer Deal, die Emails sind toll. Vertrau mir.</details>`;
+               this.modalContent = `Keine`;
                break;
          }
          this.showModal = true;
