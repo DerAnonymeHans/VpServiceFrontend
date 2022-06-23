@@ -12,6 +12,12 @@ import Save from "@/assets/icons/save.svg?component";
 import Close from "@/assets/icons/close.svg?component";
 import Settings from "@/assets/icons/settings.svg?component";
 import Info from "@/assets/icons/info.svg?component";
+import Help from "@/assets/icons/help.svg?component";
+import Code from "@/assets/icons/code.svg?component";
+import Quotes from "@/assets/icons/quotes.svg?component";
+import Table from "@/assets/icons/table.svg?component";
+import StatCreation from "@/assets/icons/statCreation.svg?component";
+import Thunder from "@/assets/icons/thunder.svg?component";
 </script>
 <template>
    <Gesamtzahlen v-if="name === 'gesamtzahlen'" />
@@ -25,6 +31,12 @@ import Info from "@/assets/icons/info.svg?component";
    <Close v-if="name === 'close'" />
    <Settings v-if="name === 'settings'" />
    <Info v-if="name === 'info'" />
+   <Help v-if="name === 'help'" />
+   <Quotes v-if="name === 'quotes'" />
+   <Code v-if="name === 'code'" />
+   <Table v-if="name === 'table'" />
+   <StatCreation v-if="name === 'statCreation'" />
+   <Thunder v-if="name === 'thunder'" />
 </template>
 <script>
 export default {

@@ -31,8 +31,8 @@ export default {
          for (let selector of options.selectors) {
             if (typeof selector.name !== "string") continue;
             const data = await this.fetchStat(`/RelativeOf/${encodeURIComponent(selector.name)}/InComparison`);
-            missed.data.push(data.missed * 100);
-            subst.data.push(data.substituted * 100);
+            missed.data.push((data.missed * 100).toFixed(2));
+            subst.data.push((data.substituted * 100).toFixed(2));
          }
          if (sumData) {
             missed.sumData("rel");

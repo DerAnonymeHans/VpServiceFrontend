@@ -34,7 +34,7 @@ export default {
          const key = options.switches.sortBy.slice(1) === "m" ? "missed" : "substituted";
          const data = [];
          for (let item of res) {
-            data.push({ Name: item.name, "Stundenzahl in %": Math.round(item[key] * 100) });
+            data.push({ Name: item.name, "Stundenzahl in %": (item[key] * 100).toFixed(2) });
          }
          return data;
       },
