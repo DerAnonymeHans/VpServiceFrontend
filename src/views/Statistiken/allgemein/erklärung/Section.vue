@@ -3,7 +3,7 @@
 import IconRepo from "@/repos/IconRepo.vue";
 </script>
 <template>
-   <div class="section flex" :class="{ invert: isInvert }">
+   <div class="section flex" :class="[isInvert ? 'invert' : '', mq.current]">
       <div class="icon">
          <IconRepo :name="svg" />
       </div>
@@ -15,6 +15,7 @@ import IconRepo from "@/repos/IconRepo.vue";
 </template>
 <script>
 export default {
+   inject: ["mq"],
    props: {
       svg: {
          type: String,
@@ -40,9 +41,6 @@ export default {
 
    .icon {
       color: $accent;
-      height: 10vh;
-      aspect-ratio: 1;
-      margin-right: $margin;
    }
    h3 {
       margin-top: 0;
@@ -53,6 +51,26 @@ export default {
       .icon {
          margin-right: 0;
          margin-left: $margin;
+      }
+   }
+
+   &.desktop,
+   &.tablet {
+      flex-direction: row;
+      .icon {
+         height: 10vh;
+         aspect-ratio: 1;
+         margin-right: $margin;
+      }
+   }
+   &.mobile {
+      flex-direction: column;
+      .icon {
+         $size: 30vw;
+         height: $size;
+         width: $size;
+         margin: auto;
+         margin-bottom: $margin;
       }
    }
 }
