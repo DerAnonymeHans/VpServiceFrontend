@@ -16,7 +16,7 @@ export default {
       return {
          fehlVerContent: `<b>Fehlstunden:</b> Anzahl der Stunden die der <abbr title="Zusammenfassung von Lehrer, Klassen, Klassenstufen, Fächern, ...">Name</abbr> weniger als planmäßig durchgeführt hat. Wenn Lehrer oder Fächer häufiger vertreten als sie ausfallen, kann die Fehlstundenzahl ins negative rutschen, da der Lehrer oder das Fach dann mehr Stunden als planmäßig durchführt.
          <br><br>
-         <b>Vertretungsstunden:</b> Anzahl der Stunden die der Name für einen anderen Namen nicht-planmäßig übernommen hat.
+         <b>Vertretungsstunden:</b> Anzahl der Stunden die der Name für einen anderen Namen übernommen hat.
          `,
          statExtractionContent: `Über den Tag werden, gepaart mit dem Benachrichtigungsservice, die Vertretungsplandaten gesammelt und veraltete Vertretungsplandaten des Tages überschrieben. Jeden Tag zwischen 15 und 17 Uhr (um diese Uhrzeit wird der Vertretungsplan des Tages wohl hoffentlich nicht mehr geändert) werden die Statistiken mit Hilfe dieser Daten aktualisiert.
          <br>
