@@ -10,6 +10,8 @@ import Vergleich from "@/assets/icons/vergleich.svg?component";
 import Zeit from "@/assets/icons/zeit.svg?component";
 import Save from "@/assets/icons/save.svg?component";
 import Close from "@/assets/icons/close.svg?component";
+import Settings from "@/assets/icons/settings.svg?component";
+import Info from "@/assets/icons/info.svg?component";
 </script>
 <template>
    <Gesamtzahlen v-if="name === 'gesamtzahlen'" />
@@ -21,6 +23,8 @@ import Close from "@/assets/icons/close.svg?component";
    <Save v-if="name === 'save'" />
    <Delete v-if="name === 'delete'" />
    <Close v-if="name === 'close'" />
+   <Settings v-if="name === 'settings'" />
+   <Info v-if="name === 'info'" />
 </template>
 <script>
 export default {

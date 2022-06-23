@@ -2,9 +2,12 @@
 
 <script setup>
 import { computed } from "vue";
+
 import Navigation from "./components/Navigation.vue";
 import Sandkasten from "./sandkasten/Sandkasten.vue";
 import Ranglisten from "./ranglisten/Ranglisten.vue";
+import Allgemein from "./allgemein/Allgemein.vue";
+
 import Modal from "@/components/modal/Modal.vue";
 import DBStatus from "./enums/DBStatus.js";
 import { fetchAPI, sleep } from "@/App.vue";
@@ -18,6 +21,7 @@ import EntityType from "./enums/EntityType.js";
       <div class="content">
          <Sandkasten v-if="page === 'Sandkasten'" :statistic="statistic" />
          <Ranglisten v-if="page === 'Ranglisten'" :statistic="statistic" />
+         <Allgemein v-if="page === 'Allgemein'" :statistic="statistic" />
       </div>
    </main>
    <Modal :isOpen="showModal" @close="showModal = !showModal" :title="modalTitle" :content="modalContent" :buttons="[]"></Modal>

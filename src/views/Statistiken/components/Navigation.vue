@@ -7,7 +7,7 @@ import ScrollSelector, { Item } from "./ScrollSelector.vue";
 <template>
    <div class="nav-container" :class="mq.current">
       <div class="center">
-         <Switch :options="['Sandkasten', 'Ranglisten']" :default="page" @switch="changePage" />
+         <Switch :options="['Allgemein', 'Sandkasten', 'Ranglisten']" :default="page" @switch="changePage" />
       </div>
       <div class="scroll-selector vert-center">
          <ScrollSelector
@@ -28,6 +28,7 @@ export default {
    data() {
       return {
          itemsContainer: {
+            Allgemein: [new Item("Erklärung", "info"), new Item("Einstellungen", "settings")],
             Sandkasten: [
                new Item("Gesamtzahlen", "gesamtzahlen"),
                new Item("Nach Zeit", "zeit"),
