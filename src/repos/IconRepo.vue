@@ -37,6 +37,7 @@ import Label from "@/assets/icons/label.svg?component";
    <Code v-if="name === 'code'" />
    <Table v-if="name === 'table'" />
    <StatCreation v-if="name === 'statCreation'" />
+   <Thunder v-if="name === 'thunder'" />
    <Label v-if="name === 'label'" />
    <Label v-if="name === 'beschreibungen'" />
 </template>
