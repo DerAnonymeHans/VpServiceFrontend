@@ -1,5 +1,7 @@
 <!-- @format -->
-
+<script setup>
+import { sleep } from "@/App.vue";
+</script>
 <template>
    <main :class="mq.current">
       <div class="text-container">
@@ -20,6 +22,15 @@
 <script>
 export default {
    inject: ["mq"],
+   async mounted() {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("scroll") === "true") {
+         await sleep(500);
+         this.scrollToForm();
+         params.delete("scroll");
+         window.history.pushState("", "", window.location.origin + window.location.pathname + params.toString());
+      }
+   },
    methods: {
       scrollToForm() {
          window.scrollBy({ top: 100000, left: 0, behavior: "smooth" });

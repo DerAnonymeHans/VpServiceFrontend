@@ -19,7 +19,7 @@
 
          <div class="btn-container">
             <!-- <button class="btn-focus" @click="subscribe()">Abonnieren</button> -->
-            <RouterLink to="/Benachrichtigung" class="btn-focus">Abonnieren</RouterLink>
+            <RouterLink to="/Benachrichtigung?scroll=true" class="btn-focus">Zum Abonnement</RouterLink>
          </div>
 
          <img class="kepler-img" v-if="mq.desktop" src="@/assets/kepler_circles.png" alt="Kepler" />

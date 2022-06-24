@@ -206,6 +206,9 @@ main {
 <style lang="scss">
 @import "@/styles/_variables.scss";
 main {
+   .content {
+      padding-bottom: $margin * 2;
+   }
    // &.desktop{
    //    .statistic{
    //       min-height: 60vh;

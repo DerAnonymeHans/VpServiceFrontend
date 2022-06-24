@@ -33,7 +33,6 @@ export default {
 .section-container {
    width: 100%;
    margin: auto;
-   padding-bottom: 2vw;
 
    > * {
       margin: $margin * 3 0;
