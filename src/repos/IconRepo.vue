@@ -18,6 +18,7 @@ import Quotes from "@/assets/icons/quotes.svg?component";
 import Table from "@/assets/icons/table.svg?component";
 import StatCreation from "@/assets/icons/statCreation.svg?component";
 import Thunder from "@/assets/icons/thunder.svg?component";
+import Label from "@/assets/icons/label.svg?component";
 </script>
 <template>
    <Gesamtzahlen v-if="name === 'gesamtzahlen'" />
@@ -36,7 +37,8 @@ import Thunder from "@/assets/icons/thunder.svg?component";
    <Code v-if="name === 'code'" />
    <Table v-if="name === 'table'" />
    <StatCreation v-if="name === 'statCreation'" />
-   <Thunder v-if="name === 'thunder'" />
+   <Label v-if="name === 'label'" />
+   <Label v-if="name === 'beschreibungen'" />
 </template>
 <script>
 export default {

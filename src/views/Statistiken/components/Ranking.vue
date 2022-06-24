@@ -23,7 +23,7 @@ import { sleep } from "@/App.vue";
          <button class="btn-focus" @click="redraw()">Erstellen</button>
       </div>
 
-      <div class="podest-container box">
+      <div class="podest-container box" v-if="!disablePodest">
          <div class="podest-item second">
             <div class="name">{{ podest.second }}</div>
             <div class="podest">
@@ -78,6 +78,8 @@ export default {
          type: Function,
          required: true,
       },
+      disableAutoSwitches: Boolean,
+      disablePodest: Boolean,
    },
    data() {
       return {
@@ -101,7 +103,7 @@ export default {
    },
    mounted() {
       this.isMounted = true;
-      this._switches.sortBy = new SwitchModel(["Top-Fehl", "Top-Ver", "Flop-Fehl", "Flop-Ver"], "Top-Fehl");
+      if (!this.disableAutoSwitches) this._switches.sortBy = new SwitchModel(["Top-Fehl", "Top-Ver", "Flop-Fehl", "Flop-Ver"], "Top-Fehl");
       this.switchSessionHandler("load");
    },
    methods: {
@@ -115,13 +117,14 @@ export default {
          for (let key in this._switches) switchVals[key] = this._switches[key].value;
          const options = new GenerationOptions(switchVals);
          this.rankList = await this.getRanklist(options);
-         this.doPodest();
+         !this.disablePodest && this.doPodest();
          this.explanation = await this.getExplanation(options);
       },
       doPodest() {
-         this.podest.first = this.rankList[0].Name;
-         this.podest.second = this.rankList[1].Name;
-         this.podest.third = this.rankList[2].Name;
+         for (const [idx, place] of ["first", "second", "third"].entries()) {
+            console.log(place, idx);
+            this.podest[place] = typeof this.rankList[idx]?.Name === "string" ? this.rankList[idx].Name : "";
+         }
       },
       switchSessionHandler(action) {
          for (let key in this._switches) {

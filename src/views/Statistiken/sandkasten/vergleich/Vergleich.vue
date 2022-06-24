@@ -44,8 +44,9 @@ export default {
       },
       async getExplanation(options, chart) {
          const attendance = options.switches.attendance === "beides" ? "Fehl- und Vertretungsstunden" : options.switches.attendance;
-         const recordedDays = await this.fetchStat(`/RecordedDays/Count`);
-         return `Das Diagramm zeigt die ${attendance} verglichen mit der durchschnittlichen Anzahl an ${attendance} des Typs - die Angaben sind also in Prozent. Das bedeutet: Es werden die relativen ${attendance} (siehe Statistik 'relativ') genommen und diese mit der durchschnitlichen relativen Zahl an ${attendance} des Typs (Lehrer, Klassen, Kurse, ...) ins Verhältnis genommen. Hohe Werte bedeuten also, das der Name verglichen mit seinem Typ sehr viel ${attendance} hat. 
+         return `Das Diagramm zeigt die ${attendance} verglichen mit der durchschnittlichen Anzahl an ${attendance} des Typs - die Angaben sind also in Prozent. Das bedeutet: Es werden die relativen ${attendance} (siehe Statistik 'relativ') genommen und diese mit der durchschnitlichen relativen Zahl an ${attendance} des Typs (Lehrer, Klassen, Kurse, ...) ins Verhältnis genommen. Hohe Werte bedeuten also, das der Name verglichen mit seinem Typ sehr viel ${attendance} hat.
+         <br>
+         Bsp.: Lehrer X hat 40% mehr Fehlstunden als der Durchschnittslehrer. 
          ${
             options.switches.sumMode === "addieren"
                ? `Die Daten aller ausgewählten Namen werden hierbei relativ addiert (es wird das arithmetische Mittel der Prozente gebildet), so dass die Summe ihrer ${attendance} sichtbar ist.`

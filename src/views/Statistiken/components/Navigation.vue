@@ -42,6 +42,7 @@ export default {
                new Item("Nach Zeit", "zeit"),
                new Item("Beziehungen", "beziehungen"),
                new Item("Relativ", "relativ"),
+               new Item("Beschreibungen", "beschreibungen"),
             ],
          },
          items: [],
