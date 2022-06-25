@@ -151,11 +151,11 @@ class Dataset {
    sumData(mode = "abs") {
       switch (mode) {
          case "abs":
-            this.data = [this.data.reduce((prev, current) => prev + current, 0)];
+            this.data = [this.data.reduce((prev, current) => parseFloat(prev) + parseFloat(current), 0)];
             break;
          case "rel":
             let oldLength = this.data.length;
-            this.data = [this.data.reduce((prev, current) => prev + current, 0) / oldLength];
+            this.data = [this.data.reduce((prev, current) => parseFloat(prev) + parseFloat(current), 0) / oldLength];
             break;
       }
       this.backgroundColor = ColorRepo.get(1);

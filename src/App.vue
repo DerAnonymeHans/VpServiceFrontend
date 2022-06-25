@@ -44,4 +44,14 @@ article {
    line-height: 1.5em;
    column-width: 300px;
 }
+table {
+   td,
+   th {
+      border-left: $margin solid #fff0;
+   }
+
+   tr > td:first-child {
+      border: 0px;
+   }
+}
 </style>
