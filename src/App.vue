@@ -40,7 +40,7 @@ article {
    column-gap: $margin * 2;
    padding: $padding;
    color: $col-text;
-   font-size: 1.2em;
+   font-size: 1.15em;
    line-height: 1.5em;
    column-width: 300px;
 }

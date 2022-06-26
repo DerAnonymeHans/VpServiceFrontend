@@ -28,7 +28,7 @@ export default {
    data() {
       return {
          itemsContainer: {
-            Allgemein: [new Item("Erklärungen", "info"), new Item("Einstellungen", "settings")],
+            Allgemein: [new Item("Erklärungen", "info"), new Item("Einstellungen", "settings"), new Item("Logout", "logout")],
             Sandkasten: [
                new Item("Gesamtzahlen", "gesamtzahlen"),
                new Item("Nach Zeit", "zeit"),

@@ -7,6 +7,7 @@ import Navigation from "./components/Navigation.vue";
 import Sandkasten from "./sandkasten/Sandkasten.vue";
 import Ranglisten from "./ranglisten/Ranglisten.vue";
 import Allgemein from "./allgemein/Allgemein.vue";
+import Login from "./login/Login.vue";
 
 import Modal from "@/components/modal/Modal.vue";
 import DBStatus from "./enums/DBStatus.js";
@@ -16,12 +17,15 @@ import EntityType from "./enums/EntityType.js";
 
 <template>
    <main :class="mq.current">
-      <Navigation />
+      <Navigation v-if="_isLoggedIn" />
 
       <div class="content">
-         <Sandkasten v-if="page === 'Sandkasten'" :statistic="statistic" />
-         <Ranglisten v-if="page === 'Ranglisten'" :statistic="statistic" />
-         <Allgemein v-if="page === 'Allgemein'" :statistic="statistic" />
+         <div v-if="_isLoggedIn">
+            <Sandkasten v-if="page === 'Sandkasten'" :statistic="statistic" />
+            <Ranglisten v-if="page === 'Ranglisten'" :statistic="statistic" />
+            <Allgemein v-if="page === 'Allgemein'" :statistic="statistic" />
+         </div>
+         <Login v-if="!_isLoggedIn" />
       </div>
    </main>
    <Modal :isOpen="showModal" @close="showModal = !showModal" :title="modalTitle" :content="modalContent" :buttons="[]"></Modal>
@@ -36,6 +40,7 @@ export default {
          showModal: false,
          modalTitle: "",
          modalContent: "",
+         _isLoggedIn: false,
       };
    },
    inject: ["mq"],
@@ -61,6 +66,13 @@ export default {
                this.statistic = val;
             },
          }),
+         isLoggedIn: computed({
+            get: () => this._isLoggedIn,
+            set: (val) => {
+               this._isLoggedIn = val;
+               if (!this._isLoggedIn) this.page = "";
+            },
+         }),
          fetchStat: this.fetchStat,
       };
    },
@@ -68,7 +80,7 @@ export default {
       await this.dbSetup();
    },
    mounted() {
-      this.preloadData();
+      // this.preloadData();
    },
    methods: {
       inform(title, content) {
@@ -127,7 +139,7 @@ export default {
 
             let res;
             try {
-               res = await fetchAPI("/Statistic" + path);
+               res = await fetchAPI("/Statistic" + path, { credentials: "include" });
                if (res.status !== 200) throw new Error();
                res = await res.json();
             } catch (e) {
@@ -184,7 +196,7 @@ export default {
 @import "@/styles/_variables.scss";
 main {
    .content {
-      margin: $margin auto;
+      margin: 5vh auto;
    }
    &.desktop {
       .content {

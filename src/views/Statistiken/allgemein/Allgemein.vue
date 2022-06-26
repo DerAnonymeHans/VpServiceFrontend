@@ -2,10 +2,12 @@
 
 <script setup>
 import Erklaerung from "./erklärung/Erklärung.vue";
+import Logout from "./logout/Logout.vue";
 </script>
 <template>
    <div>
       <Erklaerung v-if="statistic === 'info'" />
+      <Logout v-if="statistic === 'logout'" />
    </div>
 </template>
 <script>
