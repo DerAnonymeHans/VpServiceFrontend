@@ -11,7 +11,7 @@ export default {
    beforeMount() {},
    methods: {
       async logout() {
-         await fetchAPI("/Statistic/Logout");
+         await fetchAPI("/Statistic/Logout", { method: "POST", credentials: "include" });
          this.isLoggedIn = false;
       },
    },
