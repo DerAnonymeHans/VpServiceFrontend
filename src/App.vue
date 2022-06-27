@@ -15,6 +15,7 @@ import Footer from "@/components/footer/Footer.vue";
 <script>
 export default {};
 const URL = import.meta.env.VITE_API_URL;
+console.log(URL);
 const fetchAPI = (path, obj = {}) => fetch(URL + path, obj);
 
 const sleep = (ms) => new Promise((resolve, reject) => setTimeout(resolve, ms));
