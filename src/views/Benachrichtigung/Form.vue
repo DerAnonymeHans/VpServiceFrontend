@@ -13,6 +13,10 @@ import { fetchAPI } from "@/App.vue";
          <Input type="text" label="Anrede/Name" name="name" />
          <Input type="text" label="Email" name="mail" />
          <Input type="number" label="Klassenstufe" name="grade" />
+         <div class="agb">
+            <input type="checkbox" id="accept-agb" name="accept-agb" />
+            <label for="accept-agb">Ich akzeptiere die AGB</label>
+         </div>
          <button class="btn-focus" type="submit">Los gehts!</button>
       </form>
       <Modal :isOpen="showModal" @close="showModal = !showModal" :title="modalTitle" :content="modalContent" :buttons="[]" />
@@ -70,6 +74,10 @@ export default {
       button {
          width: 50%;
          margin: $margin auto;
+      }
+
+      .agb {
+         color: white;
       }
    }
 
