@@ -3,7 +3,9 @@
 import { fetchAPI } from "@/App.vue";
 </script>
 <template>
-   <button class="btn" @click="logout">Ausloggen</button>
+   <div class="flex">
+      <button class="btn" @click="logout">Ausloggen</button>
+   </div>
 </template>
 <script>
 export default {

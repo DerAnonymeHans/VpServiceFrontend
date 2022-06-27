@@ -13,7 +13,12 @@ import Footer from "@/components/footer/Footer.vue";
 </template>
 
 <script>
-export default {};
+export default {
+   beforeMount() {
+      if (window.location.origin === "http://kepleraner.herokuapp.com")
+         window.location = "https://kepleraner.herokuapp.com" + window.location.pathname + window.location.search;
+   },
+};
 const URL = import.meta.env.VITE_API_URL;
 console.log(URL);
 const fetchAPI = (path, obj = {}) => fetch(URL + path, obj);

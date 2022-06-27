@@ -77,6 +77,7 @@ export default {
    border-radius: $border-radius;
    margin-top: 12vh;
    padding: $padding;
+   background-color: rgba($col-medium, 0.3);
    .icon {
       height: 20vh;
       aspect-ratio: 1;

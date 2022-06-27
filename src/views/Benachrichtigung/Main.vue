@@ -16,7 +16,9 @@ import { sleep } from "@/App.vue";
             weisen Zitaten.
          </article>
       </div>
-      <img src="@/assets/mail-example-hand.png" alt="Email" />
+      <abbr title="Quelle: https://pngimg.com/image/49158 (Bild bearbeitet - Email Screenshot eingefügt)"
+         ><img src="@/assets/mail-example-hand.png" alt="Email"
+      /></abbr>
    </main>
 </template>
 <script>

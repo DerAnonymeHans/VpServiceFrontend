@@ -16,6 +16,7 @@ export default {
          switchModel: {
             timeType: new SwitchModel(["Monate", "Wochentage", "Stunden"], "Monate"),
             attendance: new SwitchModel(["Fehlstunden", "Vertretungsstunden", "beides"], "Fehlstunden"),
+            continuity: new SwitchModel(["getrennt", "fortlaufend"], "getrennt"),
             sumMode: new SwitchModel(["getrennt", "addieren"], "getrennt"),
          },
       };
@@ -63,6 +64,12 @@ export default {
                // shift month to start in august
                set.data = timeType === TimeType.MONTH ? [...data[key].slice(7, Infinity), ...data[key].slice(0, 7)] : data[key];
                set.key = key;
+
+               if (options.switches.continuity === "fortlaufend") {
+                  for (let i = 1; i < set.data.length; i++) {
+                     set.data[i] += set.data[i - 1];
+                  }
+               }
 
                if (sumData) {
                   if (datasets.length < keys.length) {

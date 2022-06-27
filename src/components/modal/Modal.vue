@@ -9,7 +9,7 @@ import IconRepo from "@/repos/IconRepo.vue";
             <h3>{{ title }}</h3>
             <button class="btn-svg" @click="close(close)"><IconRepo name="close" /></button>
          </div>
-         <div v-html="content"></div>
+         <div class="content" v-html="content"></div>
          <slot></slot>
          <div v-for="button in buttons" :key="button.name" class="button-container">
             <button :class="button.className" @click="close(button.onClick)">{{ button.text }}</button>
@@ -95,6 +95,10 @@ export { Button };
       }
    }
 
+   .content {
+      overflow: auto;
+   }
+
    .button-container {
       margin-top: $margin;
    }
@@ -114,16 +118,28 @@ export { Button };
       width: 40vw;
       top: 20vh;
       left: 30vw;
+      max-height: 60vh;
+      .content {
+         max-height: 35vh;
+      }
    }
    &.tablet {
       width: 70vw;
       top: 30vh;
       left: 15vw;
+      max-height: 55vh;
+      .content {
+         max-height: 30vh;
+      }
    }
    &.mobile {
       width: 90vw;
       bottom: 5vh;
       left: 5vw;
+      max-height: 70vh;
+      .content {
+         max-height: 55vh;
+      }
    }
 }
 </style>

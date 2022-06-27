@@ -23,6 +23,7 @@
          </div>
 
          <img class="kepler-img" v-if="mq.desktop" src="@/assets/kepler_circles.png" alt="Kepler" />
+         <!-- https://hurraki.de/wiki/Datei:Johannes_Kepler.jpg - gemeinfrei -->
       </div>
    </header>
 </template>
