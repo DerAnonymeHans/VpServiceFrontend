@@ -1,5 +1,7 @@
 <!-- @format -->
-
+<script setup>
+import { fetchAPI } from "@/App.vue";
+</script>
 <template>
    <button class="btn" @click="logout">Ausloggen</button>
 </template>
@@ -8,8 +10,8 @@ export default {
    inject: ["isLoggedIn"],
    beforeMount() {},
    methods: {
-      logout() {
-         document.cookie = "statAuth=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      async logout() {
+         await fetchAPI("/Statistic/Logout");
          this.isLoggedIn = false;
       },
    },
