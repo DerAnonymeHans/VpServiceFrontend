@@ -212,7 +212,8 @@ export { Dataset, DatasetGroup };
          height: 70vh;
       }
       .switches {
-         display: flex;
+         display: grid;
+         grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
       }
    }
    &.tablet {
