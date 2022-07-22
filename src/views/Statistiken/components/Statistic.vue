@@ -12,7 +12,7 @@ import { sleep } from "@/App.vue";
       <NameSelectorContainer @selector-change="(selectors) => selectorsChanged(selectors)">
          <slot></slot>
       </NameSelectorContainer>
-      <div class="statistic box">
+      <div class="statistic box" ref="chart-container">
          <canvas id="mychart" ref="chart"></canvas>
       </div>
 
@@ -78,7 +78,7 @@ export default {
       async selectorsChanged(selectors) {
          this.selectors = selectors;
          await this.redraw();
-         this.$refs.chart.scrollIntoView({ behavior: "smooth" });
+         this.$refs["chart-container"].scrollIntoView({ behavior: "smooth", block: "end" });
       },
       async redraw() {
          if (!this.isMounted) return;
