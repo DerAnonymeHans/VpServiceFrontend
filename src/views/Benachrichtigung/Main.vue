@@ -35,7 +35,7 @@ export default {
    },
    methods: {
       scrollToForm() {
-         window.scrollBy({ top: 100000, left: 0, behavior: "smooth" });
+         window.scrollBy({ top: 1000000, left: 0, behavior: "smooth" });
       },
    },
 };

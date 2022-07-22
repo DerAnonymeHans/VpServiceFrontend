@@ -9,8 +9,8 @@ import NameSelector from "../../components/NameSelector.vue";
          <NameSelector />
          <div>
             Durch klicken auf den Pfeil auf der rechten Seite kannst du zwischen den verschiedenen Kategorien wechseln. Es gibt folgende Kategorien:
-            Lehrer, Fächer, Kurse, Klassen sowie Kepler (die gesamte Schule). Durch das Minus auf der linken Seite kannst du das Element löschen (hier
-            nicht).
+            Lehrer, Fächer, Kurse, Klassenstufen, Klassen sowie Kepler (die gesamte Schule). Durch das Minus auf der linken Seite kannst du das
+            Element löschen (hier nicht).
          </div>
       </div>
       <Section svg="quotes" :content="fehlVerContent" />
