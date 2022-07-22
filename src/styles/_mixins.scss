@@ -1,0 +1,9 @@
+/** @format */
+
+@mixin box {
+   border: 2px solid $col-medium;
+   border-radius: $border-radius;
+   padding: $padding;
+   background-color: rgba($col-medium, 0.3);
+   color: $col-text;
+}

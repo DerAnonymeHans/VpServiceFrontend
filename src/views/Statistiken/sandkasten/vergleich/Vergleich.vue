@@ -69,7 +69,7 @@ export default {
          })()}
          ${
             options.selectors.findIndex((selector) => selector.type.key === "KEPLER") !== -1
-               ? `<br><br>Die ${attendance} von Schule werden dabei mit deutschlandweiten Daten einer Umfrage der Welt in Zusammenarbeit mit Statista verglichen (<a href="https://www.zeit.de/gesellschaft/schule/2017-10/unterrichtsausfall-schule-bildung-studie-eltern">Artikel</a>)`
+               ? `<br><br>Die ${attendance} von Schule werden dabei mit deutschlandweiten Daten einer Umfrage der Zeit in Zusammenarbeit mit Statista verglichen (<a href="https://www.zeit.de/gesellschaft/schule/2017-10/unterrichtsausfall-schule-bildung-studie-eltern">Artikel</a>)`
                : ""
          }
          `;

@@ -12,7 +12,7 @@ import { fetchAPI } from "@/App.vue";
       <form id="subscribe-form" @submit="submit" target="dummy-frame">
          <Input type="text" label="Anrede/Name" name="name" />
          <Input type="text" label="Email" name="mail" />
-         <Input type="number" label="Klassenstufe" name="grade" />
+         <Input type="number" label="Klassenstufe" name="grade" :min="5" :max="12" />
          <div class="agb">
             <input type="checkbox" id="accept-agb" name="accept-agb" />
             <label for="accept-agb">Ich akzeptiere die AGB</label>

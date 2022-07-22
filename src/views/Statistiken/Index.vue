@@ -197,6 +197,7 @@ export default {
 main {
    .content {
       margin: 5vh auto;
+      margin-bottom: 0;
    }
    &.desktop {
       .content {
@@ -213,28 +214,5 @@ main {
          width: 95vw;
       }
    }
-}
-</style>
-<style lang="scss">
-@import "@/styles/_variables.scss";
-main {
-   .content {
-      padding-bottom: $margin * 2;
-   }
-   // &.desktop{
-   //    .statistic{
-   //       min-height: 60vh;
-   //    }
-   // }
-   // &.tablet{
-   //    .statistic{
-   //       min-height: 60vh;
-   //    }
-   // }
-   // &.mobile{
-   //    .statistic{
-   //       min-height: 80vh;
-   //    }
-   // }
 }
 </style>

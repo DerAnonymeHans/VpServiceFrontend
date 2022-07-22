@@ -3,12 +3,15 @@
 <template>
    <main :class="mq.current">
       <article :class="mq.current" class="introduction">
-         Wenn jemand eine Idee hat was für ein sinnvoller Text hier stehen könnte bitte melden. Denn dieses Gelaber das jetzt hier steht macht nicht
-         wirklich Sinn und erfüllt auch keinen Sinn abgesehen von dem des Platzhalters. Der Text existiert einfach nur um zu existieren. Doch tun wir
-         das denn nicht alle? Eine äußerst existentialistische Frage, die dem Text jetzt spontan doch irgendwie Bedeutung schenkt... Also, was ist der
-         Sinn des Lebens? Wenn du darauf eine Antwort hast kannst du dich auch bei mir melden. Ok, noch ein bisschen. Also, Text hier Text da Text
-         dort blablabla. Ach Moment, vielleicht doch noch was sinnvolles. Dies ist keine offizielle Seite des Johanes Kepler Gymnasiums Leipzig (dafür
-         sieht sie ja auch viel zu modern aus haha ;) ). Alle Angaben sind ohne Gewähr. Aber jetzt wirklich, was soll hier stehen??? Aaaaahhh
+         Auf Kepleraner findest du Dinge rund um das Johannes-Kepler-Gymnasium Leipzig. Es sei aber angemerkt, dass es sich hierbei um keine
+         offizielle Schulseite, sondern um ein Privatprojekt handelt. Unter dem Menüpunkt <a href="/Statistiken">Statistiken</a> findest du
+         statistische Daten über alles mögliche. Von einfachen Daten wie den Gesamtzahlen an Fehl- und Vertretungsstunden für
+         Lehrer/Fächer/Klassen/Klassenstufen/Kurse über die Daten nach Monaten, Wochentagen, Stunden und Schnittmengen von Daten zwischen bspw. einer
+         Klasse und ihrer Lehrer bis hin zu errechnetem Ausfall als Anteil an der planmäßigen Gesamtstunden. Außerdem gibt es natürlich auch Rankings
+         in dem die Top 10 aufgeführt werden.<br />Ein weiterer wichtiger Bestandteil der Seite sind die Vertretungsplan Update Emails. Wenn du es
+         auch Leid bist, ständig nach neuen Vertretungsplandaten zu schauen, dann abonniere unter <a href="/Benachrichtigung">Benachrichtigung</a> den
+         Service und erhalte immer Plan Updates für deine Klassenstufe, sowie vieles mehr.<br />Für Feedback und Möglichkeiten wie du dich selbst mit
+         einbringen kannst gibt es unter <a href="/Mitmachen">Mitmachen</a> diverse Optionen.
       </article>
       <div class="spaceship-container" v-if="mq.desktop">
          <img class="spaceship-img" src="@/assets/spaceship.png" alt="Spaceship" />
@@ -22,11 +25,13 @@ export default {
 </script>
 <style lang="scss">
 @import "@/styles/_variables.scss";
+@import "@/styles/_mixins.scss";
 
 main {
    height: max-content;
    padding-bottom: 5vw;
    .introduction {
+      @include box;
       margin: $margin auto;
       z-index: 2;
       position: relative;

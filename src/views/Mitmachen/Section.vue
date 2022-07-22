@@ -43,6 +43,7 @@ export default {
 <style lang="scss">
 @import "@/styles/helper";
 @import "@/styles/variables.scss";
+@import "@/styles/mixins.scss";
 section {
    margin-bottom: $margin * 5;
    .heading-container {
@@ -62,6 +63,10 @@ section {
 
    .content-container {
       margin: $margin * 2 auto;
+
+      article {
+         @include box;
+      }
    }
 
    &.invert {

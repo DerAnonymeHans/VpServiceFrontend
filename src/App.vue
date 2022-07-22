@@ -17,6 +17,10 @@ export default {
    beforeMount() {
       if (window.location.origin === "http://kepleraner.herokuapp.com")
          window.location = "https://kepleraner.herokuapp.com" + window.location.pathname + window.location.search;
+
+      const params = new URLSearchParams(window.location.search);
+      sessionStorage.setItem("cached-stat-user", params.get("stat-user"));
+      sessionStorage.setItem("cached-stat-pw", params.get("stat-pw"));
    },
 };
 const URL = import.meta.env.VITE_API_URL;
@@ -37,11 +41,12 @@ body {
    margin: 0;
    height: fit-content;
    font-family: "Gadugi", sans-serif;
-   // font-family: Arial;
+}
+::selection {
+   background-color: $accent;
+   color: $col-light;
 }
 article {
-   background-color: $col-medium;
-   border-radius: $border-radius;
    text-align: justify;
    column-gap: $margin * 2;
    padding: $padding;
@@ -58,6 +63,18 @@ table {
 
    tr > td:first-child {
       border: 0px;
+   }
+}
+
+::-webkit-scrollbar {
+   width: 10px;
+   background-color: $col-dark;
+}
+::-webkit-scrollbar-thumb {
+   background-color: lighten($col-dark, 40%);
+
+   &:hover {
+      background-color: lighten($col-dark, 60%);
    }
 }
 </style>

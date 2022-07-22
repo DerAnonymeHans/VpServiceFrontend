@@ -11,7 +11,7 @@ import { sleep } from "@/App.vue";
             suchst ewig nach den Zeilen die dich überhaupt betreffen... Doch dagegen gibt es ein Mittel! Indem du den VpMailservice abonnierst erhälst
             du mit maximal 10 minütiger Verzögerung Informationen über einen neuen Plan (nur wenn sich tatsächlich etwas für dich ändert!!), wenn
             vorhanden erhälst du sogar noch den vom Tag danach - und zwar auch nur die Daten die du auch brauchst.<br />
-            Um das ganze noch weiter aufzuwerten, erhälst du im oberen Bild in der Email Informationen über das Wetter oder siehst andere
+            Um das Ganze noch weiter aufzuwerten, erhälst du im oberen Bild in der Email Informationen über das Wetter oder siehst andere
             eventabhängige Kunstwerke. Nicht zu vergessen ist außerdem das 'Kleine aber feine Extra' mit lustigen Sprüchen, interessanten Fakten oder
             weisen Zitaten.
          </article>
@@ -42,13 +42,13 @@ export default {
 </script>
 <style scoped lang="scss">
 @import "@/styles/_variables.scss";
+@import "@/styles/_mixins.scss";
 @import "@/styles/components.scss";
 main {
    margin: auto;
    margin-top: 3em;
+   padding-bottom: 0 !important;
    text-align: center;
-   // box-sizing: border-box;
-
    grid-gap: 2em;
    justify-content: center;
 
@@ -60,7 +60,7 @@ main {
       margin-bottom: 2em;
 
       article {
-         background: none;
+         @include box;
       }
    }
 

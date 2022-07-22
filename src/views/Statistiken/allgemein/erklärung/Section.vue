@@ -32,12 +32,10 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import "@/styles/_variables.scss";
+@import "@/styles/_mixins.scss";
 .section {
    height: fit-content;
-   border: 2px solid $col-medium;
-   padding: $padding;
-   border-radius: $border-radius;
-   color: $col-text;
+   @include box;
 
    .icon {
       color: $accent;

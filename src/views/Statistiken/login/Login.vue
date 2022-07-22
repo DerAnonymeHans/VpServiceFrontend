@@ -20,8 +20,8 @@ import { fetchAPI } from "@/App.vue";
          Passwort und Nutzername gleichen sich dabei mit denen der Schulwebseite.
       </article>
       <form class="form" id="login-form" @submit="submit">
-         <Input type="text" label="Nutzername" name="name" :isInvert="true" />
-         <Input type="password" label="Passwort" name="pw" :isInvert="true" />
+         <Input type="text" label="Nutzername" name="name" :isInvert="true" :defaultValue="username" />
+         <Input type="password" label="Passwort" name="pw" :isInvert="true" :defaultValue="password" />
          <div>
             <input type="checkbox" id="accept-agb" name="accept-agb" />
             <label for="accept-agb">Ich akzeptiere die AGB</label>
@@ -41,6 +41,8 @@ export default {
          showModal: false,
          modalTitle: "",
          modalContent: "",
+         username: "",
+         password: "",
       };
    },
    async beforeMount() {
@@ -48,6 +50,12 @@ export default {
          let res = await fetchAPI("/Statistic/IsLoggedIn", { credentials: "include" }).then((res) => res.json());
          if (res === true) this.isLoggedIn = true;
       } catch {}
+
+      const username = sessionStorage.getItem("cached-stat-user"),
+         password = sessionStorage.getItem("cached-stat-pw");
+      console.log(username, password);
+      if (username !== null) this.username = username;
+      if (password !== null) this.password = password;
    },
    methods: {
       submit(e) {
@@ -72,12 +80,10 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import "@/styles/_variables.scss";
+@import "@/styles/_mixins.scss";
 .login-container {
-   border: 2px solid $col-medium;
-   border-radius: $border-radius;
+   @include box;
    margin-top: 12vh;
-   padding: $padding;
-   background-color: rgba($col-medium, 0.3);
    .icon {
       height: 20vh;
       aspect-ratio: 1;

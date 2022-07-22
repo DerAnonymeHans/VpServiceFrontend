@@ -1,9 +1,18 @@
 <!-- @format -->
 <script setup>
 import Section from "./Section.vue";
+import NameSelector from "../../components/NameSelector.vue";
 </script>
 <template>
    <div class="section-container" :class="mq.current">
+      <div class="selector-explanation">
+         <NameSelector />
+         <div>
+            Durch klicken auf den Pfeil auf der rechten Seite kannst du zwischen den verschiedenen Kategorien wechseln. Es gibt folgende Kategorien:
+            Lehrer, Fächer, Kurse, Klassen sowie Kepler (die gesamte Schule). Durch das Minus auf der linken Seite kannst du das Element löschen (hier
+            nicht).
+         </div>
+      </div>
       <Section svg="quotes" :content="fehlVerContent" />
       <Section svg="statCreation" title="Statistikerstellung" :content="statExtractionContent" />
       <Section svg="thunder" title="Differenzen" :content="diferenzenContent" />
@@ -30,12 +39,56 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import "@/styles/_variables.scss";
+@import "@/styles/_mixins.scss";
 .section-container {
    width: 100%;
    margin: auto;
 
    > * {
       margin: $margin * 3 0;
+   }
+
+   .selector-explanation {
+      @include box;
+      display: flex;
+      flex-direction: column;
+      > * {
+         margin: $margin 0;
+         &:first-child {
+            margin: auto;
+         }
+      }
+   }
+
+   &.desktop {
+      .selector-explanation {
+         > * {
+            &:first-child {
+               width: 40%;
+               margin: auto;
+            }
+         }
+      }
+   }
+   &.tablet {
+      .selector-explanation {
+         > * {
+            &:first-child {
+               width: 60%;
+               margin: auto;
+            }
+         }
+      }
+   }
+   &.mobile {
+      .selector-explanation {
+         > * {
+            &:first-child {
+               width: 90%;
+               margin: auto;
+            }
+         }
+      }
    }
 }
 </style>
