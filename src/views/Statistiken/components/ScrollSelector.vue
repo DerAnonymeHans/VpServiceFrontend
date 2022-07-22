@@ -97,6 +97,11 @@ export { Item };
       }
    }
 
+   &.ultrawide {
+      .item {
+         width: max(5vw, 150px);
+      }
+   }
    &.desktop {
       .item {
          width: max(8vw, 150px);

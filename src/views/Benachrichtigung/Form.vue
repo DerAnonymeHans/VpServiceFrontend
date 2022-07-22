@@ -81,6 +81,11 @@ export default {
       }
    }
 
+   &.ultrawide {
+      form {
+         width: 20vw;
+      }
+   }
    &.desktop {
       form {
          width: 30vw;

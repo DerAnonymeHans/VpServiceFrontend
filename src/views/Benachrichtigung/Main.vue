@@ -69,6 +69,15 @@ main {
       margin-top: auto;
    }
 
+   &.ultrawide {
+      display: grid;
+      width: 50vw;
+      grid-template-columns: 1fr 1fr;
+
+      img {
+         max-width: 20vw;
+      }
+   }
    &.desktop {
       display: grid;
       width: 60vw;

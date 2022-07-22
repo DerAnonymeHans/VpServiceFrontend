@@ -286,7 +286,8 @@ export { sortByToSentence };
       }
    }
 
-   &.desktop {
+   &.desktop,
+   &.ultrawide {
       .podest-container {
          width: 40%;
       }

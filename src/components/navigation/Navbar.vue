@@ -92,7 +92,8 @@ nav {
    }
 
    &.desktop,
-   &.tablet {
+   &.tablet,
+   &.ultrawide {
       padding: $padding;
       width: 100%;
       .nav-item-container {

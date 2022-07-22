@@ -74,6 +74,11 @@ export default {
       justify-content: center;
    }
 
+   &.ultrawide {
+      .scroll-selector {
+         height: max(7vh, 100px);
+      }
+   }
    &.desktop {
       .scroll-selector {
          height: max(6vh, 100px);

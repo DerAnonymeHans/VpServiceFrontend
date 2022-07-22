@@ -2,7 +2,10 @@
 
 <template>
    <header>
-      <svg class="shape-bg" viewBox="0 0 100 40" v-if="mq.desktop">
+      <svg class="shape-bg" viewBox="0 0 100 30" v-if="mq.ultrawide">
+         <path d="M 0 0 v 25 L 30 30 L 100 25 v -25 0 Z" fill="currentColor" />
+      </svg>
+      <svg class="shape-bg" viewBox="0 0 100 40" v-else-if="mq.desktop">
          <path d="M 0 0 v 30 L 30 40 L 100 30 v -40 0 Z" fill="currentColor" />
       </svg>
       <svg class="shape-bg" viewBox="0 0 100 60" v-else-if="mq.tablet">
@@ -18,11 +21,10 @@
          </div>
 
          <div class="btn-container">
-            <!-- <button class="btn-focus" @click="subscribe()">Abonnieren</button> -->
             <RouterLink to="/Benachrichtigung?scroll=true" class="btn-focus">Zum Abonnement</RouterLink>
          </div>
 
-         <img class="kepler-img" v-if="mq.desktop" src="@/assets/kepler_circles.png" alt="Kepler" />
+         <img class="kepler-img" v-if="mq.desktopPlus" src="@/assets/kepler_circles.png" alt="Kepler" />
          <!-- https://hurraki.de/wiki/Datei:Johannes_Kepler.jpg - gemeinfrei -->
       </div>
    </header>
@@ -138,7 +140,7 @@ export default {
       }
       .btn-container {
          margin-top: 10vw;
-         button {
+         .btn-focus {
             font-size: 1vw;
          }
       }
@@ -147,6 +149,32 @@ export default {
          position: absolute;
          right: 5vw;
          top: 12vw;
+      }
+   }
+   &.ultrawide {
+      .greeting {
+         margin-left: 20vw;
+         margin-top: 6vw;
+         h3 {
+            font-size: 5vw;
+            line-height: 5vw;
+         }
+         h1 {
+            font-size: 8vw;
+            line-height: 8vw;
+         }
+      }
+      .btn-container {
+         margin-top: 5vw;
+         .btn-focus {
+            font-size: 0.7vw;
+         }
+      }
+      .kepler-img {
+         width: 15vw;
+         position: absolute;
+         right: 5vw;
+         top: 8vw;
       }
    }
 }

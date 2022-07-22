@@ -1,6 +1,7 @@
 /** @format */
 
 @import "@/styles/_variables";
+@import "@/styles/_mixins";
 
 .hamburger-icon {
    aspect-ratio: 1;
@@ -41,7 +42,5 @@
 }
 
 .box {
-   background-color: $col-medium;
-   border-radius: $border-radius;
-   padding: $padding;
+   @include box;
 }

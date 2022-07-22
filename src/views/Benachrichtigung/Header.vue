@@ -45,6 +45,11 @@ header {
       margin: 0;
    }
 
+   &.ultrawide {
+      .heading {
+         font-size: 5vw;
+      }
+   }
    &.desktop {
       .heading {
          font-size: 5vw;

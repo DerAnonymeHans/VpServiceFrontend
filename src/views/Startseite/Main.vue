@@ -13,7 +13,7 @@
          Gesamtstunden. Außerdem gibt es natürlich auch Rankings in denen die Top 10 aufgeführt werden.<br />Für Feedback und Möglichkeiten wie du
          dich selbst mit einbringen kannst gibt es unter <a href="/Mitmachen">Mitmachen</a> diverse Optionen.<br />
       </article>
-      <div class="spaceship-container" v-if="mq.desktop">
+      <div class="spaceship-container" v-if="mq.desktopPlus">
          <img class="spaceship-img" src="@/assets/spaceship.png" alt="Spaceship" />
       </div>
    </main>
@@ -35,6 +35,23 @@ main {
       margin: $margin auto;
       z-index: 2;
       position: relative;
+   }
+   &.ultrawide {
+      .introduction {
+         width: 40vw;
+         margin-top: $margin * 6;
+      }
+      .spaceship-container {
+         position: relative;
+         margin: $margin * 8 0;
+
+         .spaceship-img {
+            position: absolute;
+            z-index: 1;
+            margin-left: 10vw;
+            bottom: $margin;
+         }
+      }
    }
    &.desktop {
       .introduction {

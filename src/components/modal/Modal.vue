@@ -114,6 +114,15 @@ export { Button };
       transform: translateY(50px);
    }
 
+   &.ultrawide {
+      width: 30vw;
+      top: 20vh;
+      left: 35vw;
+      max-height: 60vh;
+      .content {
+         max-height: 35vh;
+      }
+   }
    &.desktop {
       width: 40vw;
       top: 20vh;

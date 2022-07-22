@@ -195,9 +195,15 @@ export default {
 <style lang="scss" scoped>
 @import "@/styles/_variables.scss";
 main {
+   padding-bottom: $padding * 2;
    .content {
       margin: 5vh auto;
       margin-bottom: 0;
+   }
+   &.ultrawide {
+      .content {
+         width: 45vw;
+      }
    }
    &.desktop {
       .content {

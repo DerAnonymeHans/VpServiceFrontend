@@ -207,7 +207,8 @@ export { Dataset, DatasetGroup };
       color: $col-text;
    }
 
-   &.desktop {
+   &.desktop,
+   &.ultrawide {
       .statistic {
          height: 70vh;
       }

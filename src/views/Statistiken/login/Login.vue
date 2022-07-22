@@ -53,7 +53,6 @@ export default {
 
       const username = sessionStorage.getItem("cached-stat-user"),
          password = sessionStorage.getItem("cached-stat-pw");
-      console.log(username, password);
       if (username !== null) this.username = username;
       if (password !== null) this.password = password;
    },
@@ -105,6 +104,11 @@ export default {
       }
    }
 
+   &.ultrawide {
+      .form {
+         width: 40%;
+      }
+   }
    &.desktop {
       .form {
          width: 50%;

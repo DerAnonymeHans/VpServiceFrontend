@@ -77,6 +77,19 @@ section {
       }
    }
 
+   &.ultrawide {
+      .heading-container {
+         width: 65vw;
+         font-size: 1.3vw;
+         line-height: 2vw;
+      }
+      .content-container {
+         width: 50vw;
+         display: grid;
+         grid-template-columns: 1fr 1fr;
+         grid-gap: $margin * 3;
+      }
+   }
    &.desktop {
       .heading-container {
          width: 75vw;

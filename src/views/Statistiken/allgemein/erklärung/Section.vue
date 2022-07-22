@@ -53,7 +53,8 @@ export default {
    }
 
    &.desktop,
-   &.tablet {
+   &.tablet,
+   &.ultrawide {
       flex-direction: row;
       .icon {
          height: 10vh;

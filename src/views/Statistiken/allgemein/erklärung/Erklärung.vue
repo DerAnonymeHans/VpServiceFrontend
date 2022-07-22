@@ -60,7 +60,8 @@ export default {
       }
    }
 
-   &.desktop {
+   &.desktop,
+   &.ultrawide {
       .selector-explanation {
          > * {
             &:first-child {
