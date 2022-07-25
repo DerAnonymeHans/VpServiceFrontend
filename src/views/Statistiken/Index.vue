@@ -37,7 +37,8 @@ export default {
       return {
          page: "Sandkasten",
          statistic: "gesamtzahlen",
-         year: (new Date(Date.now()).getFullYear() - (new Date(Date.now()).getMonth() + 1 < 8 ? 1 : 0)).toString().slice(2), // getMonth() + 1 because start at 0
+         // year: (new Date(Date.now()).getFullYear() - (new Date(Date.now()).getMonth() + 1 < 8 ? 1 : 0)).toString().slice(2), // getMonth() + 1 because start at 0
+         year: "21",
          showModal: false,
          modalTitle: "",
          modalContent: "",
@@ -93,7 +94,10 @@ export default {
    },
    async beforeMount() {
       await this.dbSetup();
-      this.year = typeof sessionStorage.getItem("stat-year") !== "string" ? "21" : sessionStorage.getItem("stat-year");
+      this.year =
+         typeof sessionStorage.getItem("stat-year") !== "string"
+            ? await this.fetchStat("/Years/Current", false)
+            : sessionStorage.getItem("stat-year");
    },
    mounted() {
       // this.preloadData();

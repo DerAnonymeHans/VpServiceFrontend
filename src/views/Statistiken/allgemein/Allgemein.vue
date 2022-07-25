@@ -3,11 +3,13 @@
 <script setup>
 import Erklaerung from "./erklärung/Erklärung.vue";
 import Logout from "./logout/Logout.vue";
+import Settings from "./settings/Settings.vue";
 </script>
 <template>
    <div>
       <Erklaerung v-if="statistic === 'info'" />
       <Logout v-if="statistic === 'logout'" />
+      <Settings v-if="statistic === 'settings'" />
    </div>
 </template>
 <script>
