@@ -32,7 +32,7 @@ import { sleep } from "@/App.vue";
 </template>
 <script>
 export default {
-   inject: ["fetchStat", "mq"],
+   inject: ["fetchStat", "mq", "year"],
    props: {
       getDatasets: {
          type: Function,

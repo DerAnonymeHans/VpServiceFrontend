@@ -91,18 +91,28 @@
    }
 }
 
-.select {
+@mixin select {
    cursor: pointer;
    border-radius: $border-radius;
    padding-right: $padding;
-   border: 2px solid $col-dark;
+   border: 2px solid red;
    width: 100%;
    user-select: none;
-   background-color: $col-dark;
-   color: $col-light;
 
    &:focus,
    &:hover {
       outline: none;
    }
+}
+.select {
+   @include select;
+   background-color: $col-dark;
+   color: $col-light;
+   border-color: $col-dark;
+}
+.select-invert {
+   @include select;
+   background-color: $col-light;
+   color: $col-dark;
+   border-color: $col-light;
 }

@@ -20,8 +20,8 @@ import EntityType from "./enums/EntityType.js";
       <Navigation v-if="_isLoggedIn" />
 
       <div class="content">
-         <div v-if="_isLoggedIn">
-            <Sandkasten v-if="page === 'Sandkasten'" :statistic="statistic" />
+         <div v-if="_isLoggedIn && !updateRequested">
+            <Sandkasten v-if="page === 'Sandkasten'" :statistic="statistic" :year="year" />
             <Ranglisten v-if="page === 'Ranglisten'" :statistic="statistic" />
             <Allgemein v-if="page === 'Allgemein'" :statistic="statistic" />
          </div>
@@ -37,10 +37,12 @@ export default {
       return {
          page: "Sandkasten",
          statistic: "gesamtzahlen",
+         year: (new Date(Date.now()).getFullYear() - (new Date(Date.now()).getMonth() + 1 < 8 ? 1 : 0)).toString().slice(2), // getMonth() + 1 because start at 0
          showModal: false,
          modalTitle: "",
          modalContent: "",
          _isLoggedIn: false,
+         updateRequested: false,
       };
    },
    inject: ["mq"],
@@ -66,6 +68,19 @@ export default {
                this.statistic = val;
             },
          }),
+         year: computed({
+            get: () => {
+               if (typeof sessionStorage.getItem("stat-year") !== "string") return this.year;
+               return sessionStorage.getItem("stat-year");
+            },
+            set: async (val) => {
+               sessionStorage.setItem("stat-year", val);
+               this.year = val;
+               this.updateRequested = true;
+               await (() => new Promise((resolve, reject) => setTimeout(resolve, 0)))();
+               this.updateRequested = false;
+            },
+         }),
          isLoggedIn: computed({
             get: () => this._isLoggedIn,
             set: (val) => {
@@ -78,6 +93,7 @@ export default {
    },
    async beforeMount() {
       await this.dbSetup();
+      this.year = typeof sessionStorage.getItem("stat-year") !== "string" ? "21" : sessionStorage.getItem("stat-year");
    },
    mounted() {
       // this.preloadData();
@@ -137,9 +153,11 @@ export default {
                } catch (e) {}
             }
 
+            console.log(this.year);
+
             let res;
             try {
-               res = await fetchAPI("/Statistic" + path, { credentials: "include" });
+               res = await fetchAPI("/Statistic" + path + `?year=${this.year}`, { credentials: "include" });
                if (res.status !== 200) throw new Error();
                res = await res.json();
             } catch (e) {
@@ -161,7 +179,7 @@ export default {
       },
       getFromDb(path) {
          return new Promise(async (resolve, reject) => {
-            const request = await window.statDB.transaction(["cached-data"]).objectStore("cached-data").get(path);
+            const request = await window.statDB.transaction(["cached-data"]).objectStore("cached-data").get(`${path}?year=${this.year}`);
 
             request.onsuccess = (e) => {
                if (e.target.result === undefined) return reject();
@@ -173,7 +191,10 @@ export default {
          });
       },
       insertInDb(path, value) {
-         window.statDB.transaction(["cached-data"], "readwrite").objectStore("cached-data").add({ data: value, path: path });
+         window.statDB
+            .transaction(["cached-data"], "readwrite")
+            .objectStore("cached-data")
+            .add({ data: value, path: path + `?year=${this.year}` });
       },
 
       async preloadData() {

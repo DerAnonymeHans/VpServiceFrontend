@@ -122,7 +122,6 @@ export default {
       },
       doPodest() {
          for (const [idx, place] of ["first", "second", "third"].entries()) {
-            console.log(place, idx);
             this.podest[place] = typeof this.rankList[idx]?.Name === "string" ? this.rankList[idx].Name : "";
          }
       },

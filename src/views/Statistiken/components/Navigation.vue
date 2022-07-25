@@ -9,6 +9,11 @@ import ScrollSelector, { Item } from "./ScrollSelector.vue";
       <div class="center">
          <Switch :options="['Allgemein', 'Sandkasten', 'Ranglisten']" :default="page" @switch="changePage" />
       </div>
+      <div class="center">
+         <select class="select-invert year-select" :value="defaultYear" @change="(e) => changeYear(e.target.value)">
+            <option v-for="year in years" v-bind:key="year.short" :value="year.short">{{ year.long }}</option>
+         </select>
+      </div>
       <div class="scroll-selector vert-center">
          <ScrollSelector
             @select="
@@ -24,7 +29,7 @@ import ScrollSelector, { Item } from "./ScrollSelector.vue";
 </template>
 <script>
 export default {
-   inject: ["page", "statistic", "mq"],
+   inject: ["page", "statistic", "year", "mq", "fetchStat"],
    data() {
       return {
          itemsContainer: {
@@ -46,15 +51,29 @@ export default {
             ],
          },
          items: [],
+         years: [],
+         defaultYear: "21",
       };
    },
-   mounted() {
+   async mounted() {
       this.changePage(this.page);
+      this.years = await this.getYears();
+      this.defaultYear = this.year;
    },
    methods: {
       changePage(newPage) {
          this.page = newPage;
          this.items = this.itemsContainer[newPage];
+      },
+      changeYear(year) {
+         this.year = year;
+         this.defaultYear = year;
+      },
+      async getYears() {
+         const res = await this.fetchStat("/Years", false);
+         return res.map((short) => {
+            return { short: short, long: `${short}/${parseInt(short) + 1}` };
+         });
       },
    },
 };
@@ -67,6 +86,10 @@ export default {
    padding-bottom: $padding;
    background-color: $col-dark;
 
+   .year-select {
+      margin-top: $margin;
+   }
+
    .scroll-selector {
       margin: $margin auto;
       width: 100%;
@@ -74,24 +97,29 @@ export default {
       justify-content: center;
    }
 
+   &.desktop,
    &.ultrawide {
       .scroll-selector {
-         height: max(7vh, 100px);
-      }
-   }
-   &.desktop {
-      .scroll-selector {
          height: max(6vh, 100px);
+      }
+      .year-select {
+         width: max(5%, 80px);
       }
    }
    &.tablet {
       .scroll-selector {
          height: max(5vh, 100px);
       }
+      .year-select {
+         width: max(10%, 80px);
+      }
    }
    &.mobile {
       .scroll-selector {
          height: max(5vh, 100px);
+      }
+      .year-select {
+         width: 30%;
       }
    }
 }
