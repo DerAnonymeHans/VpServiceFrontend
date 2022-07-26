@@ -3,11 +3,12 @@
 <script setup>
 import Switch from "@/components/switch/Switch.vue";
 import ScrollSelector, { Item } from "./ScrollSelector.vue";
+import KeyLabelPair from "@/structs/KeyLabelPair.js";
 </script>
 <template>
    <div class="nav-container" :class="mq.current">
       <div class="center">
-         <Switch :options="['Allgemein', 'Sandkasten', 'Ranglisten']" :default="page" @switch="changePage" />
+         <Switch :options="pages" :default="page" @switch="changePage" />
       </div>
       <div class="center">
          <select class="select-invert year-select" :value="defaultYear" @change="(e) => changeYear(e.target.value)">
@@ -32,9 +33,14 @@ export default {
    inject: ["page", "statistic", "year", "mq", "fetchStat"],
    data() {
       return {
+         pages: [
+            new KeyLabelPair("allgemein", "Allgemein"),
+            new KeyLabelPair("sandkasten", "Sandkasten"),
+            new KeyLabelPair("ranglisten", "Ranglisten"),
+         ],
          itemsContainer: {
-            Allgemein: [new Item("Erklärungen", "info"), new Item("Einstellungen", "settings"), new Item("Logout", "logout")],
-            Sandkasten: [
+            allgemein: [new Item("Erklärungen", "info"), new Item("Einstellungen", "settings"), new Item("Logout", "logout")],
+            sandkasten: [
                new Item("Gesamtzahlen", "gesamtzahlen"),
                new Item("Nach Zeit", "zeit"),
                new Item("Beziehungen", "beziehungen"),
@@ -42,7 +48,7 @@ export default {
                new Item("Im Vergleich", "vergleich"),
                // new Item("Durchschnitte", "durchschnitt"),
             ],
-            Ranglisten: [
+            ranglisten: [
                new Item("Gesamtzahlen", "gesamtzahlen"),
                new Item("Nach Zeit", "zeit"),
                new Item("Beziehungen", "beziehungen"),

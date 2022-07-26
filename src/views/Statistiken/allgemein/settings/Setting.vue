@@ -9,8 +9,8 @@ import Switch, { SwitchModel } from "@/components/switch/Switch.vue";
             <p class="name">{{ name }}</p>
             <p class="desc">{{ description }}</p>
          </div>
-         <button v-if="options.length === 1" class="btn" @click="$emit('optionChange', { option: _key, value: options[0] })">
-            {{ options[0] }}
+         <button v-if="options.length === 1" class="btn" @click="$emit('optionChange', { option: _key, value: options[0].key })">
+            {{ options[0].label }}
          </button>
          <Switch
             v-if="options.length > 1"
@@ -76,7 +76,7 @@ export { SettingModel };
       button {
          width: fit-content;
          height: fit-content;
-         margin: auto;
+         margin-left: auto;
       }
    }
 
@@ -85,6 +85,7 @@ export { SettingModel };
       .content {
          display: grid;
          grid-template-columns: 5fr 1fr;
+         align-items: center;
          .text {
             display: grid;
             grid-template-columns: 1fr 4fr;
@@ -92,10 +93,9 @@ export { SettingModel };
 
          &.isSwitch {
             grid-template-columns: 1fr;
+            justify-items: right;
          }
       }
-   }
-   &.tablet {
    }
 }
 </style>

@@ -5,6 +5,7 @@ import Chart from "chart.js/auto";
 import ColorRepo from "@/repos/ColorRepo.js";
 import Switch, { SwitchModel } from "@/components/switch/Switch.vue";
 import { sleep } from "@/App.vue";
+import KLP from "@/structs/KeyLabelPair.js";
 </script>
 <template>
    <div class="ranking" :class="mq.current">
@@ -103,7 +104,11 @@ export default {
    },
    mounted() {
       this.isMounted = true;
-      if (!this.disableAutoSwitches) this._switches.sortBy = new SwitchModel(["Top-Fehl", "Top-Ver", "Flop-Fehl", "Flop-Ver"], "Top-Fehl");
+      if (!this.disableAutoSwitches)
+         this._switches.sortBy = new SwitchModel(
+            [new KLP("top-miss", "Top-Fehl"), new KLP("top-subst", "Top-Ver"), new KLP("flop-miss", "Flop-Fehl"), new KLP("flop-subst", "Flop-Ver")],
+            "top-miss"
+         );
       this.switchSessionHandler("load");
    },
    methods: {
@@ -145,16 +150,16 @@ class GenerationOptions {
       for (let key in this.switches) {
          if (key === "sortBy") {
             switch (this.switches.sortBy) {
-               case "Top-Fehl":
+               case "top-miss":
                   this.switches.sortBy = "mm";
                   break;
-               case "Top-Ver":
+               case "top-subst":
                   this.switches.sortBy = "ms";
                   break;
-               case "Flop-Fehl":
+               case "flop-miss":
                   this.switches.sortBy = "lm";
                   break;
-               case "Flop-Ver":
+               case "flop-subst":
                   this.switches.sortBy = "ls";
                   break;
             }

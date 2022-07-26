@@ -5,6 +5,7 @@ import { computed } from "vue";
 import Switch from "@/components/switch/Switch.vue";
 import WithType from "./WithType.vue";
 import WithName from "./WithName.vue";
+import KLP from "@/structs/KeyLabelPair.js";
 </script>
 <template>
    <div class="beziehungen-page" :class="mq.current">
@@ -12,8 +13,8 @@ import WithName from "./WithName.vue";
          <Switch :invert="true" :options="compareModeOptions" :default="compareModeValue" @switch="(to) => switchCompareMode(to)" />
       </div>
       <div class="beziehungen-main">
-         <WithType v-if="compareModeValue === 'Typ'" />
-         <WithName v-if="compareModeValue === 'Name'" />
+         <WithType v-if="compareModeValue === 'type'" />
+         <WithName v-if="compareModeValue === 'name'" />
       </div>
    </div>
 </template>
@@ -23,8 +24,8 @@ export default {
    data() {
       return {
          isMounted: false,
-         compareModeOptions: ["Name", "Typ"],
-         compareModeValue: "Name",
+         compareModeOptions: [new KLP("name", "Name"), new KLP("type", "Typ")],
+         compareModeValue: "name",
       };
    },
    created() {

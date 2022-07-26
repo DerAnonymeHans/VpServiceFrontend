@@ -21,9 +21,9 @@ import EntityType from "./enums/EntityType.js";
 
       <div class="content">
          <div v-if="_isLoggedIn && !updateRequested">
-            <Sandkasten v-if="page === 'Sandkasten'" :statistic="statistic" :year="year" />
-            <Ranglisten v-if="page === 'Ranglisten'" :statistic="statistic" />
-            <Allgemein v-if="page === 'Allgemein'" :statistic="statistic" />
+            <Allgemein v-if="page === 'allgemein'" :statistic="statistic" />
+            <Sandkasten v-if="page === 'sandkasten'" :statistic="statistic" :year="year" />
+            <Ranglisten v-if="page === 'ranglisten'" :statistic="statistic" />
          </div>
          <Login v-if="!_isLoggedIn" />
       </div>
@@ -35,7 +35,7 @@ import EntityType from "./enums/EntityType.js";
 export default {
    data() {
       return {
-         page: "Sandkasten",
+         page: "sandkasten",
          statistic: "gesamtzahlen",
          // year: (new Date(Date.now()).getFullYear() - (new Date(Date.now()).getMonth() + 1 < 8 ? 1 : 0)).toString().slice(2), // getMonth() + 1 because start at 0
          year: "21",

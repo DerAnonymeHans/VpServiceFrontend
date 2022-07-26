@@ -4,6 +4,7 @@
 import Ranking, { sortByToSentence } from "../../components/Ranking.vue";
 import { SwitchModel } from "@/components/switch/Switch.vue";
 import EntityType from "../../enums/EntityType.js";
+import KLP from "@/structs/KeyLabelPair.js";
 </script>
 <template>
    <div>
@@ -22,7 +23,7 @@ export default {
    data() {
       return {
          switches: {
-            sortBy: new SwitchModel(["Top-Fehl", "Top-Ver"], "Top-Fehl"),
+            sortBy: new SwitchModel([new KLP("top-miss", "Top-Fehl"), new KLP("top-subst", "Top-Ver")], "top-miss"),
          },
       };
    },

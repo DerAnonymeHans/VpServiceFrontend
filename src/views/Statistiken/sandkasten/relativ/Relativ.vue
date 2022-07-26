@@ -3,6 +3,7 @@
 <script setup>
 import Statistic, { Dataset } from "../../components/Statistic.vue";
 import { SwitchModel } from "@/components/switch/Switch.vue";
+import KLP from "@/structs/KeyLabelPair.js";
 </script>
 <template>
    <Statistic :getDatasets="getDatasets" :getLabels="getLabels" :getExplanation="getExplanation" chartType="bar" :_switches="switches" />
@@ -13,21 +14,24 @@ export default {
    data() {
       return {
          switches: {
-            attendance: new SwitchModel(["Fehlstunden", "Vertretungsstunden", "beides"], "Fehlstunden"),
-            sumMode: new SwitchModel(["getrennt", "addieren"], "getrennt"),
+            attendance: new SwitchModel(
+               [new KLP("Fehlstunden", "Fehlstunden"), new KLP("Vertretungsstunden", "Vertretungsstunden"), new KLP("beides", "beides")],
+               "Vertretungsstunden"
+            ),
+            sumMode: new SwitchModel([new KLP("split", "getrennt"), new KLP("add", "addieren")], "split"),
          },
          expectedHours: [],
       };
    },
    methods: {
       getLabels(options) {
-         const sumData = options.switches.sumMode === "addieren";
+         const sumData = options.switches.sumMode === "add";
          if (sumData) return [options.selectors.map((selector) => selector.name).join(", ")];
          return options.selectors.map((selector) => selector.name);
       },
       async getDatasets(options) {
          this.expectedHours = [];
-         const sumData = options.switches.sumMode === "addieren";
+         const sumData = options.switches.sumMode === "add";
          const missed = new Dataset("Fehlstunden", options.selectors.length);
          const subst = new Dataset("Vertretungsstunden", options.selectors.length);
          for (let selector of options.selectors) {
@@ -52,7 +56,7 @@ export default {
          const recordedDays = await this.fetchStat(`/RecordedDays/Count`);
          return `Das Diagramm zeigt die relative Verteilung der ${attendance} - die Angaben sind also in Prozent. Das bedeutet: Es wird der erwartete wöchentliche Stundensatz  genommen, dieser auf die Anzahl der beobachteten Tage hochgerechnet (siehe unten) und anschließend mit den ${attendance} ins Verhältnis gesetzt. Bsp: 12% Fehlstunden bedeuten, das von der erwarteten Zahl an Stunden 12% fehlen. 
          ${
-            options.switches.sumMode === "addieren"
+            options.switches.sumMode === "add"
                ? `Die Daten aller ausgewählten Namen werden hierbei relativ addiert (es wird das arithmetische Mittel der Prozente gebildet), so dass die Summe ihrer ${attendance} sichtbar ist.`
                : ""
          }

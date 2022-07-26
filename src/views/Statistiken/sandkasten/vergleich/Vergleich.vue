@@ -14,20 +14,27 @@ export default {
    data() {
       return {
          switches: {
-            attendance: new SwitchModel(["Fehlstunden", "Vertretungsstunden", "beides"], "Fehlstunden"),
-            sumMode: new SwitchModel(["getrennt", "addieren"], "getrennt"),
+            attendance: new SwitchModel(
+               [
+                  new KeyLabelPair("Fehlstunden", "Fehlstunden"),
+                  new KeyLabelPair("Vertretungsstunden", "Vertretungsstunden"),
+                  new KeyLabelPair("beides", "beides"),
+               ],
+               "Vertretungsstunden"
+            ),
+            sumMode: new SwitchModel([new KLP("split", "getrennt"), new KLP("add", "addieren")], "split"),
          },
          averages: [],
       };
    },
    methods: {
       getLabels(options) {
-         const sumData = options.switches.sumMode === "addieren";
+         const sumData = options.switches.sumMode === "add";
          if (sumData) return [options.selectors.map((selector) => selector.name).join(", ")];
          return options.selectors.map((selector) => selector.name);
       },
       async getDatasets(options) {
-         const sumData = options.switches.sumMode === "addieren";
+         const sumData = options.switches.sumMode === "add";
          const missed = new Dataset("Fehlstunden", options.selectors.length);
          const subst = new Dataset("Vertretungsstunden", options.selectors.length);
          for (let selector of options.selectors) {
@@ -49,12 +56,11 @@ export default {
       },
       async getExplanation(options, chart) {
          const attendance = options.switches.attendance === "beides" ? "Fehl- und Vertretungsstunden" : options.switches.attendance;
-         console.log(options);
          return `Das Diagramm zeigt die ${attendance} verglichen mit der durchschnittlichen Anzahl an ${attendance} des Typs - die Angaben sind also in Prozent. Das bedeutet: Es werden die relativen ${attendance} (siehe Statistik 'relativ') genommen und diese mit der durchschnitlichen relativen Zahl an ${attendance} des Typs (Lehrer, Klassen, Kurse, ...) ins Verhältnis genommen. Hohe Werte bedeuten also, das der Name verglichen mit seinem Typ sehr viel ${attendance} hat.
          <br>
          Bsp.: Lehrer X hat 40% mehr Fehlstunden als der Durchschnittslehrer.
          ${
-            options.switches.sumMode === "addieren"
+            options.switches.sumMode === "add"
                ? `<br>Die Daten aller ausgewählten Namen werden hierbei relativ addiert (es wird das arithmetische Mittel der Prozente gebildet), so dass die Summe ihrer ${attendance} sichtbar ist. Diese Option wird nur empfohlen insofern alle ausgewählten Namen dem selben Typ angehören.`
                : ""
          }

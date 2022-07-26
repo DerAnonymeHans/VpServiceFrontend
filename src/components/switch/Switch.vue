@@ -1,9 +1,9 @@
 <!-- @format -->
-
+<script setup></script>
 <template>
    <div class="switch-container" :class="{ invert: invert }" :style="{ 'grid-template-columns': '1fr '.repeat(options.length) }">
       <div v-for="(option, idx) of options" :key="idx" :class="{ selected: selected === idx }" @click="doSwitch(idx)">
-         {{ option }}
+         {{ option.label }}
       </div>
       <div class="switcher" :style="{ left: left, width: 100 / options.length + '%' }"></div>
    </div>
@@ -25,24 +25,23 @@ export default {
       };
    },
    mounted() {
-      const idx = this.options.indexOf(this.default);
+      const idx = this.options.findIndex((el) => this.default === el.key);
       if (idx === -1) return;
       this.doSwitch(idx);
    },
    methods: {
       doSwitch(idx) {
-         // this.selected = this.selected === 0 ? 1 : 0;
          this.selected = idx;
          this.left = (100 / this.options.length) * idx + "%";
 
-         this.$emit("switch", this.options[this.selected]);
+         this.$emit("switch", this.options[this.selected].key);
       },
    },
 };
 
 class SwitchModel {
    constructor(options, _default) {
-      this.options = options;
+      this.options = options; // [KeyLabelPair]
       this.value = _default;
    }
 }

@@ -4,6 +4,7 @@
 import Statistic, { Dataset } from "../../components/Statistic.vue";
 import TimeType from "../../enums/TimeType.js";
 import { SwitchModel } from "@/components/switch/Switch.vue";
+import KLP from "@/structs/KeyLabelPair.js";
 </script>
 <template>
    <Statistic :getDatasets="getDatasets" :getLabels="getLabels" :getExplanation="getExplanation" chartType="line" :_switches="switchModel" />
@@ -14,10 +15,13 @@ export default {
    data() {
       return {
          switchModel: {
-            timeType: new SwitchModel(["Monate", "Wochentage", "Stunden"], "Monate"),
-            attendance: new SwitchModel(["Fehlstunden", "Vertretungsstunden", "beides"], "Fehlstunden"),
-            continuity: new SwitchModel(["getrennt", "fortlaufend"], "getrennt"),
-            sumMode: new SwitchModel(["getrennt", "addieren"], "getrennt"),
+            timeType: new SwitchModel([new KLP("Monate", "Monate"), new KLP("Wochentage", "Wochentage"), new KLP("Stunden", "Stunden")], "Monate"),
+            attendance: new SwitchModel(
+               [new KLP("Fehlstunden", "Fehlstunden"), new KLP("Vertretungsstunden", "Vertretungsstunden"), new KLP("beides", "beides")],
+               "Fehlstunden"
+            ),
+            continuity: new SwitchModel([new KLP("split", "getrennt"), new KLP("continuos", "fortlaufend")], "split"),
+            sumMode: new SwitchModel([new KLP("split", "getrennt"), new KLP("add", "addieren")], "split"),
          },
       };
    },
@@ -33,7 +37,7 @@ export default {
          }
       },
       async getDatasets(options) {
-         let sumData = options.switches.sumMode === "addieren";
+         let sumData = options.switches.sumMode === "add";
          let timeType = 0;
          switch (options.switches.timeType) {
             case "Monate":
@@ -65,7 +69,7 @@ export default {
                set.data = timeType === TimeType.MONTH ? [...data[key].slice(7, Infinity), ...data[key].slice(0, 7)] : data[key];
                set.key = key;
 
-               if (options.switches.continuity === "fortlaufend") {
+               if (options.switches.continuity === "continuos") {
                   for (let i = 1; i < set.data.length; i++) {
                      set.data[i] += set.data[i - 1];
                   }
@@ -92,7 +96,7 @@ export default {
          const timeType = options.switches.timeType;
          return `Das Diagramm zeigt die ${attendance} je nach ${timeType.slice(0, timeType.length - 1)}.
          ${
-            options.switches.sumMode === "addieren"
+            options.switches.sumMode === "add"
                ? `Die Daten aller ausgewählten Namen werden hierbei addiert, so dass die Summe ihrer ${attendance} sichtbar ist.`
                : ""
          }
