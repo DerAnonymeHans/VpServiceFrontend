@@ -3,7 +3,7 @@
 import { fetchAPI } from "@/App.vue";
 </script>
 <template>
-   <div class="flex">
+   <div class="flex box">
       <button class="btn" @click="logout">Ausloggen</button>
    </div>
 </template>
@@ -21,4 +21,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import "@/styles/_variables.scss";
+.flex {
+   justify-content: center;
+}
 </style>

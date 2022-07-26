@@ -78,7 +78,7 @@ export default {
       async selectorsChanged(selectors) {
          this.selectors = selectors;
          await this.redraw();
-         this.$refs["chart-container"].scrollIntoView({ behavior: "smooth", block: "end" });
+         if (localStorage.getItem("stat-scroll") !== "false") this.$refs["chart-container"].scrollIntoView({ behavior: "smooth", block: "end" });
       },
       async redraw() {
          if (!this.isMounted) return;

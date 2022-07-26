@@ -13,6 +13,7 @@ import KLP from "@/structs/KeyLabelPair.js";
          :name="setting.name"
          :description="setting.desc"
          :options="setting.options"
+         :defaultValue="setting.defaultVal"
          @optionChange="optionChange"
       />
    </div>
@@ -44,7 +45,8 @@ export default {
                   "stat-scroll",
                   "Scrolling",
                   "Hier kannst du entscheiden ob nach klicken des 'Diagramm erstellen' Knopfes, der Bildschirm zum Diagramm gescrollt werden soll.",
-                  ["Scrollen", "Nicht scrollen"]
+                  [new KLP("true", "Scrollen"), new KLP("false", "Nicht scrollen")],
+                  localStorage.getItem("stat-scroll")
                ),
             ]),
          ],

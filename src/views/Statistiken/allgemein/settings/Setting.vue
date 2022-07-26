@@ -94,6 +94,10 @@ export { SettingModel };
          &.isSwitch {
             grid-template-columns: 1fr;
             justify-items: right;
+
+            .text {
+               grid-template-columns: 1fr 5fr;
+            }
          }
       }
    }
