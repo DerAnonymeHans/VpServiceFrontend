@@ -82,6 +82,7 @@ export default {
       },
       async redraw() {
          if (!this.isMounted) return;
+         this.setCursorStyle("wait");
          let doc = document.documentElement;
          let top = (window.pageYOffset || doc.scrollTop) - (doc.clientTop || 0);
 
@@ -112,6 +113,7 @@ export default {
             `;
 
          window.scrollTo(0, top);
+         this.setCursorStyle("auto");
       },
       async switchMode(key, value) {
          this._switches[key].value = value;
@@ -128,6 +130,9 @@ export default {
                this._switches[key].value = saved;
             }
          }
+      },
+      setCursorStyle(name) {
+         document.body.style.cursor = name;
       },
    },
 };

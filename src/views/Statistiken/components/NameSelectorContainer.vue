@@ -10,8 +10,12 @@ import Bookmarks from "./BookMarks.vue";
 <template>
    <div class="name-selectors-container box" :class="mq.current">
       <div class="actions dont-print">
-         <button class="btn-svg" @click="showBookmarks = true"><IconRepo name="save" /></button>
-         <button class="btn-svg" @click="deleteAll()"><IconRepo name="delete" /></button>
+         <abbr title="Speichern/Laden">
+            <button class="btn-svg" @click="showBookmarks = true"><IconRepo name="save" /></button>
+         </abbr>
+         <abbr title="Auswahl löschen">
+            <button class="btn-svg" @click="deleteAll()"><IconRepo name="delete" /></button>
+         </abbr>
       </div>
       <div class="selectors">
          <NameSelector

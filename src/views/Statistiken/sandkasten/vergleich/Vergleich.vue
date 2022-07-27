@@ -4,6 +4,7 @@
 import Statistic, { Dataset } from "../../components/Statistic.vue";
 import { SwitchModel } from "@/components/switch/Switch.vue";
 import EntityType from "@/views/Statistiken/enums/EntityType.js";
+import KLP from "@/structs/KeyLabelPair.js";
 </script>
 <template>
    <Statistic :getDatasets="getDatasets" :getLabels="getLabels" :getExplanation="getExplanation" chartType="bar" :_switches="switches" />
@@ -15,11 +16,7 @@ export default {
       return {
          switches: {
             attendance: new SwitchModel(
-               [
-                  new KeyLabelPair("Fehlstunden", "Fehlstunden"),
-                  new KeyLabelPair("Vertretungsstunden", "Vertretungsstunden"),
-                  new KeyLabelPair("beides", "beides"),
-               ],
+               [new KLP("Fehlstunden", "Fehlstunden"), new KLP("Vertretungsstunden", "Vertretungsstunden"), new KLP("beides", "beides")],
                "Vertretungsstunden"
             ),
             sumMode: new SwitchModel([new KLP("split", "getrennt"), new KLP("add", "addieren")], "split"),
