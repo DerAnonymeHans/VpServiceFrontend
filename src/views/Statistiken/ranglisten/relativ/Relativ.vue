@@ -45,7 +45,7 @@ export default {
             type.name
          } mit den ${sortBy} relativ gesehen. Diese Statistik hat die meiste Aussagekraft wenn man Ausfall und Vertretung von ${
             type.name.slice(type.name.length - 1) === "n" ? type.name : type.name + "n"
-         } bewerten will, da sie die Gesamtsunden mit in Betracht bezieht.`;
+         } bewerten will, da sie die Gesamtstunden mit in Betracht bezieht.`;
       },
       changeType(newType) {
          if (parseInt(newType) != newType) return;

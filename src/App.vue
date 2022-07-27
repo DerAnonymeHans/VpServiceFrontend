@@ -77,4 +77,22 @@ table {
       background-color: lighten($col-dark, 60%);
    }
 }
+
+@media print {
+   .box {
+      color: black !important;
+      border-color: rgba(0, 0, 0, 0.2) !important;
+      // border: none !important;
+      background-color: none;
+   }
+   .dont-print {
+      display: none !important;
+   }
+   .print {
+      display: block !important;
+   }
+}
+.print {
+   display: none;
+}
 </style>

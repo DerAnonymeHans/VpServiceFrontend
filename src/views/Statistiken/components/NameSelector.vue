@@ -5,13 +5,13 @@ import EntityType from "../enums/EntityType.js";
 </script>
 <template>
    <div class="name-select-container">
-      <div class="name-select-delete" @click="deleteSelf()"></div>
+      <div class="name-select-delete dont-print" @click="deleteSelf()"></div>
       <div class="select-wrapper">
          <select :value="selectedName === undefined ? options[0] : selectedName" @input="onSelect">
             <option v-for="option in options" :key="option" :value="option">{{ option }}</option>
          </select>
       </div>
-      <div class="name-select-type-change" @click="nextType()" :style="{ 'background-color': entityType.color }"></div>
+      <div class="name-select-type-change dont-print" @click="nextType()" :style="{ 'background-color': entityType.color }"></div>
    </div>
 </template>
 <script>
@@ -158,6 +158,12 @@ $border-width: 2px;
          transform: rotate(45deg);
          bottom: 10%;
       }
+   }
+}
+
+@media print {
+   * {
+      font-size: 8pt;
    }
 }
 </style>

@@ -6,7 +6,7 @@ import ScrollSelector, { Item } from "./ScrollSelector.vue";
 import KeyLabelPair from "@/structs/KeyLabelPair.js";
 </script>
 <template>
-   <div class="nav-container" :class="mq.current">
+   <div class="nav-container dont-print" :class="mq.current">
       <div class="center">
          <Switch :options="pages" :default="page" @switch="changePage" />
       </div>
@@ -88,7 +88,7 @@ export default {
 @import "@/styles/helper.scss";
 @import "@/styles/variables.scss";
 .nav-container {
-   padding-top: 12vh;
+   // padding-top: 12vh;
    padding-bottom: $padding;
    background-color: $col-dark;
 

@@ -9,7 +9,7 @@ import Bookmarks from "./BookMarks.vue";
 </script>
 <template>
    <div class="name-selectors-container box" :class="mq.current">
-      <div class="actions">
+      <div class="actions dont-print">
          <button class="btn-svg" @click="showBookmarks = true"><IconRepo name="save" /></button>
          <button class="btn-svg" @click="deleteAll()"><IconRepo name="delete" /></button>
       </div>
@@ -26,7 +26,7 @@ import Bookmarks from "./BookMarks.vue";
          <button class="name-selectors-add btn" @click="addSelector"></button>
       </div>
       <slot></slot>
-      <div class="submit-btn-container">
+      <div class="submit-btn-container dont-print">
          <button class="btn-focus vert-center" @click="$emit('selector-change', selectors)">Diagramm erstellen</button>
       </div>
       <Modal :isOpen="showBookmarks" @close="showBookmarks = !showBookmarks" :title="modalTitle" :content="''" :buttons="[]">
@@ -153,6 +153,12 @@ class Selector {
 
    &.mobile {
       grid-template-columns: 1fr 1fr;
+   }
+}
+
+@media print {
+   .selectors {
+      grid-template-columns: repeat(auto-fit, 100px) !important;
    }
 }
 </style>

@@ -6,7 +6,7 @@ import { MqResponsive } from "vue3-mq";
 </script>
 
 <template>
-   <nav :class="`${mq.current} ${isNavOpen ? 'nav-open' : 'nav-closed'}`">
+   <nav :class="`${mq.current} ${isNavOpen ? 'nav-open' : 'nav-closed'}`" class="dont-print">
       <!-- <NavItems v-if="false"/> -->
       <div class="nav-item-container">
          <NavItems v-if="mq.tabletPlus || isNavOpen" @select="toggleMenu()" />

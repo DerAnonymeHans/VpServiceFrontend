@@ -17,6 +17,12 @@ import EntityType from "./enums/EntityType.js";
 
 <template>
    <main :class="mq.current">
+      <h3 class="print text-center">Eine Statistik von kepleraner.herokuapp.com</h3>
+      <div class="print text-center">Schuljahr: {{ year }}/{{ parseInt(year) + 1 }}</div>
+      <div class="print text-center">Datum: {{ getDate() }}</div>
+      <div class="user-inform-container dont-print">
+         <div v-if="userInformation.length > 0" class="user-inform">{{ userInformation }}</div>
+      </div>
       <Navigation v-if="_isLoggedIn" />
 
       <div class="content">
@@ -37,13 +43,13 @@ export default {
       return {
          page: "sandkasten",
          statistic: "gesamtzahlen",
-         // year: (new Date(Date.now()).getFullYear() - (new Date(Date.now()).getMonth() + 1 < 8 ? 1 : 0)).toString().slice(2), // getMonth() + 1 because start at 0
          year: "21",
          showModal: false,
          modalTitle: "",
          modalContent: "",
          _isLoggedIn: false,
          updateRequested: false,
+         userInformation: "",
       };
    },
    inject: ["mq"],
@@ -100,7 +106,7 @@ export default {
             : sessionStorage.getItem("stat-year");
    },
    mounted() {
-      // this.preloadData();
+      this.getUserInformation();
    },
    methods: {
       inform(title, content) {
@@ -213,14 +219,39 @@ export default {
             console.warn("Preload failed. " + e.message);
          }
       },
+      async getUserInformation() {
+         const res = await this.fetchAPI("/Statistic/CheckDataFreshness").then((res) => res.json());
+         if (res.message === null || res.message === undefined) return;
+         this.userInformation = res.message;
+      },
+      getDate() {
+         const date = new Date(Date.now());
+         return `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
+      },
    },
 };
 </script>
 
 <style lang="scss" scoped>
 @import "@/styles/_variables.scss";
+@import "@/styles/_mixins.scss";
 main {
    padding-bottom: $padding * 2;
+   margin-top: 9vh;
+   .user-inform-container {
+      background-color: $col-dark;
+      padding: $padding 0;
+      .user-inform {
+         @include box;
+         border-color: $warning;
+         background-color: rgba($warning, 0.2);
+         color: white;
+         width: fit-content;
+         max-width: 80vw;
+         margin: auto;
+      }
+   }
+
    .content {
       margin: 5vh auto;
       margin-bottom: 0;
@@ -244,6 +275,16 @@ main {
       .content {
          width: 95vw;
       }
+   }
+}
+
+@media print {
+   main {
+      margin-top: 2vh !important;
+      padding-bottom: 0 !important;
+   }
+   .content {
+      width: 100vw !important;
    }
 }
 </style>

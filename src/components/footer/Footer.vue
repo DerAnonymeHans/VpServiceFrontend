@@ -7,11 +7,12 @@ import Modal, { Button } from "@/components/modal/Modal.vue";
 </script>
 <template>
    <Modal :isOpen="showModal" @close="showModal = !showModal" :title="modalTitle" :content="modalContent" :buttons="[]"></Modal>
-   <footer>
+   <footer class="dont-print">
       <a @click="openModal('Datenschutz')">Datenschutz</a>
       <a @click="openModal('Impressum')">Impressum</a>
       <a @click="openModal('AGB')">AGB</a>
    </footer>
+   <p class="print">Alle Angaben ohne Gewähr.</p>
 </template>
 
 <script>

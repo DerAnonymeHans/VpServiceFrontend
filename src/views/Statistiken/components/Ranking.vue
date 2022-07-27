@@ -9,7 +9,7 @@ import KLP from "@/structs/KeyLabelPair.js";
 </script>
 <template>
    <div class="ranking" :class="mq.current">
-      <div class="inputs box">
+      <div class="inputs box dont-print">
          <div class="switches flex">
             <Switch
                v-for="(_switch, key) in _switches"
@@ -315,6 +315,21 @@ $trans: 10%;
    }
    100% {
       transform: rotate($deg) translateX($trans);
+   }
+}
+
+@media print {
+   .podest-container {
+      width: 60%;
+      border: none !important;
+   }
+   .podest {
+      border: 5px solid rgba(black, 0.7) !important;
+   }
+   .podest-item {
+      .name {
+         animation: none !important;
+      }
    }
 }
 </style>

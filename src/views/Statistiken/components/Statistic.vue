@@ -16,7 +16,7 @@ import { sleep } from "@/App.vue";
          <canvas id="mychart" ref="chart"></canvas>
       </div>
 
-      <div class="switches">
+      <div class="switches dont-print">
          <Switch
             v-for="(_switch, key) in _switches"
             :key="key"
@@ -226,6 +226,16 @@ export { Dataset, DatasetGroup };
       .statistic {
          height: 80vh;
       }
+   }
+}
+
+@media print {
+   #mychart {
+      width: 100% !important;
+      max-height: 40vh;
+   }
+   .statistic {
+      height: fit-content !important;
    }
 }
 </style>

@@ -9,7 +9,7 @@ import KLP from "@/structs/KeyLabelPair.js";
 </script>
 <template>
    <div class="beziehungen-page" :class="mq.current">
-      <div class="beziehungen-header">
+      <div class="beziehungen-header dont-print">
          <Switch :invert="true" :options="compareModeOptions" :default="compareModeValue" @switch="(to) => switchCompareMode(to)" />
       </div>
       <div class="beziehungen-main">

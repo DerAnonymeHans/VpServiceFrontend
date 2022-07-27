@@ -1,25 +1,26 @@
+/** @format */
+
 @import "./variables";
 
-.center{
+.center {
    width: 100%;
    display: flex;
    justify-content: center;
 }
+.text-center {
+   text-align: center;
+}
 
-.margin-vert{
+.margin-vert {
    margin: $margin 0;
 }
 
-.flex{
+.flex {
    display: flex;
-}.flex-n-margin{
+}
+.flex-n-margin {
    display: flex;
    > * {
-      margin-inline: $margin * .5;
+      margin-inline: $margin * 0.5;
    }
 }
-
-
-
-
-
