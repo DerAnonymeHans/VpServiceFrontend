@@ -219,7 +219,7 @@ export default {
          }
       },
       async getUserInformation() {
-         const res = await fetchAPI("/Statistic/CheckDataFreshness").then((res) => res.json());
+         const res = await fetchAPI("/Statistic/CheckDataFreshness", { credentials: "include" }).then((res) => res.json());
          if (res.message === null || res.message === undefined) return;
          this.userInformation = res.message;
       },
