@@ -92,6 +92,7 @@ export default {
             get: () => this._isLoggedIn,
             set: (val) => {
                this._isLoggedIn = val;
+               this._isLoggedIn && this.getUserInformation();
                if (!this._isLoggedIn) this.page = "";
             },
          }),
@@ -106,7 +107,7 @@ export default {
             : sessionStorage.getItem("stat-year");
    },
    mounted() {
-      this.getUserInformation();
+      this._isLoggedIn && this.getUserInformation();
    },
    methods: {
       inform(title, content) {
