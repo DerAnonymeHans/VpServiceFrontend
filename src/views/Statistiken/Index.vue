@@ -163,8 +163,6 @@ export default {
                } catch (e) {}
             }
 
-            console.log(this.year);
-
             let res;
             try {
                res = await fetchAPI("/Statistic" + path + `?year=${this.year}`, { credentials: "include" });
@@ -220,7 +218,7 @@ export default {
          }
       },
       async getUserInformation() {
-         const res = await this.fetchAPI("/Statistic/CheckDataFreshness").then((res) => res.json());
+         const res = await fetchAPI("/Statistic/CheckDataFreshness").then((res) => res.json());
          if (res.message === null || res.message === undefined) return;
          this.userInformation = res.message;
       },
