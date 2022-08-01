@@ -231,6 +231,7 @@ export default {
          }
       },
       async getUserInformation() {
+         await this.handleYear();
          let userInformation = [];
          userInformation.push(await this.checkFor("Freshness"), await this.checkFor("Amount"));
          userInformation = userInformation.filter((el) => typeof el === "string");
