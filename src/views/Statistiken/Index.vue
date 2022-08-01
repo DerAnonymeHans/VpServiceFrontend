@@ -154,6 +154,7 @@ export default {
       },
       fetchStat(path, isInform = true, isHandleYear = true) {
          return new Promise(async (resolve, reject) => {
+            this.setCursorStyle("wait");
             isHandleYear && (await this.handleYear());
             const dbStatus = sessionStorage.getItem("db-status");
             for (let i = 0; i < 5; i++) {
@@ -163,6 +164,7 @@ export default {
             if (dbStatus === DBStatus.RUNNING) {
                try {
                   const res = await this.getFromDb(path);
+                  this.setCursorStyle("auto");
                   return resolve(res);
                } catch (e) {}
             }
@@ -174,8 +176,11 @@ export default {
                res = await res.json();
             } catch (e) {
                if (isInform) this.inform("Problem", "Die von dir angefragten Statistiken wurden nicht gefunden.");
+               this.setCursorStyle("auto");
                return reject();
             }
+
+            this.setCursorStyle("auto");
 
             if (!res.isSuccess) {
                if (isInform) this.inform("Information", res.message);
@@ -244,6 +249,9 @@ export default {
       getDate() {
          const date = new Date(Date.now());
          return `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
+      },
+      setCursorStyle(name) {
+         document.body.style.cursor = name;
       },
    },
 };
