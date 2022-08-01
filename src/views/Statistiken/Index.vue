@@ -21,7 +21,12 @@ import EntityType from "./enums/EntityType.js";
       <div class="print text-center">Schuljahr: {{ year }}/{{ parseInt(year) + 1 }}</div>
       <div class="print text-center">Datum: {{ getDate() }}</div>
       <div class="user-inform-container dont-print">
-         <div v-if="userInformation.length > 0" class="user-inform">{{ userInformation }}</div>
+         <div v-if="userInformation.length > 0" class="user-inform">
+            <span v-for="info in userInformation" :key="info">
+               {{ info }}
+               <br />
+            </span>
+         </div>
       </div>
       <Navigation v-if="_isLoggedIn" />
 
@@ -49,7 +54,7 @@ export default {
          modalContent: "",
          _isLoggedIn: false,
          updateRequested: false,
-         userInformation: "",
+         userInformation: [],
       };
    },
    inject: ["mq"],
@@ -86,6 +91,7 @@ export default {
                this.updateRequested = true;
                await (() => new Promise((resolve, reject) => setTimeout(resolve, 0)))();
                this.updateRequested = false;
+               await this.getUserInformation();
             },
          }),
          isLoggedIn: computed({
@@ -99,12 +105,8 @@ export default {
          fetchStat: this.fetchStat,
       };
    },
-   async beforeMount() {
+   async created() {
       await this.dbSetup();
-      this.year =
-         typeof sessionStorage.getItem("stat-year") !== "string"
-            ? await this.fetchStat("/Years/Current", false)
-            : sessionStorage.getItem("stat-year");
    },
    mounted() {
       this._isLoggedIn && this.getUserInformation();
@@ -150,8 +152,9 @@ export default {
             };
          });
       },
-      fetchStat(path, isInform = true) {
+      fetchStat(path, isInform = true, isHandleYear = true) {
          return new Promise(async (resolve, reject) => {
+            isHandleYear && (await this.handleYear());
             const dbStatus = sessionStorage.getItem("db-status");
             for (let i = 0; i < 5; i++) {
                if (dbStatus === DBStatus.PENDING) await sleep(200);
@@ -186,6 +189,15 @@ export default {
             return resolve(res.body);
          });
       },
+      async handleYear() {
+         const cached = sessionStorage.getItem("stat-year");
+         if (typeof cached === "string") {
+            if (this.year === cached) return;
+            this.year = cached;
+            return;
+         }
+         this.year = await this.fetchStat("/Years/Current", false, false);
+      },
       getFromDb(path) {
          return new Promise(async (resolve, reject) => {
             const request = await window.statDB.transaction(["cached-data"]).objectStore("cached-data").get(`${path}?year=${this.year}`);
@@ -219,9 +231,14 @@ export default {
          }
       },
       async getUserInformation() {
-         const res = await fetchAPI("/Statistic/CheckDataFreshness", { credentials: "include" }).then((res) => res.json());
-         if (res.message === null || res.message === undefined) return;
-         this.userInformation = res.message;
+         let userInformation = [];
+         userInformation.push(await this.checkFor("Freshness"), await this.checkFor("Amount"));
+         userInformation = userInformation.filter((el) => typeof el === "string");
+         this.userInformation = userInformation;
+      },
+      async checkFor(what) {
+         let res = await fetchAPI(`/Statistic/CheckData${what}?year=${this.year}`, { credentials: "include" }).then((res) => res.json());
+         return res.message || null;
       },
       getDate() {
          const date = new Date(Date.now());
