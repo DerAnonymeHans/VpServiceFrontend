@@ -4,6 +4,7 @@ import { createApp } from "vue";
 import App from "./App.vue";
 import router from "./router";
 import { Vue3Mq } from "vue3-mq";
+import "./registerServiceWorker";
 
 const app = createApp(App);
 
@@ -19,3 +20,5 @@ app.use(Vue3Mq, {
 app.config.unwrapInjectedRef = true;
 
 app.mount("#app");
+
+console.log("base_url", process.env.BASE_URL);

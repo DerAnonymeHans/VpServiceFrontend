@@ -1,0 +1,26 @@
+{
+   "name": "Kepleraner",
+   "short_name": "Kepleraner",
+   "start_url": "index.html",
+   "display": "standalone",
+   "background_color": "#000",
+   "theme_color": "#ff8ded",
+   "orientation": "portrait-primary",
+   "icons": [
+      {
+         "src": "/img/icons/apple-touch-icon-76x76.png",
+         "type": "image/png",
+         "sizes": "76x76"
+      },
+      {
+         "src": "/img/icons/android-chrome-192x192.png",
+         "type": "image/png",
+         "sizes": "192x192"
+      },
+      {
+         "src": "/img/icons/android-chrome-512x512.png",
+         "type": "image/png",
+         "sizes": "512x512"
+      }
+   ]
+}
