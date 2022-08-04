@@ -3,8 +3,10 @@
 <script setup>
 import { ref } from "vue";
 import Input from "@/components/input/Input.vue";
+import Switch, { SwitchModel } from "@/components/switch/Switch.vue";
 import Modal, { Button } from "@/components/modal/Modal.vue";
 import { fetchAPI, sleep } from "@/App.vue";
+import KeyLabelPair from "@/structs/KeyLabelPair.js";
 </script>
 <template>
    <div class="form-container" :class="mq.current">
@@ -13,12 +15,15 @@ import { fetchAPI, sleep } from "@/App.vue";
          <Input type="text" label="Anrede/Name" name="name" />
          <Input type="text" label="Email" name="mail" />
          <Input type="number" label="Klassenstufe" name="grade" :min="5" :max="12" />
+         <div class="center">
+            <Switch :options="switchModel.options" :default="switchModel.value" @switch="switchNotifyMode" />
+         </div>
          <div class="agb">
             <input type="checkbox" id="accept-agb" name="accept-agb" />
             <label for="accept-agb">Ich akzeptiere die AGB</label>
          </div>
          <button class="btn-focus" type="submit">Los gehts!</button>
-         <button class="btn-border-invert" type="button" @click="resetHashModal()">Ich bin bereits angemeldet - neu anmelden</button>
+         <button class="btn-border-invert" type="button" @click="requestHashResetModal()">Ich bin bereits angemeldet</button>
       </form>
       <Modal :isOpen="showModal" @close="showModal = !showModal" :title="modalTitle" :content="modalContent" :buttons="modalButtons">
          <Input v-if="isHashResetModal" :isInvert="true" label="Email Addresse" :id="'hashreset-mail-input'"></Input>
@@ -38,12 +43,16 @@ export default {
          modalButtons: [],
          showModal: false,
          isHashResetModal: false,
+         notifyMode: "pwa",
+
+         switchModel: new SwitchModel([new KeyLabelPair("pwa", "Per App"), new KeyLabelPair("mail", "Per Mail")], "pwa"),
       };
    },
    methods: {
       submit(e) {
          e.preventDefault();
          const formdata = new FormData(e.target);
+         formdata.append("notify-mode", this.notifyMode);
          fetchAPI("/Subscribe", { method: "POST", body: formdata })
             .then((res) => res.json())
             .then((res) => {
@@ -53,12 +62,19 @@ export default {
                   this.$emit("newUser");
                } else this.modalTitle = "Fehlschlag";
 
-               this.modalContent = res.message;
+               this.modalContent =
+                  res.message +
+                  (this.notifyMode === "pwa"
+                     ? " Wenn die Anfrage akzeptiert wird, wirst du eine Email mit einem Link erhalten."
+                     : " Sobald die Anfrage akzeptiert wird, erhälst auch du die Emails.");
                this.modalButtons = [];
                this.showModal = true;
             });
       },
-      resetHashModal() {
+      switchNotifyMode(to) {
+         this.notifyMode = to;
+      },
+      requestHashResetModal() {
          this.modalTitle = "Neu anmelden";
          this.modalContent = `Wenn du dich bereits einmal angemeldet hast und nun auf die Vertretungsplandaten zugreifen möchtest bist du hier richtig. Wenn du auf den Knopf drückst, erhälst du eine Email, mit einem Link, der dich wieder anmeldet.<br><br>
          `;
@@ -66,14 +82,14 @@ export default {
             new Button("Email senden", "btn", () => {
                (async () => {
                   await sleep(300);
-                  this.resetHash();
+                  this.requestHashReset();
                })();
             }),
          ];
          this.isHashResetModal = true;
          this.showModal = true;
       },
-      async resetHash() {
+      async requestHashReset() {
          const mail = document.getElementById("hashreset-mail-input").value;
          this.isHashResetModal = false;
          await sleep(0);
@@ -92,7 +108,7 @@ export default {
                new Button("Erneut versuchen", "btn", () => {
                   (async () => {
                      await sleep(300);
-                     this.resetHashModal();
+                     this.requestHashResetModal();
                   })();
                }),
             ];

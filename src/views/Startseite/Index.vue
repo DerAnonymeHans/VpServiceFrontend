@@ -5,18 +5,12 @@ import Main from "./Main.vue";
 </script>
 
 <template>
-	<Header />
-	<Main />
+   <Header />
+   <Main />
 </template>
 
 <script>
-export default {
-	component: {
-		Header, Main
-	}
-}
+export default {};
 </script>
 
-
-<style scoped lang="scss">
-</style>
+<style scoped lang="scss"></style>

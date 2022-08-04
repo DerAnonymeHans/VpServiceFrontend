@@ -20,6 +20,7 @@ import StatCreation from "@/assets/icons/statCreation.svg?component";
 import Thunder from "@/assets/icons/thunder.svg?component";
 import Label from "@/assets/icons/label.svg?component";
 import Lock from "@/assets/icons/lock.svg?component";
+import Account from "@/assets/icons/account.svg?component";
 </script>
 <template>
    <Gesamtzahlen v-if="name === 'gesamtzahlen'" />
@@ -43,6 +44,7 @@ import Lock from "@/assets/icons/lock.svg?component";
    <Label v-if="name === 'beschreibungen'" />
    <Lock v-if="name === 'lock'" />
    <Lock v-if="name === 'logout'" />
+   <Account v-if="name === 'account'" />
 </template>
 <script>
 export default {

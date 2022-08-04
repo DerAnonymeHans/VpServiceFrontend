@@ -34,9 +34,7 @@ export default {
          clickTime: null,
       };
    },
-   mounted() {
-      console.log(this.buttons);
-   },
+   mounted() {},
    updated() {
       if (this.isOpen) {
          this.clickTime = Date.now();
