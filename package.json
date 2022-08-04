@@ -2,12 +2,13 @@
   "name": "vp-service",
   "version": "0.0.0",
   "scripts": {
-    "build": "vite build && workbox generateSW workbox-config.js && bash ./copyServiceWorker.bash",
+    "build": "vite build",
+    "build1": "vite build && workbox generateSW workbox-config.js && bash ./copyServiceWorker.bash",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
     "dev": "vite",
     "preview": "vite preview --port 4173",
     "start": "node server.js",
-    "buildrun": "npm run build && npm run start"
+    "buildrun": "npm run build1 && npm run start"
   },
   "dependencies": {
     "chart.js": "^3.8.0",
