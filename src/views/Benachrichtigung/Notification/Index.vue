@@ -33,7 +33,7 @@ import KeyLabelPair from "@/structs/KeyLabelPair.js";
                         <th>Raum</th>
                         <th>Info</th>
                      </tr>
-                     <tr v-for="row in table.rows" :key="row" :style="{ color: row.hasChange ? this.color : '' }">
+                     <tr v-for="row in table.rows" :key="row" :style="{ color: row.hasChange ? color : '' }">
                         <td>{{ row.row.klasse }}</td>
                         <td>{{ row.row.stunde }}</td>
                         <td>{{ row.row.fach }}</td>
@@ -46,7 +46,7 @@ import KeyLabelPair from "@/structs/KeyLabelPair.js";
             </div>
          </div>
          <div class="box small-extra">
-            <blockquote :style="{ borderColor: this.color }" v-html="extraText"></blockquote>
+            <blockquote :style="{ borderColor: color }" v-html="extraText"></blockquote>
             <p v-if="extraAuthor?.length > 0">~{{ extraAuthor }}</p>
          </div>
       </div>
@@ -110,8 +110,33 @@ export default {
    mounted() {
       this.loadColorScheme(localStorage.getItem("color-scheme"));
       this.getNotifyMode();
+      this.handlePushSubscribtion();
    },
    methods: {
+      handlePushSubscribtion() {
+         navigator.serviceWorker.ready.then((reg) => {
+            console.log("reg", reg);
+            reg.pushManager.getSubscription().then((sub) => {
+               if (sub === undefined || sub === null) {
+                  this.subscribePush();
+                  return;
+               }
+               this.sendPushSubscription(sub);
+            });
+         });
+      },
+      subscribePush() {
+         console.log("subscribePush");
+         navigator.serviceWorker.getRegistration().then((reg) => {
+            reg.pushManager.subscribe({ userVisibleOnly: true }, (sub) => {
+               this.sendPushSubscription(sub);
+            });
+         });
+      },
+      async sendPushSubscription(sub) {
+         console.log(sub);
+         return new Promise(async (resolve, reject) => {});
+      },
       async fetchData() {
          const res = await Promise.allSettled([this.fetchModel("Global"), this.fetchModel("Grade"), this.fetchModel("User")]);
          const global = res[0].value,

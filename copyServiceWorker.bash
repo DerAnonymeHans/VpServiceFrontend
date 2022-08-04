@@ -1,0 +1,1 @@
+cp ./dist/service-worker.js ./dist/undefinedservice-worker.js

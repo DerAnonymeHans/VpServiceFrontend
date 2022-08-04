@@ -1,7 +1,7 @@
 {
    "name": "Kepleraner",
    "short_name": "Kepleraner",
-   "start_url": "Startseite",
+   "start_url": "/Benachrichtigung",
    "display": "standalone",
    "background_color": "#000",
    "theme_color": "#ff8ded",
