@@ -32,5 +32,9 @@
     "vite-svg-loader": "^3.3.0",
     "vue-template-compiler": "^2.6.14",
     "webpack": "^5.73.0"
+  },
+  "engines": {
+    "npm": "8.12.1",
+    "node": "14.16.1"
   }
 }
