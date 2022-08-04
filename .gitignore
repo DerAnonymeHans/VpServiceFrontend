@@ -28,4 +28,5 @@ coverage
 *.sw?
 *.bash
 .prettierignore
+.env
 
