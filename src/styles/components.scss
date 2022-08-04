@@ -31,6 +31,20 @@
    }
 }
 
+.btn-border-invert {
+   background-color: $col-dark;
+   color: $col-medium;
+   border: 2px $col-medium solid;
+   border-radius: $border-radius;
+   padding: 0.5 * $padding;
+   transition: all 0.5s ease;
+   &:hover,
+   &:focus {
+      cursor: pointer;
+      box-shadow: 0px 0px 0px 0.5em rgba($col-medium, 0.2);
+   }
+}
+
 .btn-focus {
    background-color: $accent;
    color: $col-light;

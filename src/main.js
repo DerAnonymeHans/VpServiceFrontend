@@ -20,5 +20,3 @@ app.use(Vue3Mq, {
 app.config.unwrapInjectedRef = true;
 
 app.mount("#app");
-
-console.log("base_url", process.env.BASE_URL);

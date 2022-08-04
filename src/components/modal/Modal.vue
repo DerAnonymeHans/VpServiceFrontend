@@ -7,7 +7,7 @@ import IconRepo from "@/repos/IconRepo.vue";
       <div v-show="isOpen" class="modal-container" :class="mq.current">
          <div class="flex head">
             <h3>{{ title }}</h3>
-            <button class="btn-svg" @click="close(close)"><IconRepo name="close" /></button>
+            <button class="btn-svg" @click="close()"><IconRepo name="close" /></button>
          </div>
          <div class="content" v-html="content"></div>
          <slot></slot>
@@ -31,9 +31,11 @@ export default {
    inject: ["mq"],
    data() {
       return {
-         buttons: [...this.buttons],
          clickTime: null,
       };
+   },
+   mounted() {
+      console.log(this.buttons);
    },
    updated() {
       if (this.isOpen) {
@@ -60,6 +62,7 @@ export default {
          this.close();
       },
       close(callback) {
+         if (typeof callback === "function") callback();
          this.$emit("close");
       },
    },

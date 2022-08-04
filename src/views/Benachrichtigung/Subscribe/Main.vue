@@ -5,7 +5,9 @@ import { sleep } from "@/App.vue";
 <template>
    <main :class="mq.current">
       <div class="text-container">
-         <button class="btn-focus" @click="scrollToForm()">Zum Abonnement</button>
+         <div>
+            <button class="btn-focus" @click="scrollToForm()">Zum Abonnement</button>
+         </div>
          <article>
             Bist du nicht auch genervt jedesmal nach einem neuen Vertretungsplan zu schauen? Und dann musst du dich auch nochmal neu anmelden und
             suchst ewig nach den Zeilen die dich überhaupt betreffen... Doch dagegen gibt es ein Mittel! Indem du den VpMailservice abonnierst erhälst
@@ -54,10 +56,17 @@ main {
 
    .text-container {
       width: 100%;
+      margin-bottom: 2em;
+
+      > div {
+         display: flex;
+         flex-direction: column;
+         align-items: center;
+      }
+
       button {
          margin-bottom: 2em;
       }
-      margin-bottom: 2em;
 
       article {
          @include box;

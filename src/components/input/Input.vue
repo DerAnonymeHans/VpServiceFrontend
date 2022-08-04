@@ -3,7 +3,7 @@
 <template>
    <div :class="{ invert: isInvert }">
       <label>{{ label }}</label>
-      <input :type="type" :name="name" :value="value" :min="min" :max="max" />
+      <input :id="id" :type="type" :name="name" :value="value" :min="min" :max="max" />
    </div>
 </template>
 <script>
@@ -22,6 +22,7 @@ export default {
       isInvert: { type: Boolean, required: true },
       min: Number,
       max: Number,
+      id: String,
    },
    data() {
       return {

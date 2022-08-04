@@ -1,40 +1,76 @@
 <!-- @format -->
 
 <script setup>
-import Header from "./Header.vue";
-import Main from "./Main.vue";
-import Form from "./Form.vue";
-import { fetchAPI } from "../../App.vue";
+import Subscribe from "./Subscribe/Index.vue";
+import Notification from "./Notification/Index.vue";
+import { fetchAPI } from "@/App.vue";
+import Modal, { Button } from "@/components/modal/Modal.vue";
 </script>
 <template>
-   <Header :userCount="userCount" />
-   <Main />
-   <Form @newUser="newUser()" />
+   <div class="content">
+      <div v-if="isLoggedIn === null"></div>
+      <Notification v-else-if="isLoggedIn === true" />
+      <Subscribe v-else-if="isLoggedIn === false" />
+      <Modal :isOpen="showModal" @close="showModal = !showModal" :title="modalTitle" :content="modalContent" :buttons="[]" />
+   </div>
 </template>
 <script>
 export default {
-   inject: ["fetchAPI"],
    data() {
       return {
-         userCount: "#",
+         isLoggedIn: null,
+         modalTitle: "",
+         modalContent: "",
+         showModal: false,
       };
    },
    async mounted() {
-      this.getUserCount();
+      await this.handleHashReset();
+      await this.checkIfLoggedIn();
    },
    methods: {
-      getUserCount() {
-         fetchAPI("/GetUserCount")
-            .then((res) => res.json())
-            .then((res) => {
-               if (res.isSuccess) this.userCount = res.body;
-            });
+      async handleHashReset() {
+         const params = new URLSearchParams(window.location.search);
+         const resetMail = params.get("reset-mail"),
+            resetKey = params.get("reset-key");
+         if (typeof resetMail !== "string" || typeof resetKey !== "string") return;
+
+         let res;
+         try {
+            console.log();
+            res = await fetchAPI(`/User/ResetHash/${resetMail}/${resetKey}`, { method: "POST" }).then((res) => res.json());
+            if (res.isSuccess) {
+               this.modalTitle = "Anmeldung erfolgreich";
+               this.modalContent = "Anmeldung erfolgreich";
+               return;
+            }
+            this.modalTitle = "Anmeldung fehlgeschlagen";
+            this.modalContent = res.message;
+         } catch (e) {
+            console.log(e);
+            this.modalTitle = "Anmeldung fehlgeschlagen";
+            this.modalContent = "Leider ist etwas schief gelaufen";
+         }
+         this.showModal = true;
       },
-      newUser() {
-         window.scrollBy({ top: -99999, left: 0, behavior: "smooth" });
-         setTimeout(this.getUserCount, 1000);
+      async checkIfLoggedIn() {
+         try {
+            let res = await fetchAPI("/User/IsAuthenticated").then((res) => res.json());
+            if (res.body === true) {
+               this.isLoggedIn = true;
+               return;
+            }
+            this.isLoggedIn = false;
+         } catch {
+            this.isLoggedIn = false;
+            return;
+         }
       },
    },
 };
 </script>
-<style lang="scss"></style>
+<style lang="scss" scoped>
+.content {
+   margin-top: 9vh;
+}
+</style>

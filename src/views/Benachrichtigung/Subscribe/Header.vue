@@ -26,7 +26,6 @@ export default {
 header {
    background-color: $col-dark;
    padding: $padding * 2;
-   margin-top: 8vh;
    text-align: center;
 
    .heading {
