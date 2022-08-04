@@ -17,7 +17,8 @@
     "v-switch-case": "^1.0.3",
     "vue": "^3.2.36",
     "vue-router": "^4.0.15",
-    "vue3-mq": "^3.1.0"
+    "vue3-mq": "^3.1.0",
+    "workbox": "^0.0.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^2.3.3",
