@@ -9,13 +9,6 @@ import KeyLabelPair from "@/structs/KeyLabelPair.js";
 </script>
 <template>
    <div :class="mq.current" class="page" ref="page">
-      <div
-         id="webpushr-subscription-button"
-         data-show-subscriber-count="false"
-         data-button-text="Benachrichtigung abonnieren"
-         data-subscriber-count-text=""
-         data-background-color="#ff8ded"
-      ></div>
       <div class="data">
          <img :src="imgSrc" class="artwork" :alt="imgSrc" />
          <h2 class="global-extra" :style="{ color: color }">{{ globalExtra }}</h2>
@@ -62,6 +55,13 @@ import KeyLabelPair from "@/structs/KeyLabelPair.js";
             <div class="account-logo"><IconRepo name="account" /></div>
          </div>
          <div class="box">
+            <div
+               id="webpushr-subscription-button"
+               data-show-subscriber-count="false"
+               data-button-text="Benachrichtigung erlauben"
+               data-subscriber-count-text=""
+               data-background-color="#ff8ded"
+            ></div>
             <Switch
                v-for="(_switch, key) in _switches"
                :key="key"
