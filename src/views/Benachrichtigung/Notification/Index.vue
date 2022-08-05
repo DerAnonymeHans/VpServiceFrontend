@@ -117,33 +117,12 @@ export default {
    mounted() {
       this.loadColorScheme(localStorage.getItem("color-scheme"));
       this.getNotifyMode();
-      this.handlePushSubscribtion();
+
+      webpushr("fetch_id", (sid) => {
+         this.saveUserPushrId(sid);
+      });
    },
    methods: {
-      handlePushSubscribtion() {
-         navigator.serviceWorker.ready.then((reg) => {
-            console.log("reg", reg);
-            reg.pushManager.getSubscription().then((sub) => {
-               if (sub === undefined || sub === null) {
-                  this.subscribePush();
-                  return;
-               }
-               this.sendPushSubscription(sub);
-            });
-         });
-      },
-      subscribePush() {
-         console.log("subscribePush");
-         navigator.serviceWorker.getRegistration().then((reg) => {
-            reg.pushManager.subscribe({ userVisibleOnly: true }, (sub) => {
-               this.sendPushSubscription(sub);
-            });
-         });
-      },
-      async sendPushSubscription(sub) {
-         console.log(sub);
-         return new Promise(async (resolve, reject) => {});
-      },
       async fetchData() {
          const res = await Promise.allSettled([this.fetchModel("Global"), this.fetchModel("Grade"), this.fetchModel("User")]);
          const global = res[0].value,
@@ -228,7 +207,7 @@ export default {
             "col-dark": "#ccc",
             font: "#000",
          };
-         const scheme = name === "darkmode" ? dark : light;
+         const scheme = name === "lightmode" ? light : dark;
          for (const key in scheme) {
             this.$refs.page.style.setProperty(`--${key}`, scheme[key]);
          }
@@ -247,6 +226,17 @@ export default {
          }
          this.modalTitle = "Fehlschlag";
          this.showModal = true;
+      },
+      async saveUserPushrId(sid) {
+         console.log(sid);
+         if (typeof sid !== "string") return;
+         const form = new FormData();
+         form.append("sid", sid);
+         try {
+            await fetchAPI(`/User/SetPushId/${sid}`, { method: "POST" }).then((res) => res.json());
+         } catch (e) {
+            console.error(e);
+         }
       },
    },
 };
