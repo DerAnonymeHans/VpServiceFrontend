@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "build": "",
-    "build1": "vite build && workbox generateSW workbox-config.js && bash ./copyServiceWorker.bash",
+    "build1": "vite build && workbox generateSW workbox-config.js && bash ./copyServiceWorker.sh",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
     "dev": "vite",
     "preview": "vite preview --port 4173",
