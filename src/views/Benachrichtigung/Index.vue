@@ -10,7 +10,7 @@ import Modal, { Button } from "@/components/modal/Modal.vue";
    <div class="content">
       <div v-if="isLoggedIn === null"></div>
       <Notification v-else-if="isLoggedIn === true" />
-      <Subscribe v-else-if="isLoggedIn === false" />
+      <Subscribe v-else-if="isLoggedIn === false" @keyEntered="(key) => resetHash(key)" />
       <Modal :isOpen="showModal" @close="showModal = !showModal" :title="modalTitle" :content="modalContent" :buttons="[]" />
    </div>
 </template>
@@ -25,7 +25,7 @@ export default {
       };
    },
    async mounted() {
-      await this.handleHashReset();
+      // await this.handleHashReset();
       await this.checkIfLoggedIn();
    },
    methods: {
@@ -61,6 +61,28 @@ export default {
             this.showModal = true;
             return resolve();
          });
+      },
+      async resetHash(key) {
+         const form = new FormData();
+         form.append("key", key);
+         let res;
+         try {
+            res = await fetchAPI(`/User/ResetHash`, { method: "POST", body: form }).then((res) => res.json());
+            if (res.isSuccess) {
+               this.modalTitle = "Anmeldung erfolgreich";
+               this.modalContent = "Anmeldung erfolgreich";
+               this.showModal = true;
+               this.checkIfLoggedIn();
+               return;
+            }
+            this.modalTitle = "Anmeldung fehlgeschlagen";
+            this.modalContent = res.message;
+         } catch (e) {
+            this.modalTitle = "Anmeldung fehlgeschlagen";
+            this.modalContent = "Leider ist etwas schief gelaufen";
+         }
+         this.showModal = true;
+         return;
       },
       async checkIfLoggedIn() {
          try {

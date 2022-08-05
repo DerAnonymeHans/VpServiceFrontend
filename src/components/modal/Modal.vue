@@ -89,6 +89,7 @@ export { Button };
    box-shadow: 0px 0px 0.5em 0.5em rgba($col-dark, 0.1);
    border-top: 1em solid $accent;
    box-sizing: border-box;
+   overflow: auto;
 
    .head {
       :last-child {

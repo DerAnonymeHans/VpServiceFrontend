@@ -9,7 +9,7 @@ import { fetchAPI } from "@/App.vue";
 <template>
    <Header :userCount="userCount" />
    <Main />
-   <Form @newUser="newUser()" />
+   <Form @newUser="newUser()" @keyEntered="(e) => $emit('keyEntered', e)" />
 </template>
 <script>
 export default {
