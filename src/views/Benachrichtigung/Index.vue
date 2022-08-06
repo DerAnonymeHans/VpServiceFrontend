@@ -18,7 +18,7 @@ import Modal, { Button } from "@/components/modal/Modal.vue";
 export default {
    data() {
       return {
-         isLoggedIn: null,
+         isLoggedIn: false,
          modalTitle: "",
          modalContent: "",
          showModal: false,
