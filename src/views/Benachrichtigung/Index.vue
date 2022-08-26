@@ -5,12 +5,17 @@ import Subscribe from "./Subscribe/Index.vue";
 import Notification from "./Notification/Index.vue";
 import { fetchAPI } from "@/App.vue";
 import Modal, { Button } from "@/components/modal/Modal.vue";
+import Switch, { SwitchModel } from "@/components/switch/Switch.vue";
+import KeyLabelPair from "@/structs/KeyLabelPair.js";
 </script>
 <template>
    <div class="content">
-      <div v-if="isLoggedIn === null"></div>
-      <Notification v-else-if="isLoggedIn === true" />
-      <Subscribe v-else-if="isLoggedIn === false" @keyEntered="(key) => resetHash(key)" />
+      <div class="center page-switch-container">
+         <Switch :options="switchModel.options" :default="switchModel.value" @switch="(newPage) => (page = newPage)" v-if="isLoggedIn" />
+      </div>
+      <div v-if="page === null"></div>
+      <Notification v-else-if="page === 'notif'" />
+      <Subscribe v-else-if="page === 'sub'" @keyEntered="(key) => resetHash(key)" />
       <Modal :isOpen="showModal" @close="showModal = !showModal" :title="modalTitle" :content="modalContent" :buttons="[]" />
    </div>
 </template>
@@ -19,9 +24,11 @@ export default {
    data() {
       return {
          isLoggedIn: null,
+         page: null,
          modalTitle: "",
          modalContent: "",
          showModal: false,
+         switchModel: new SwitchModel([new KeyLabelPair("sub", "Abo Seite"), new KeyLabelPair("notif", "Plan Seite")], "notif"),
       };
    },
    async mounted() {
@@ -89,19 +96,22 @@ export default {
             let res = await fetchAPI("/User/IsAuthenticated").then((res) => res.json());
             if (res.body === true) {
                this.isLoggedIn = true;
+               this.page = "notif";
                return;
             }
-            this.isLoggedIn = false;
-         } catch {
-            this.isLoggedIn = false;
-            return;
-         }
+         } catch {}
+         this.isLoggedIn = false;
+         this.page = "sub";
       },
    },
 };
 </script>
 <style lang="scss" scoped>
+@import "@/styles/_variables.scss";
 .content {
    margin-top: 9vh;
+}
+.page-switch-container {
+   background-color: $col-dark;
 }
 </style>

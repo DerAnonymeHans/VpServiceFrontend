@@ -15,7 +15,7 @@ import KeyLabelPair from "@/structs/KeyLabelPair.js";
          <Input type="text" label="Anrede/Name" name="name" />
          <Input type="text" label="Email" name="mail" />
          <Input type="number" label="Klassenstufe" name="grade" :min="5" :max="12" />
-         <div class="center">
+         <div class="center" v-if="os != 'mac'">
             <Switch :options="switchModel.options" :default="switchModel.value" @switch="switchNotifyMode" />
          </div>
          <div class="agb">
@@ -36,7 +36,7 @@ import KeyLabelPair from "@/structs/KeyLabelPair.js";
 </template>
 <script>
 export default {
-   inject: ["mq"],
+   inject: ["mq", "os"],
    component: {
       Input,
    },

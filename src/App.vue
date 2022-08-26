@@ -14,6 +14,11 @@ import Footer from "@/components/footer/Footer.vue";
 
 <script>
 export default {
+   provide() {
+      return {
+         os: this.getOs(),
+      };
+   },
    beforeMount() {
       if (window.location.origin === "http://kepleraner.herokuapp.com")
          window.location = "https://kepleraner.herokuapp.com" + window.location.pathname + window.location.search;
@@ -22,9 +27,17 @@ export default {
       sessionStorage.setItem("cached-stat-user", params.get("stat-user"));
       sessionStorage.setItem("cached-stat-pw", params.get("stat-pw"));
    },
+   methods: {
+      getOs() {
+         const userAgent = window.navigator.userAgent;
+         if (userAgent.indexOf("Windows") != -1) return "windows";
+         if (userAgent.indexOf("mac") != -1) return "mac";
+         if (userAgent.indexOf("X11") != -1) return "unix";
+         if (userAgent.indexOf("Linux") != -1) return "linux";
+      },
+   },
 };
 const URL = import.meta.env.VITE_API_URL;
-console.log(URL);
 const fetchAPI = (path, obj = {}) => fetch(URL + path, Object.assign({ credentials: "include" }, obj));
 
 const sleep = (ms) => new Promise((resolve, reject) => setTimeout(resolve, ms));
