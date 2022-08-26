@@ -124,7 +124,12 @@ export default {
    },
    methods: {
       async fetchData() {
-         const res = await Promise.allSettled([this.fetchModel("Global"), this.fetchModel("Grade"), this.fetchModel("User")]);
+         const useCachedData = !(await this.isPlanNew());
+         const res = await Promise.allSettled([
+            this.fetchModel("Global", useCachedData),
+            this.fetchModel("Grade", useCachedData),
+            this.fetchModel("User", useCachedData),
+         ]);
          const global = res[0].value,
             grade = res[1].value,
             user = res[2].value;
@@ -145,12 +150,21 @@ export default {
          this.extraAuthor = user.smallExtra.author;
          this.color = global.artwork.color;
          this.title = global.subject;
+
+         localStorage.setItem("last-origin-datetime", `${this.originDate}, ${this.originTime}`);
       },
-      fetchModel(name) {
+      fetchModel(name, useCachedData) {
          return new Promise(async (resolve, reject) => {
+            if (useCachedData) {
+               const json = localStorage.getItem(`${name}-model`);
+               if (json.length > 0) {
+                  return resolve(JSON.parse(json));
+               }
+            }
             try {
                let res = await fetchAPI(`/Notification/${name}Model`).then((res) => res.json());
                if (res.isSuccess) {
+                  localStorage.setItem(`${name}-model`, JSON.stringify(res.body));
                   return resolve(res.body);
                }
                this.modalTitle = "Fehlschlag";
@@ -161,6 +175,19 @@ export default {
             }
             this.showModal = true;
             return reject();
+         });
+      },
+      async isPlanNew() {
+         return new Promise(async (resolve, reject) => {
+            try {
+               let res = await fetchAPI(`/Notification/IsNewPlan/${encodeURIComponent(localStorage.getItem("last-origin-datetime"))}`).then((res) =>
+                  res.json()
+               );
+               if (res.isSuccess) {
+                  return resolve(res.body);
+               }
+            } catch (e) {}
+            return resolve(true);
          });
       },
       async getNotifyMode() {
