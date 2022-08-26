@@ -52,6 +52,10 @@ export default {
          switchModel: new SwitchModel([new KeyLabelPair("pwa", "Per App"), new KeyLabelPair("mail", "Per Mail")], "pwa"),
       };
    },
+   mounted() {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("codeModal") === "true") this.enterKeyModal();
+   },
    methods: {
       submit(e) {
          e.preventDefault();
