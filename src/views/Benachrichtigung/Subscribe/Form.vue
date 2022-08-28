@@ -49,7 +49,7 @@ export default {
          modalMode: "",
          notifyMode: "pwa",
 
-         switchModel: new SwitchModel([new KeyLabelPair("pwa", "Per Nachricht"), new KeyLabelPair("mail", "Per Mail")], "pwa"),
+         switchModel: new SwitchModel([new KeyLabelPair("pwa", "Push Nachricht"), new KeyLabelPair("mail", "Per Mail")], "pwa"),
       };
    },
    mounted() {

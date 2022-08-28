@@ -62,14 +62,16 @@ import KeyLabelPair from "@/structs/KeyLabelPair.js";
                data-subscriber-count-text=""
                data-background-color="#ff8ded"
             ></div>
-            <Switch
-               v-for="(_switch, key) in _switches"
-               :key="key"
-               :invert="true"
-               :options="_switch.options"
-               :default="_switch.value"
-               @switch="(to) => switchMode(key, to)"
-            />
+            <div class="switches">
+               <Switch
+                  v-for="(_switch, key) in _switches"
+                  :key="key"
+                  :invert="true"
+                  :options="_switch.options"
+                  :default="_switch.value"
+                  @switch="(to) => switchMode(key, to)"
+               />
+            </div>
          </div>
       </div>
       <Modal :isOpen="showModal" @close="showModal = !showModal" :title="modalTitle" :content="modalContent" :buttons="[]" />
@@ -356,6 +358,12 @@ class Table {
          .account-logo {
             color: $accent;
             margin: auto;
+         }
+      }
+
+      .switches {
+         > * {
+            margin: $margin 0;
          }
       }
    }
