@@ -47,9 +47,9 @@ export default {
          modalButtons: [],
          showModal: false,
          modalMode: "",
-         notifyMode: "pwa",
+         notifyMode: "mail",
 
-         switchModel: new SwitchModel([new KeyLabelPair("pwa", "Push Nachricht"), new KeyLabelPair("mail", "Per Mail")], "pwa"),
+         switchModel: new SwitchModel([new KeyLabelPair("pwa", "Push Nachricht"), new KeyLabelPair("mail", "Per Mail")], "mail"),
       };
    },
    mounted() {
