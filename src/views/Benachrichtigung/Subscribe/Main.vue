@@ -11,12 +11,14 @@ import { sleep } from "@/App.vue";
          </div>
          <article>
             Bist du nicht auch genervt jedesmal nach einem neuen Vertretungsplan zu schauen? Und dann musst du dich auch nochmal neu anmelden und
-            suchst ewig nach den Zeilen die dich überhaupt betreffen... Doch dagegen gibt es ein Mittel! Indem du den VpMailservice abonnierst erhälst
-            du mit maximal 10 minütiger Verzögerung Informationen über einen neuen Plan (nur wenn sich tatsächlich etwas für dich ändert!!), wenn
-            vorhanden erhälst du sogar noch den vom Tag danach - und zwar auch nur die Daten die du auch brauchst.<br />
+            suchst ewig nach den Zeilen die dich überhaupt betreffen... Doch dagegen gibt es ein Mittel! Indem du den Kepleraner VP Service abonnierst
+            erhälst du mit maximal 10 minütiger Verzögerung Informationen über einen neuen Plan (nur wenn sich tatsächlich etwas für dich ändert!!),
+            wenn vorhanden erhälst du sogar noch den vom Tag danach - und zwar auch nur die Daten die du auch brauchst.<br />
             Um das Ganze noch weiter aufzuwerten, erhälst du im oberen Bild in der Email Informationen über das Wetter oder siehst andere
             eventabhängige Kunstwerke. Nicht zu vergessen ist außerdem das 'Kleine aber feine Extra' mit lustigen Sprüchen, interessanten Fakten oder
-            weisen Zitaten.
+            weisen Zitaten.<br />
+            Du hast dabei die Wahl zwischen Emails, wie auf dem Bild zu sehen, oder Push Benachrichtigungen (nur für Android) die dich auf eine
+            Webseite ähnlich des Email Bildes führen.
          </article>
       </div>
       <abbr title="Quelle: https://pngimg.com/image/49158 (Bild bearbeitet - Email Screenshot eingefügt)"
