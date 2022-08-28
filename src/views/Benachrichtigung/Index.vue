@@ -3,20 +3,23 @@
 <script setup>
 import Subscribe from "./Subscribe/Index.vue";
 import Notification from "./Notification/Index.vue";
-import { fetchAPI } from "@/App.vue";
+import { fetchAPI, sleep } from "@/App.vue";
 import Modal, { Button } from "@/components/modal/Modal.vue";
 import Switch, { SwitchModel } from "@/components/switch/Switch.vue";
 import KeyLabelPair from "@/structs/KeyLabelPair.js";
+import Input from "@/components/input/Input.vue";
 </script>
 <template>
    <div class="content">
       <div class="center page-switch-container">
-         <Switch :options="switchModel.options" :default="switchModel.value" @switch="(newPage) => (page = newPage)" v-if="isLoggedIn" />
+         <Switch :options="switchModel.options" :default="page" :value="page" @switch="switchPage" v-if="isLoggedIn" />
       </div>
       <div v-if="page === null"></div>
       <Notification v-else-if="page === 'notif'" />
-      <Subscribe v-else-if="page === 'sub'" @keyEntered="(key) => resetHash(key)" />
-      <Modal :isOpen="showModal" @close="showModal = !showModal" :title="modalTitle" :content="modalContent" :buttons="[]" />
+      <Subscribe v-else-if="page === 'sub'" @requestHashReset="requestHashResetModal()" />
+      <Modal :isOpen="showModal" @close="showModal = !showModal" :title="modalTitle" :content="modalContent" :buttons="modalButtons">
+         <Input v-if="modalMode === 'hashReset'" :isInvert="true" label="Email Addresse" :id="'hashreset-mail-input'"></Input>
+      </Modal>
    </div>
 </template>
 <script>
@@ -28,35 +31,41 @@ export default {
          modalTitle: "",
          modalContent: "",
          showModal: false,
+         modalMode: "",
+         modalButtons: [],
          switchModel: new SwitchModel([new KeyLabelPair("sub", "Abo Seite"), new KeyLabelPair("notif", "Plan Seite")], "notif"),
       };
    },
    async mounted() {
-      // await this.handleHashReset();
-      await this.checkIfLoggedIn();
+      await this.handleHashReset();
+      await this.getPage();
+      console.log("page", this.page);
    },
    methods: {
       async handleHashReset() {
          return new Promise(async (resolve, reject) => {
             const params = new URLSearchParams(window.location.search);
-            const resetMail = params.get("reset-mail"),
-               resetKey = params.get("reset-key");
-            if (typeof resetMail !== "string" || typeof resetKey !== "string") return resolve();
-
+            const key = params.get("code");
+            if (key === null) return resolve();
+            params.delete("code");
+            window.history.pushState("", "", window.location.origin + window.location.pathname + params.toString());
+            await this.resetHash(key);
+            return resolve();
+         });
+      },
+      async resetHash(key) {
+         return new Promise(async (resolve, reject) => {
             const form = new FormData();
-            form.append("mail", resetMail);
-            form.append("key", resetKey);
+            form.append("key", key);
             let res;
             try {
                res = await fetchAPI(`/User/ResetHash`, { method: "POST", body: form }).then((res) => res.json());
                if (res.isSuccess) {
                   this.modalTitle = "Anmeldung erfolgreich";
-                  this.modalContent = "Anmeldung erfolgreich";
-
-                  params.delete("reset-mail");
-                  params.delete("reset-key");
-                  window.location.search = params.toString();
+                  this.modalContent =
+                     "Um Benachrichtigungen zu erhalten, musst du auf die Glocke unten links drücken und Benachrichtigungen erlauben.";
                   this.showModal = true;
+                  sessionStorage.setItem("notif-page", "notif");
                   return resolve();
                }
                this.modalTitle = "Anmeldung fehlgeschlagen";
@@ -65,43 +74,75 @@ export default {
                this.modalTitle = "Anmeldung fehlgeschlagen";
                this.modalContent = "Leider ist etwas schief gelaufen";
             }
+            this.modalMode = "hashResetResponse";
+            this.modalButtons = [];
             this.showModal = true;
             return resolve();
          });
       },
-      async resetHash(key) {
-         const form = new FormData();
-         form.append("key", key);
-         let res;
-         try {
-            res = await fetchAPI(`/User/ResetHash`, { method: "POST", body: form }).then((res) => res.json());
-            if (res.isSuccess) {
-               this.modalTitle = "Anmeldung erfolgreich";
-               this.modalContent = "Anmeldung erfolgreich";
-               this.showModal = true;
-               this.checkIfLoggedIn();
-               return;
-            }
-            this.modalTitle = "Anmeldung fehlgeschlagen";
-            this.modalContent = res.message;
-         } catch (e) {
-            this.modalTitle = "Anmeldung fehlgeschlagen";
-            this.modalContent = "Leider ist etwas schief gelaufen";
-         }
-         this.showModal = true;
-         return;
-      },
-      async checkIfLoggedIn() {
+      async getPage() {
+         const cachedPage = sessionStorage.getItem("notif-page");
          try {
             let res = await fetchAPI("/User/IsAuthenticated").then((res) => res.json());
             if (res.body === true) {
                this.isLoggedIn = true;
-               this.page = "notif";
+               this.page = cachedPage === "notif" || cachedPage === "sub" ? cachedPage : "notif";
                return;
             }
          } catch {}
          this.isLoggedIn = false;
          this.page = "sub";
+      },
+      switchPage(page) {
+         sessionStorage.setItem("notif-page", page);
+         this.page = page;
+      },
+
+      requestHashResetModal() {
+         this.modalTitle = "Neu anmelden";
+         this.modalContent = `Wenn du dich bereits einmal angemeldet hast und nun auf die Vertretungsplandaten zugreifen möchtest bist du hier richtig. Wenn du auf den Knopf drückst, erhälst du eine Email, mit einem Link, der dich wieder anmeldet.<br><br>
+         `;
+         this.modalButtons = [
+            new Button("Email senden", "btn", () => {
+               (async () => {
+                  await sleep(300);
+                  this.requestHashReset();
+               })();
+            }),
+         ];
+         this.modalMode = "hashReset";
+         this.showModal = true;
+      },
+      async requestHashReset() {
+         const mail = document.getElementById("hashreset-mail-input").value;
+         this.modalMode = "none";
+         await sleep(0);
+
+         this.modalButtons = [];
+         let res;
+         let form = new FormData();
+         form.append("mail", mail);
+         try {
+            res = await fetchAPI(`/User/RequestHashReset`, { method: "POST", body: form }).then((res) => res.json());
+            this.modalContent = res.message;
+            if (res.isSuccess) {
+               this.modalTitle = "Erfolg";
+               this.showModal = true;
+               return;
+            }
+         } catch (e) {
+            this.modalContent = "Leider ist etwas schief gelaufen.";
+         }
+         this.modalButtons = [
+            new Button("Erneut versuchen", "btn", () => {
+               (async () => {
+                  await sleep(300);
+                  this.requestHashResetModal();
+               })();
+            }),
+         ];
+         this.modalTitle = "Fehlschlag";
+         this.showModal = true;
       },
    },
 };

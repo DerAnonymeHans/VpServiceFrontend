@@ -32,6 +32,11 @@ export default {
          const userAgent = window.navigator.userAgent;
          if (userAgent.indexOf("Windows") != -1) return "windows";
          if (userAgent.indexOf("mac") != -1) return "mac";
+         if (
+            ["iPad Simulator", "iPhone Simulator", "iPod Simulator", "iPad", "iPhone", "iPod"].includes(navigator.platform) ||
+            (navigator.userAgent.includes("Mac") && "ontouchend" in document)
+         )
+            return "mac";
          if (userAgent.indexOf("X11") != -1) return "unix";
          if (userAgent.indexOf("Linux") != -1) return "linux";
       },

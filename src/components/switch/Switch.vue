@@ -17,12 +17,20 @@ export default {
       },
       default: String,
       invert: Boolean,
+      value: String,
    },
    data() {
       return {
          selected: 0,
          left: "0",
       };
+   },
+   watch: {
+      value(newValue) {
+         const idx = this.options.findIndex((el) => newValue === el.key);
+         if (idx === -1) return;
+         this.doSwitch(idx);
+      },
    },
    mounted() {
       const idx = this.options.findIndex((el) => this.default === el.key);

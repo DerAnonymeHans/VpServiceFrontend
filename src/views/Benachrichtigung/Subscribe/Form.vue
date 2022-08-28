@@ -23,14 +23,14 @@ import KeyLabelPair from "@/structs/KeyLabelPair.js";
             <label for="accept-agb">Ich akzeptiere die AGB</label>
          </div>
          <button class="btn-focus" type="submit">Los gehts!</button>
-         <div class="flex auth-buttons">
-            <button class="btn-border-invert" type="button" @click="requestHashResetModal()">Ich bin bereits angemeldet</button>
-            <button class="btn-border-invert" type="button" @click="enterKeyModal()">Code eingeben</button>
-         </div>
+         <button class="btn-border-invert" type="button" @click="$emit('requestHashReset')" style="width: fit-content">
+            Ich bin bereits angemeldet
+         </button>
+         <!-- <button class="btn-border-invert" type="button" @click="enterKeyModal()">Code eingeben</button> -->
       </form>
       <Modal :isOpen="showModal" @close="showModal = !showModal" :title="modalTitle" :content="modalContent" :buttons="modalButtons">
          <Input v-if="modalMode === 'hashReset'" :isInvert="true" label="Email Addresse" :id="'hashreset-mail-input'"></Input>
-         <Input v-if="modalMode === 'enterKey'" :isInvert="true" label="Code" :id="'hashreset-key-input'"></Input>
+         <!-- <Input v-if="modalMode === 'enterKey'" :isInvert="true" label="Code" :id="'hashreset-key-input'"></Input> -->
       </Modal>
    </div>
 </template>
@@ -49,12 +49,16 @@ export default {
          modalMode: "",
          notifyMode: "pwa",
 
-         switchModel: new SwitchModel([new KeyLabelPair("pwa", "Per App"), new KeyLabelPair("mail", "Per Mail")], "pwa"),
+         switchModel: new SwitchModel([new KeyLabelPair("pwa", "Per Nachricht"), new KeyLabelPair("mail", "Per Mail")], "pwa"),
       };
    },
    mounted() {
-      const params = new URLSearchParams(window.location.search);
-      if (params.get("codeModal") === "true") this.enterKeyModal();
+      // const params = new URLSearchParams(window.location.search);
+      // if (params.get("codeModal") === "true") {
+      //    params.delete("codeModal");
+      //    window.history.pushState("", "", window.location.origin + window.location.pathname + params.toString());
+      //    this.enterKeyModal();
+      // }
    },
    methods: {
       submit(e) {
@@ -81,56 +85,6 @@ export default {
       },
       switchNotifyMode(to) {
          this.notifyMode = to;
-      },
-      requestHashResetModal() {
-         this.modalTitle = "Neu anmelden";
-         this.modalContent = `Wenn du dich bereits einmal angemeldet hast und nun auf die Vertretungsplandaten zugreifen möchtest bist du hier richtig. Wenn du auf den Knopf drückst, erhälst du eine Email, mit einem Link, der dich wieder anmeldet.<br><br>
-         `;
-         this.modalButtons = [
-            new Button("Email senden", "btn", () => {
-               (async () => {
-                  await sleep(300);
-                  this.requestHashReset();
-               })();
-            }),
-         ];
-         this.modalMode = "hashReset";
-         this.showModal = true;
-      },
-      async requestHashReset() {
-         const mail = document.getElementById("hashreset-mail-input").value;
-         this.modalMode = "none";
-         await sleep(0);
-
-         this.modalButtons = [];
-         let res;
-         let form = new FormData();
-         form.append("mail", mail);
-         try {
-            res = await fetchAPI(`/User/RequestHashReset`, { method: "POST", body: form }).then((res) => res.json());
-            this.modalContent = res.message;
-            if (res.isSuccess) {
-               this.modalTitle = "Erfolg";
-               this.showModal = true;
-               await sleep(1000);
-               this.showModal = false;
-               await sleep(500);
-               this.enterKeyModal();
-               return;
-            }
-         } catch (e) {
-            this.modalContent = "Leider ist etwas schief gelaufen.";
-            this.modalButtons = [
-               new Button("Erneut versuchen", "btn", () => {
-                  (async () => {
-                     await sleep(300);
-                     this.requestHashResetModal();
-                  })();
-               }),
-            ];
-         }
-         this.modalTitle = "Fehlschlag";
-         this.showModal = true;
       },
       enterKeyModal() {
          this.modalTitle = "Code eingeben";

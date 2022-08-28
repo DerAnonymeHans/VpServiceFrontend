@@ -8,8 +8,8 @@ import { fetchAPI } from "@/App.vue";
 </script>
 <template>
    <Header :userCount="userCount" />
-   <Main />
-   <Form @newUser="newUser()" @keyEntered="(e) => $emit('keyEntered', e)" />
+   <Main @requestHashReset="$emit('requestHashReset')" />
+   <Form @newUser="newUser()" @requestHashReset="$emit('requestHashReset')" />
 </template>
 <script>
 export default {

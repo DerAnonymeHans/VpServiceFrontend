@@ -7,6 +7,7 @@ import { sleep } from "@/App.vue";
       <div class="text-container">
          <div>
             <button class="btn-focus" @click="scrollToForm()">Zum Abonnement</button>
+            <button class="btn" type="button" @click="$emit('requestHashReset')">Ich bin bereits angemeldet</button>
          </div>
          <article>
             Bist du nicht auch genervt jedesmal nach einem neuen Vertretungsplan zu schauen? Und dann musst du dich auch nochmal neu anmelden und

@@ -104,7 +104,7 @@ export default {
                [new KeyLabelPair("darkmode", "Dunkelmodus"), new KeyLabelPair("lightmode", "Hellmodus")],
                localStorage.getItem("color-scheme")
             ),
-            notifyMode: new SwitchModel([new KeyLabelPair("pwa", "Per App"), new KeyLabelPair("mail", "Per Mail")], "pwa"),
+            notifyMode: new SwitchModel([new KeyLabelPair("pwa", "Push Nachricht"), new KeyLabelPair("mail", "Per Mail")], "pwa"),
          },
 
          isNotifyModeUpdated: false,
