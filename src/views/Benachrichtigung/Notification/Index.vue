@@ -74,6 +74,10 @@ import KeyLabelPair from "@/structs/KeyLabelPair.js";
             </div>
          </div>
       </div>
+      <details class="qrcode-container box">
+         <summary>QR Code</summary>
+         <img :src="qrCodeSrc" alt="QR Code" loading="lazy">
+      </details>
       <Modal :isOpen="showModal" @close="showModal = !showModal" :title="modalTitle" :content="modalContent" :buttons="[]" />
    </div>
 </template>
@@ -83,6 +87,7 @@ export default {
    data() {
       return {
          imgSrc: "",
+         qrCodeSrc: `${import.meta.env.VITE_API_URL}/Notification/QrCode`,
          globalExtra: "",
          grade: "",
          affectedDate: "",
@@ -138,7 +143,7 @@ export default {
 
          this.userName = user.userName || "Kepleraner";
          this.artworkName = global.artwork?.name || "";
-         this.imgSrc = `${import.meta.env.VITE_API_URL}/Notification/GetArtwork/${this.artworkName}/${this.userName}`;
+         this.imgSrc = `${import.meta.env.VITE_API_URL}/Notification/Artwork/${this.artworkName}/${this.userName}`;
          this.globalExtra = global.globalExtra || "Moin";
          this.affectedDate = global.affectedDate || "";
          this.originDate = global.originDate || "";
@@ -290,6 +295,7 @@ class Table {
    padding-bottom: 5vh;
    display: grid;
    align-content: flex-start;
+   color: var(--font);
 
    .box {
       color: var(--font);
@@ -365,6 +371,17 @@ class Table {
          > * {
             margin: $margin 0;
          }
+      }
+   }
+
+   .qrcode-container{
+      margin: auto;
+      margin-top: $margin;      
+      max-width: 95%;
+
+      img{
+         max-width: 500px;
+         width: 100%;
       }
    }
 

@@ -45,6 +45,7 @@ export default {
    },
    methods: {
       onClick(e) {
+         if(this.mq.tabletMinus) return;
          if (this.clickTime === null) {
             this.clickTime = Date.now();
             return;

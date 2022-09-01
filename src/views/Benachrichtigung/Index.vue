@@ -63,7 +63,10 @@ export default {
                if (res.isSuccess) {
                   this.modalTitle = "Anmeldung erfolgreich";
                   this.modalContent =
-                     "Um Benachrichtigungen zu erhalten, musst du auf die Glocke unten links drücken und Benachrichtigungen erlauben.";
+                     `<b>ACHTUNG:</b> Folge den Anweisungen um Push Nachrichten zu erhalten:<br>
+                     1. Drücke die Glocke unten links und klicke auf "ERLAUBEN".<br>
+                     2. Scrolle nach unten und wähle "Push Nachrichten" statt "Email" aus.
+                     `;
                   this.showModal = true;
                   sessionStorage.setItem("notif-page", "notif");
                   return resolve();
