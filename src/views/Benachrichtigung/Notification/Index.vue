@@ -20,7 +20,7 @@ import KeyLabelPair from "@/structs/KeyLabelPair.js";
             <span v-for="info in information" :key="info">{{ info }}<br /></span>
          </div>
          <div class="box">Es fehlen: {{ missingTeachers.join(", ") }}</div>
-         <div class="box">
+         <div class="box plan-box">
             <div v-for="table in tables" :key="table">
                <div v-if="table.rows.length > 0">
                   <h4>{{ table.weekday }}</h4>
@@ -76,7 +76,7 @@ import KeyLabelPair from "@/structs/KeyLabelPair.js";
       </div>
       <details class="qrcode-container box">
          <summary>QR Code</summary>
-         <img :src="qrCodeSrc" alt="QR Code" loading="lazy">
+         <img :src="qrCodeSrc" alt="QR Code" loading="lazy" />
       </details>
       <Modal :isOpen="showModal" @close="showModal = !showModal" :title="modalTitle" :content="modalContent" :buttons="[]" />
    </div>
@@ -158,6 +158,10 @@ export default {
          this.color = global.artwork.color;
          this.title = global.subject;
 
+         const lastPlanModel = this.handleLastPlan(global, grade);
+         // debugger;
+         if (lastPlanModel !== null) this.tables.push(lastPlanModel.table);
+
          localStorage.setItem("last-origin-datetime", `${this.originDate}, ${this.originTime}`);
       },
       fetchModel(name, useCachedData) {
@@ -183,6 +187,25 @@ export default {
             this.showModal = true;
             return reject();
          });
+      },
+      handleLastPlan(globalModel, gradeModel) {
+         let lastPlanModel = localStorage.getItem("last-plan-model");
+
+         if (lastPlanModel !== null) {
+            lastPlanModel = JSON.parse(lastPlanModel);
+         }
+         if (lastPlanModel?.affectedDate === globalModel.affectedDate) return null;
+
+         if (new Date().getHours() < 18) return lastPlanModel;
+
+         const newLastPlanModel = new LastPlanModel(
+            globalModel.affectedWeekday,
+            gradeModel.rows.map((row) => Object.assign(row, { hasChange: false })),
+            globalModel.affectedDate
+         );
+         localStorage.setItem("last-plan-model", JSON.stringify(newLastPlanModel));
+
+         return lastPlanModel;
       },
       async isPlanNew() {
          return new Promise(async (resolve, reject) => {
@@ -280,6 +303,12 @@ class Table {
       this.rows = rows;
    }
 }
+class LastPlanModel {
+   constructor(weekday, rows, affectedDate) {
+      this.table = new Table(weekday, rows);
+      this.affectedDate = affectedDate;
+   }
+}
 </script>
 <style lang="scss" scoped>
 @import "@/styles/_variables.scss";
@@ -336,6 +365,10 @@ class Table {
          text-align: center;
       }
 
+      .plan-box {
+         padding-inline: $padding * 0.1;
+      }
+
       table {
          width: 100%;
 
@@ -348,6 +381,9 @@ class Table {
                }
                &:nth-child(2n - 1) {
                   background-color: var(--col-dark);
+               }
+               &:last-child {
+                  word-break: break-all;
                }
             }
          }
@@ -374,12 +410,12 @@ class Table {
       }
    }
 
-   .qrcode-container{
+   .qrcode-container {
       margin: auto;
-      margin-top: $margin;      
+      margin-top: $margin;
       max-width: 95%;
 
-      img{
+      img {
          max-width: 500px;
          width: 100%;
       }
