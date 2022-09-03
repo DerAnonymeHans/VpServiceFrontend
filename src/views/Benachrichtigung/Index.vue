@@ -57,15 +57,17 @@ export default {
          return new Promise(async (resolve, reject) => {
             const form = new FormData();
             form.append("key", key);
+            this.modalButtons = [];
+            this.modalMode = "hashResetResponse";
             let res;
             try {
                res = await fetchAPI(`/User/ResetHash`, { method: "POST", body: form }).then((res) => res.json());
                if (res.isSuccess) {
                   this.modalTitle = "Anmeldung erfolgreich";
-                  this.modalContent =
-                     `<b>ACHTUNG:</b> Folge den Anweisungen um Push Nachrichten zu erhalten:<br>
+                  this.modalContent = `<b>ACHTUNG:</b> Folge den Anweisungen um Push Nachrichten zu erhalten:<br>
                      1. Drücke die Glocke unten links und klicke auf "ERLAUBEN".<br>
-                     2. Scrolle nach unten und wähle "Push Nachrichten" statt "Email" aus.
+                     2. Scrolle nach unten und wähle "Push Nachrichten" statt "Email" aus.<br>
+                     3. Füge die Seite als Verknüpfung zum Startbildschirm hinzu.
                      `;
                   this.showModal = true;
                   sessionStorage.setItem("notif-page", "notif");
@@ -77,8 +79,6 @@ export default {
                this.modalTitle = "Anmeldung fehlgeschlagen";
                this.modalContent = "Leider ist etwas schief gelaufen";
             }
-            this.modalMode = "hashResetResponse";
-            this.modalButtons = [];
             this.showModal = true;
             return resolve();
          });

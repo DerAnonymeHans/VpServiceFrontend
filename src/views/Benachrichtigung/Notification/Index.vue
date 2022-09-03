@@ -159,9 +159,9 @@ export default {
          this.title = global.subject;
 
          const lastPlanModel = this.handleLastPlan(global, grade);
-         // debugger;
          if (lastPlanModel !== null) this.tables.push(lastPlanModel.table);
 
+         localStorage.setItem("greeting", this.userName);
          localStorage.setItem("last-origin-datetime", `${this.originDate}, ${this.originTime}`);
       },
       fetchModel(name, useCachedData) {
