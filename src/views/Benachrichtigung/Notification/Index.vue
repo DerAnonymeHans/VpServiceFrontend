@@ -194,18 +194,24 @@ export default {
          if (lastPlanModel !== null) {
             lastPlanModel = JSON.parse(lastPlanModel);
          }
-         if (lastPlanModel?.affectedDate === globalModel.affectedDate) return null;
+         if (lastPlanModel?.affectedDate === globalModel.affectedDate) {
+            this.setLastPlan(globalModel, gradeModel);
+            return null;
+         }
 
          if (new Date().getHours() < 18) return lastPlanModel;
 
+         this.setLastPlan(globalModel, gradeModel);
+
+         return null;
+      },
+      setLastPlan(globalModel, gradeModel) {
          const newLastPlanModel = new LastPlanModel(
             globalModel.affectedWeekday,
             gradeModel.rows.map((row) => Object.assign(row, { hasChange: false })),
             globalModel.affectedDate
          );
          localStorage.setItem("last-plan-model", JSON.stringify(newLastPlanModel));
-
-         return lastPlanModel;
       },
       async isPlanNew() {
          return new Promise(async (resolve, reject) => {
