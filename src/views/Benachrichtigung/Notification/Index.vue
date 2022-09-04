@@ -23,7 +23,8 @@ import KeyLabelPair from "@/structs/KeyLabelPair.js";
          <div class="box plan-box">
             <div v-for="table in tables" :key="table">
                <div v-if="table.rows.length > 0">
-                  <h4>{{ table.weekday }}</h4>
+                  <h4 class="plan-weekday" :style="{ textDecorationColor: color }">{{ table.weekday }}</h4>
+                  <span v-for="info in table.information" :key="info">{{ info }}<br /></span>
                   <table>
                      <tr>
                         <th>Klasse</th>
@@ -50,8 +51,9 @@ import KeyLabelPair from "@/structs/KeyLabelPair.js";
             <p v-if="extraAuthor?.length > 0">~{{ extraAuthor }}</p>
          </div>
       </div>
+      <hr v-if="mq.tabletMinus" />
       <div class="user-space">
-         <div class="account-logo-container">
+         <div class="account-logo-container" v-if="mq.desktopPlus">
             <div class="account-logo"><IconRepo name="account" /></div>
          </div>
          <div class="box">
@@ -115,6 +117,8 @@ export default {
          },
 
          isNotifyModeUpdated: false,
+
+         colorScheme: "darkmode",
       };
    },
    beforeMount() {
@@ -161,6 +165,8 @@ export default {
          const lastPlanModel = this.handleLastPlan(global, grade);
          if (lastPlanModel !== null) this.tables.push(lastPlanModel.table);
 
+         this.ensurePlanColorContrast();
+
          localStorage.setItem("greeting", this.userName);
          localStorage.setItem("last-origin-datetime", `${this.originDate}, ${this.originTime}`);
       },
@@ -206,12 +212,28 @@ export default {
          return null;
       },
       setLastPlan(globalModel, gradeModel) {
-         const newLastPlanModel = new LastPlanModel(
-            globalModel.affectedWeekday,
-            gradeModel.rows.map((row) => Object.assign(row, { hasChange: false })),
-            globalModel.affectedDate
-         );
+         const newLastPlanModel = new LastPlanModel(globalModel, gradeModel);
          localStorage.setItem("last-plan-model", JSON.stringify(newLastPlanModel));
+      },
+      ensurePlanColorContrast() {
+         const wantedBrightness = this.colorScheme === "lightmode" ? 550 : 300;
+         const dec = (hex) => parseInt(hex, 16);
+         const hex = (dec) => Math.round(dec).toString(16);
+
+         let r = dec(this.color.slice(1, 3)),
+            g = dec(this.color.slice(3, 5)),
+            b = dec(this.color.slice(5, 7));
+
+         const quotient = wantedBrightness / (r + g + b);
+         if (this.colorScheme === "darkmode" && quotient < 1) return;
+         if (this.colorScheme === "lightmode" && quotient > 1) return;
+         console.log(quotient);
+
+         r *= quotient;
+         g *= quotient;
+         b *= quotient;
+
+         this.color = `#${hex(r)}${hex(g)}${hex(b)}`;
       },
       async isPlanNew() {
          return new Promise(async (resolve, reject) => {
@@ -247,6 +269,7 @@ export default {
       switchMode(key, to) {
          switch (key) {
             case "color":
+               this.colorScheme = to;
                this.loadColorScheme(to);
                break;
             case "notifyMode":
@@ -274,6 +297,8 @@ export default {
          for (const key in scheme) {
             this.$refs.page.style.setProperty(`--${key}`, scheme[key]);
          }
+
+         this.ensurePlanColorContrast();
       },
       async changeNotifyMode(name) {
          try {
@@ -291,7 +316,6 @@ export default {
          this.showModal = true;
       },
       async saveUserPushrId(sid) {
-         console.log(sid);
          if (typeof sid !== "string") return;
          const form = new FormData();
          form.append("sid", sid);
@@ -304,15 +328,20 @@ export default {
    },
 };
 class Table {
-   constructor(weekday, rows) {
+   constructor(weekday, rows, information = []) {
       this.weekday = weekday;
       this.rows = rows;
+      this.information = information;
    }
 }
 class LastPlanModel {
-   constructor(weekday, rows, affectedDate) {
-      this.table = new Table(weekday, rows);
-      this.affectedDate = affectedDate;
+   constructor(global, grade) {
+      this.table = new Table(
+         global.affectedWeekday,
+         grade.rows.map((row) => Object.assign(row, { hasChange: false })),
+         global.information
+      );
+      this.affectedDate = global.affectedDate;
    }
 }
 </script>
@@ -337,6 +366,11 @@ class LastPlanModel {
       background-color: var(--bg-medium);
       // border-color: var(--bg-medium);
       border: none;
+   }
+
+   hr {
+      width: 50%;
+      border: 1px solid $accent;
    }
 
    .data {
@@ -373,6 +407,17 @@ class LastPlanModel {
 
       .plan-box {
          padding-inline: $padding * 0.1;
+
+         > * {
+            &:not(:last-child) {
+               margin-bottom: $margin * 2;
+            }
+         }
+
+         .plan-weekday {
+            text-decoration: underline;
+            text-decoration-thickness: 2px;
+         }
       }
 
       table {
@@ -451,12 +496,10 @@ class LastPlanModel {
    &.tablet {
       .data,
       .user-space {
-         width: 60%;
+         width: 70%;
       }
       .user-space {
-         .account-logo {
-            width: 30%;
-         }
+         margin-top: $margin;
       }
    }
 
@@ -471,10 +514,7 @@ class LastPlanModel {
          }
       }
       .user-space {
-         margin-top: $margin * 2;
-         .account-logo {
-            width: 40%;
-         }
+         margin-top: $margin;
       }
    }
 }

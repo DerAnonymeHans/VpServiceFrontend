@@ -12,7 +12,7 @@ import KeyLabelPair from "@/structs/KeyLabelPair.js";
    <div class="form-container" :class="mq.current">
       <iframe id="dummy-frame" frameborder="0"></iframe>
       <form id="subscribe-form" @submit="submit" target="dummy-frame">
-         <Input type="text" label="Anrede/Name" name="name" />
+         <Input type="text" label="Anrede (Hallo ___!)" name="name" />
          <Input type="text" label="Email" name="mail" />
          <Input type="number" label="Klassenstufe" name="grade" :min="5" :max="12" />
          <div class="center" v-if="os != 'mac'">

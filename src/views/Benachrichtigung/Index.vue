@@ -39,7 +39,6 @@ export default {
    async mounted() {
       await this.handleHashReset();
       await this.getPage();
-      console.log("page", this.page);
    },
    methods: {
       async handleHashReset() {
