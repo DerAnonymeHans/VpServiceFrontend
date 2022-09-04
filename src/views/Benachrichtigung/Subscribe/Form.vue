@@ -12,7 +12,7 @@ import KeyLabelPair from "@/structs/KeyLabelPair.js";
    <div class="form-container" :class="mq.current">
       <iframe id="dummy-frame" frameborder="0"></iframe>
       <form id="subscribe-form" @submit="submit" target="dummy-frame">
-         <Input type="text" label="Anrede (Hallo ___!)" name="name" />
+         <Input type="text" :label="`Anrede -> Hallo ${anrede}!`" :defaultValue="anrede" name="name" @input="(e) => (anrede = e.target.value)" />
          <Input type="text" label="Email" name="mail" />
          <Input type="number" label="Klassenstufe" name="grade" :min="5" :max="12" />
          <div class="center" v-if="os != 'mac'">
@@ -48,6 +48,7 @@ export default {
          showModal: false,
          modalMode: "",
          notifyMode: "mail",
+         anrede: "",
 
          switchModel: new SwitchModel([new KeyLabelPair("pwa", "Push Nachricht"), new KeyLabelPair("mail", "Per Mail")], "mail"),
       };
@@ -82,6 +83,9 @@ export default {
                this.modalButtons = [];
                this.showModal = true;
             });
+      },
+      changeAnrede(e) {
+         this.anrede = e.target.value;
       },
       switchNotifyMode(to) {
          this.notifyMode = to;

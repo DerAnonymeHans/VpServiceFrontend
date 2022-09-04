@@ -3,7 +3,7 @@
 <template>
    <div :class="{ invert: isInvert }">
       <label>{{ label }}</label>
-      <input :id="id" :type="type" :name="name" :value="value" :min="min" :max="max" />
+      <input :id="id" :type="type" :name="name" :value="value" :min="min" :max="max" @input="(e) => $emit('input', e.target.value)" />
    </div>
 </template>
 <script>
@@ -30,7 +30,6 @@ export default {
       };
    },
    updated() {
-      console.log(this.defaultValue);
       if (this.defaultValue != "null") this.value = this.defaultValue;
    },
 };
