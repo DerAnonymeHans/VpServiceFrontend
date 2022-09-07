@@ -186,7 +186,8 @@ export default {
             return null;
          }
 
-         if (new Date().getHours() < 16) return lastPlanModel;
+         // if last plan is affecting today
+         if (new Date().getDate() === parseInt(lastPlanModel.affectedDate.slice(0, 2))) return lastPlanModel;
 
          this.setLastPlan(globalModel, gradeModel);
 
