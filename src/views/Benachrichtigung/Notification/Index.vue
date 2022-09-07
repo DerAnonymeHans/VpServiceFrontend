@@ -6,10 +6,12 @@ import Modal, { Button } from "@/components/modal/Modal.vue";
 import Switch, { SwitchModel } from "@/components/switch/Switch.vue";
 import IconRepo from "@/repos/IconRepo.vue";
 import KeyLabelPair from "@/structs/KeyLabelPair.js";
+import TableComp, { Table } from "./Table.vue";
+import SmallExtra from "./SmallExtra.vue";
 </script>
 <template>
-   <div :class="mq.current" class="page" ref="page">
-      <div class="data">
+   <div :class="mq.current" class="notif-page" ref="page">
+      <div class="data-space">
          <img :src="imgSrc" class="artwork" :alt="imgSrc" />
          <h2 class="global-extra" :style="{ color: color }">{{ globalExtra }}</h2>
          <div class="box text-center">
@@ -22,39 +24,17 @@ import KeyLabelPair from "@/structs/KeyLabelPair.js";
          <div class="box">Es fehlen: {{ missingTeachers.join(", ") }}</div>
          <div class="box plan-box">
             <div v-for="table in tables" :key="table">
-               <div v-if="table.rows.length > 0">
-                  <h4 class="plan-weekday" :style="{ textDecorationColor: color }">{{ table.weekday }}</h4>
-                  <span v-for="info in table.information" :key="info">{{ info }}<br /></span>
-                  <table>
-                     <tr>
-                        <th>Klasse</th>
-                        <th>Stunde</th>
-                        <th>Fach</th>
-                        <th>Lehrer</th>
-                        <th>Raum</th>
-                        <th>Info</th>
-                     </tr>
-                     <tr v-for="row in table.rows" :key="row" :style="{ color: row.hasChange ? color : '' }">
-                        <td>{{ row.row.klasse }}</td>
-                        <td>{{ row.row.stunde }}</td>
-                        <td>{{ row.row.fach }}</td>
-                        <td>{{ row.row.lehrer }}</td>
-                        <td>{{ row.row.raum }}</td>
-                        <td>{{ row.row.info }}</td>
-                     </tr>
-                  </table>
-               </div>
+               <TableComp :color="color" :table="table" />
             </div>
          </div>
          <div class="box small-extra">
-            <blockquote :style="{ borderColor: color }" v-html="extraText"></blockquote>
-            <p v-if="extraAuthor?.length > 0">~{{ extraAuthor }}</p>
+            <SmallExtra :color="color" :text="extraText" :author="extraAuthor" />
          </div>
       </div>
-      <hr v-if="mq.tabletMinus" />
+      <hr v-if="mq.tabletMinus" :style="{ borderColor: color }" />
       <div class="user-space">
          <div class="account-logo-container" v-if="mq.desktopPlus">
-            <div class="account-logo"><IconRepo name="account" /></div>
+            <div class="account-logo" :style="{ color: color }"><IconRepo name="account" /></div>
          </div>
          <div class="box">
             <div
@@ -169,6 +149,7 @@ export default {
 
          localStorage.setItem("greeting", this.userName);
          localStorage.setItem("last-origin-datetime", `${this.originDate}, ${this.originTime}`);
+         localStorage.setItem("last-affected-date", this.affectedDate);
       },
       fetchModel(name, useCachedData) {
          return new Promise(async (resolve, reject) => {
@@ -205,7 +186,7 @@ export default {
             return null;
          }
 
-         if (new Date().getHours() < 18) return lastPlanModel;
+         if (new Date().getHours() < 16) return lastPlanModel;
 
          this.setLastPlan(globalModel, gradeModel);
 
@@ -238,7 +219,9 @@ export default {
       async isPlanNew() {
          return new Promise(async (resolve, reject) => {
             try {
-               let res = await fetchAPI(`/Notification/IsNewPlan/${encodeURIComponent(localStorage.getItem("last-origin-datetime"))}`).then((res) =>
+               const lastOriginDatetime = localStorage.getItem("last-origin-datetime");
+               const lastAffectedDate = localStorage.getItem("last-affected-date");
+               let res = await fetchAPI(`/Notification/IsNewPlan/${encodeURIComponent(`${lastOriginDatetime}-${lastAffectedDate}`)}`).then((res) =>
                   res.json()
                );
                if (res.isSuccess) {
@@ -327,13 +310,7 @@ export default {
       },
    },
 };
-class Table {
-   constructor(weekday, rows, information = []) {
-      this.weekday = weekday;
-      this.rows = rows;
-      this.information = information;
-   }
-}
+
 class LastPlanModel {
    constructor(global, grade) {
       this.table = new Table(
@@ -345,9 +322,9 @@ class LastPlanModel {
    }
 }
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
 @import "@/styles/_variables.scss";
-.page {
+.notif-page {
    --bg: #111;
    --bg-medium: #222;
    --col-light: #444;
@@ -364,16 +341,16 @@ class LastPlanModel {
    .box {
       color: var(--font);
       background-color: var(--bg-medium);
-      // border-color: var(--bg-medium);
       border: none;
    }
 
    hr {
       width: 50%;
-      border: 1px solid $accent;
+      border: none;
+      border-bottom: 3px solid $accent;
    }
 
-   .data {
+   .data-space {
       margin: auto;
 
       .artwork {
@@ -386,18 +363,6 @@ class LastPlanModel {
 
       .global-extra {
          text-align: center;
-      }
-
-      .small-extra {
-         blockquote {
-            border-left: 3px solid $accent;
-            margin: 0;
-            padding-left: $padding;
-         }
-         p {
-            text-align: right;
-            margin-right: $margin * 3;
-         }
       }
 
       h4 {
@@ -413,31 +378,6 @@ class LastPlanModel {
                margin-bottom: $margin * 2;
             }
          }
-
-         .plan-weekday {
-            text-decoration: underline;
-            text-decoration-thickness: 2px;
-         }
-      }
-
-      table {
-         width: 100%;
-
-         tr {
-            td,
-            th {
-               border-left: none;
-               &:nth-child(2n) {
-                  background-color: var(--col-light);
-               }
-               &:nth-child(2n - 1) {
-                  background-color: var(--col-dark);
-               }
-               &:last-child {
-                  word-break: break-all;
-               }
-            }
-         }
       }
    }
 
@@ -445,9 +385,6 @@ class LastPlanModel {
       margin-inline: auto;
 
       .account-logo-container {
-         // border: 3px solid var(--bg-medium);
-         // border-radius: $border-radius $border-radius 0 0;
-
          .account-logo {
             color: $accent;
             margin: auto;
@@ -473,7 +410,7 @@ class LastPlanModel {
    }
 
    &.ultrawide {
-      .data,
+      .data-space,
       .user-space {
          width: 70% !important;
       }
@@ -482,7 +419,7 @@ class LastPlanModel {
    &.ultrawide,
    &.desktop {
       grid-template-columns: 1fr 1fr;
-      .data,
+      .data-space,
       .user-space {
          width: 85%;
       }
@@ -494,7 +431,7 @@ class LastPlanModel {
    }
 
    &.tablet {
-      .data,
+      .data-space,
       .user-space {
          width: 70%;
       }
@@ -504,11 +441,11 @@ class LastPlanModel {
    }
 
    &.mobile {
-      .data,
+      .data-space,
       .user-space {
          width: 95%;
       }
-      .data {
+      .data-space {
          table {
             font-size: 11pt;
          }
