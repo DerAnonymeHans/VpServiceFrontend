@@ -27,6 +27,10 @@ import SmallExtra from "./SmallExtra.vue";
                <TableComp :color="color" :table="table" />
             </div>
          </div>
+         <div class="box link-container" :style="{ color: color }">
+            <button class="btn"><a href="https://jkg-leipzig.de/vertretungsplan/">Schulseite</a></button>
+            <button class="btn"><RouterLink to="/Mitmachen">Kleines Extra beitragen</RouterLink></button>
+         </div>
          <div class="box small-extra">
             <SmallExtra :color="color" :text="extraText" :author="extraAuthor" />
          </div>
@@ -56,7 +60,7 @@ import SmallExtra from "./SmallExtra.vue";
             </div>
          </div>
       </div>
-      <details class="qrcode-container box">
+      <details class="box qrcode-container">
          <summary>QR Code</summary>
          <img :src="qrCodeSrc" alt="QR Code" loading="lazy" />
       </details>
@@ -377,6 +381,24 @@ class LastPlanModel {
          > * {
             &:not(:last-child) {
                margin-bottom: $margin * 2;
+            }
+         }
+      }
+
+      .link-container {
+         width: fit-content;
+         margin: auto;
+
+         > * {
+            margin-right: $margin;
+            color: inherit !important;
+            background-color: currentColor;
+            a {
+               color: var(--bg);
+            }
+
+            &:last-child {
+               margin-right: 0;
             }
          }
       }

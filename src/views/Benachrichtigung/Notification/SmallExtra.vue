@@ -1,6 +1,7 @@
 <!-- @format -->
 
 <template>
+   <h4><b>Kleines, aber feines Extra</b></h4>
    <blockquote :style="{ borderColor: color }" v-html="text"></blockquote>
    <p v-if="author?.length > 0">~{{ author }}</p>
 </template>
@@ -29,5 +30,9 @@ blockquote {
 p {
    text-align: right;
    margin-right: $margin * 3;
+}
+h4 {
+   margin-top: 0 !important;
+   text-align: left !important;
 }
 </style>
