@@ -13,6 +13,7 @@ import SmallExtra from "./SmallExtra.vue";
    <div :class="mq.current" class="notif-page" ref="page">
       <div class="data-space">
          <img :src="imgSrc" class="artwork" :alt="imgSrc" />
+         <div class="text-center" :style="{ color: color }" v-if="tempMax !== null">{{ tempMin }}/{{ tempMax }}°C</div>
          <h2 class="global-extra" :style="{ color: color }">{{ globalExtra }}</h2>
          <div class="box text-center">
             <b>{{ title }}</b> <br />
@@ -87,6 +88,8 @@ export default {
          userName: "",
          color: "",
          title: "",
+         tempMax: "",
+         tempMin: "",
 
          modalTitle: "",
          modalContent: "",
@@ -136,6 +139,8 @@ export default {
          this.affectedDate = global.affectedDate || "";
          this.originDate = global.originDate || "";
          this.originTime = global.originTime || "";
+         this.tempMax = global.weather.tempMax;
+         this.tempMin = global.weather.tempMin;
          this.tables.push(new Table(global.affectedWeekday, grade.rows), new Table(global.affectedWeekday2, grade.rows2));
          this.missingTeachers = global.missingTeachers?.map((teacher) => teacher.trim()) || [];
          this.information = global.information || [];
