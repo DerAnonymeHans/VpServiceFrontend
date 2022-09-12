@@ -59,6 +59,7 @@ import SmallExtra from "./SmallExtra.vue";
                   @switch="(to) => switchMode(key, to)"
                />
             </div>
+            <button class="btn" @click="reload()">Neuladen</button>
          </div>
       </div>
       <details class="box qrcode-container">
@@ -141,7 +142,7 @@ export default {
          this.originTime = global.originTime || "";
          this.tempMax = global.weather.tempMax;
          this.tempMin = global.weather.tempMin;
-         this.tables.push(new Table(global.affectedWeekday, grade.rows), new Table(global.affectedWeekday2, grade.rows2));
+         this.tables = [new Table(global.affectedWeekday, grade.rows), new Table(global.affectedWeekday2, grade.rows2)];
          this.missingTeachers = global.missingTeachers?.map((teacher) => teacher.trim()) || [];
          this.information = global.information || [];
          this.grade = grade.grade;
@@ -240,6 +241,10 @@ export default {
             } catch (e) {}
             return resolve(true);
          });
+      },
+      reload() {
+         localStorage.setItem("last-origin-datetime", "reload");
+         this.fetchData();
       },
       async getNotifyMode() {
          try {
