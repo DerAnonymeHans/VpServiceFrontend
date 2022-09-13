@@ -67,7 +67,7 @@ export default {
                      (0. Im besten Fall nutzt du Chrome)
                      1. Drücke die Glocke unten links und klicke auf "ERLAUBEN".<br>
                      2. Scrolle nach unten und wähle "Push Nachrichten" statt "Email" aus.<br>
-                     3. a) bei Chrome: Drücke auf die 3 Punkte oben rechts und anschließend auf "App installieren" (Keine Angst, das ist nur diese Webseite in App-Form - rund 0,5 MB)<br>
+                     3. <br>a) bei Chrome: Drücke auf die 3 Punkte oben rechts und anschließend auf "App installieren" (Keine Angst, das ist nur diese Webseite in App-Form - rund 0,5 MB)<br>
                      b) sonst: Füge die Webseite als Verknüpfung zum Startbildschirm hinzu
                      `;
                   this.showModal = true;

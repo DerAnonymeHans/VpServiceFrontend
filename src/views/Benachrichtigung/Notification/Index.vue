@@ -123,6 +123,7 @@ export default {
    },
    methods: {
       async fetchData() {
+         this.loadCachedData();
          const useCachedData = !(await this.isPlanNew());
          const res = await Promise.allSettled([
             this.fetchModel("Global", useCachedData),
@@ -160,6 +161,37 @@ export default {
          localStorage.setItem("greeting", this.userName);
          localStorage.setItem("last-origin-datetime", `${this.originDate}, ${this.originTime}`);
          localStorage.setItem("last-affected-date", this.affectedDate);
+      },
+      async loadCachedData() {
+         const res = await Promise.allSettled([this.fetchModel("Global", true), this.fetchModel("Grade", true), this.fetchModel("User", true)]);
+         const global = res[0].value,
+            grade = res[1].value,
+            user = res[2].value;
+
+         this.title = "Lade...";
+         if (global !== null) {
+            this.globalExtra = global.globalExtra || "Moin";
+            this.affectedDate = global.affectedDate || "";
+            this.originDate = global.originDate || "";
+            this.originTime = global.originTime || "";
+            this.tempMax = global.weather.tempMax;
+            this.tempMin = global.weather.tempMin;
+            this.missingTeachers = global.missingTeachers?.map((teacher) => teacher.trim()) || [];
+            this.information = global.information || [];
+            this.color = global.artwork.color;
+         }
+         if (grade !== null) {
+            this.grade = grade.grade;
+            this.globalExtra = grade.gradeExtra !== null ? grade.gradeExtra : this.globalExtra;
+         }
+         if (globalExtra !== null && grade !== null) {
+            this.tables = [new Table(global.affectedWeekday, grade.rows), new Table(global.affectedWeekday2, grade.rows2)];
+         }
+         if (user !== null) {
+            this.userName = user.userName || "Kepleraner";
+            this.extraText = user.smallExtra.text;
+            this.extraAuthor = user.smallExtra.author;
+         }
       },
       fetchModel(name, useCachedData) {
          return new Promise(async (resolve, reject) => {
