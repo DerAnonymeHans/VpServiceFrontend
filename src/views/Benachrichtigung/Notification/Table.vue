@@ -1,10 +1,10 @@
 <!-- @format -->
 
 <template>
-   <div v-if="table.rows.length > 0">
+   <div>
       <h4 class="plan-weekday" :style="{ textDecorationColor: color }">{{ table.weekday }}</h4>
       <span v-for="info in table.information" :key="info">{{ info }}<br /></span>
-      <table>
+      <table v-if="table.rows.length > 0">
          <tr>
             <th>Klasse</th>
             <th>Stunde</th>
@@ -22,6 +22,7 @@
             <td>{{ row.row.info }}</td>
          </tr>
       </table>
+      <p class="center" v-else>Keine Änderungen...</p>
    </div>
 </template>
 <script>
