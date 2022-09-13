@@ -59,7 +59,7 @@ import SmallExtra from "./SmallExtra.vue";
                   @switch="(to) => switchMode(key, to)"
                />
             </div>
-            <button class="btn" @click="reload()">Neuladen</button>
+            <button class="btn" @click="() => reload()">Neuladen</button>
          </div>
       </div>
       <details class="box qrcode-container">
