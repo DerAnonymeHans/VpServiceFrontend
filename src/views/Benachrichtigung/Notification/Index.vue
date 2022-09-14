@@ -223,7 +223,7 @@ export default {
          if (lastPlanModel !== null) {
             lastPlanModel = JSON.parse(lastPlanModel);
          }
-         if (lastPlanModel?.affectedDate === globalModel.affectedDate) {
+         if (lastPlanModel?.affectedDate === globalModel.affectedDate || lastPlanModel === null) {
             this.setLastPlan(globalModel, gradeModel);
             return null;
          }
@@ -233,9 +233,6 @@ export default {
             lastPlanModel.table.weekday += " (heute)";
             return lastPlanModel;
          }
-
-         this.setLastPlan(globalModel, gradeModel);
-
          return null;
       },
       setLastPlan(globalModel, gradeModel) {
