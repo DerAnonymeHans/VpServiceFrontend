@@ -184,7 +184,7 @@ export default {
             this.grade = grade.grade;
             this.globalExtra = grade.gradeExtra !== null ? grade.gradeExtra : this.globalExtra;
          }
-         if (globalExtra !== null && grade !== null) {
+         if (global !== null && grade !== null) {
             this.tables = [new Table(global.affectedWeekday, grade.rows), new Table(global.affectedWeekday2, grade.rows2)];
          }
          if (user !== null) {
@@ -229,7 +229,10 @@ export default {
          }
 
          // if last plan is affecting today
-         if (new Date().getDate() === parseInt(lastPlanModel.affectedDate.slice(0, 2))) return lastPlanModel;
+         if (new Date().getDate() === parseInt(lastPlanModel.affectedDate.slice(0, 2))) {
+            lastPlanModel.table.weekday += " (heute)";
+            return lastPlanModel;
+         }
 
          this.setLastPlan(globalModel, gradeModel);
 
@@ -259,7 +262,7 @@ export default {
 
          this.color = `#${hex(r)}${hex(g)}${hex(b)}`;
       },
-      async isPlanNew() {
+      isPlanNew() {
          return new Promise(async (resolve, reject) => {
             try {
                const lastOriginDatetime = localStorage.getItem("last-origin-datetime");
