@@ -157,7 +157,7 @@ export default {
          this.title = global.subject;
 
          const lastPlanModel = this.handleLastPlan(global, grade);
-         if (lastPlanModel !== null) this.tables.push(lastPlanModel.table);
+         if (lastPlanModel !== null) this.plans.push(lastPlanModel);
 
          this.ensurePlanColorContrast();
 
@@ -237,20 +237,20 @@ export default {
          if (lastPlanModel !== null) {
             lastPlanModel = JSON.parse(lastPlanModel);
          }
-         if (lastPlanModel?.affectedDate === globalModel.affectedDate || lastPlanModel === null) {
-            this.setLastPlan(globalModel, gradeModel);
-            return null;
-         }
 
          // if last plan is affecting today
-         if (new Date().getDate() === parseInt(lastPlanModel.affectedDate.slice(0, 2))) {
-            lastPlanModel.table.weekday += " (heute)";
+         if (new Date().getDate() === parseInt(lastPlanModel?.affectedDate.slice(0, 2))) {
+            lastPlanModel.affectedWeekday += " (heute)";
             return lastPlanModel;
          }
+
+         this.setLastPlan(globalModel, gradeModel);
          return null;
       },
-      setLastPlan(globalModel, gradeModel) {
-         const newLastPlanModel = new LastPlanModel(globalModel, gradeModel);
+      setLastPlan(global, grade) {
+         global.globalPlans = [global.globalPlans[0]];
+         grade.listOfTables = [grade.listOfTables[0]];
+         const newLastPlanModel = this.makePlans(global, grade)[0];
          localStorage.setItem("last-plan-model", JSON.stringify(newLastPlanModel));
       },
       ensurePlanColorContrast() {
@@ -371,17 +371,6 @@ export default {
       },
    },
 };
-
-class LastPlanModel {
-   constructor(global, grade) {
-      this.table = new Table(
-         global.affectedWeekday,
-         grade.rows.map((row) => Object.assign(row, { hasChange: false })),
-         global.information
-      );
-      this.affectedDate = global.affectedDate;
-   }
-}
 </script>
 <style lang="scss">
 @import "@/styles/_variables.scss";
