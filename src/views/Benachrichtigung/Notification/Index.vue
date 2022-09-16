@@ -6,7 +6,7 @@ import Modal, { Button } from "@/components/modal/Modal.vue";
 import Switch, { SwitchModel } from "@/components/switch/Switch.vue";
 import IconRepo from "@/repos/IconRepo.vue";
 import KeyLabelPair from "@/structs/KeyLabelPair.js";
-import TableComp, { Table } from "./Table.vue";
+import PlanComponent, { Plan } from "./Plan.vue";
 import SmallExtra from "./SmallExtra.vue";
 </script>
 <template>
@@ -19,13 +19,13 @@ import SmallExtra from "./SmallExtra.vue";
             <b>{{ title }}</b> <br />
             <i>(vom {{ originDate }} um {{ originTime }} Uhr.)</i>
          </div>
-         <div class="box" v-if="information.length > 0">
+         <!-- <div class="box" v-if="information.length > 0">
             <span v-for="info in information" :key="info">{{ info }}<br /></span>
-         </div>
-         <div class="box">Es fehlen: {{ missingTeachers.join(", ") }}</div>
-         <div class="box plan-box">
-            <div v-for="table in tables" :key="table">
-               <TableComp :color="color" :table="table" />
+         </div> -->
+         <!-- <div class="box">Es fehlen: {{ missingTeachers.join(", ") }}</div> -->
+         <div class="plan-box">
+            <div v-for="plan in plans" :key="plan">
+               <PlanComponent :color="color" :plan="plan" />
             </div>
          </div>
          <div class="box link-container" :style="{ color: color }">
@@ -78,17 +78,18 @@ export default {
          qrCodeSrc: `${import.meta.env.VITE_API_URL}/Notification/QrCode`,
          globalExtra: "",
          grade: "",
+
+         title: "",
          affectedDate: "",
          originDate: "",
          originTime: "",
-         missingTeachers: [],
-         information: [],
-         tables: [],
+
+         plans: [],
+
          extraText: "",
          extraAuthor: "",
          userName: "",
          color: "",
-         title: "",
          tempMax: "",
          tempMin: "",
 
@@ -138,14 +139,16 @@ export default {
          this.artworkName = global.artwork?.name || "";
          this.imgSrc = `${import.meta.env.VITE_API_URL}/Notification/Artwork/${this.artworkName}/${this.userName}`;
          this.globalExtra = global.globalExtra || "Moin";
-         this.affectedDate = global.affectedDate || "";
-         this.originDate = global.originDate || "";
-         this.originTime = global.originTime || "";
+
          this.tempMax = global.weather.tempMax;
          this.tempMin = global.weather.tempMin;
-         this.tables = [new Table(global.affectedWeekday, grade.rows), new Table(global.affectedWeekday2, grade.rows2)];
-         this.missingTeachers = global.missingTeachers?.map((teacher) => teacher.trim()) || [];
-         this.information = global.information || [];
+
+         this.plans = this.makePlans(global, grade);
+
+         this.originDate = this.plans[0].originDate;
+         this.originTime = this.plans[0].originTime;
+         this.affectedDate = this.plans[0].affectedDate;
+
          this.grade = grade.grade;
          this.globalExtra = grade.gradeExtra !== null ? grade.gradeExtra : this.globalExtra;
          this.extraText = user.smallExtra.text;
@@ -185,13 +188,24 @@ export default {
             this.globalExtra = grade.gradeExtra !== null ? grade.gradeExtra : this.globalExtra;
          }
          if (global !== null && grade !== null) {
-            this.tables = [new Table(global.affectedWeekday, grade.rows), new Table(global.affectedWeekday2, grade.rows2)];
+            this.plans = this.makePlans(global, grade);
          }
          if (user !== null) {
             this.userName = user.userName || "Kepleraner";
             this.extraText = user.smallExtra.text;
             this.extraAuthor = user.smallExtra.author;
          }
+      },
+      makePlans(global, grade) {
+         const plans = [];
+         for (let i = 0; i < global.globalPlans.length; i++) {
+            const plan = global.globalPlans[i];
+            const rows = grade.listOfTables[i];
+            plans.push(
+               new Plan(plan.affectedDate, plan.affectedWeekday, plan.originDate, plan.originTime, plan.announcements, plan.missingTeachers, rows)
+            );
+         }
+         return plans;
       },
       fetchModel(name, useCachedData) {
          return new Promise(async (resolve, reject) => {
@@ -416,16 +430,6 @@ class LastPlanModel {
       h4 {
          margin: $margin * 0.5 auto;
          text-align: center;
-      }
-
-      .plan-box {
-         padding-inline: $padding * 0.1;
-
-         > * {
-            &:not(:last-child) {
-               margin-bottom: $margin * 2;
-            }
-         }
       }
 
       .link-container {
