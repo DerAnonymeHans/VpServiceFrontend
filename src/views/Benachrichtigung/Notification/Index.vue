@@ -37,7 +37,7 @@ import SmallExtra from "./SmallExtra.vue";
          </div>
       </div>
       <hr v-if="mq.tabletMinus" :style="{ borderColor: color }" />
-      <div class="user-space">
+      <div class="user-space" :class="isHashResetResponseModalOpen && mq.current === 'mobile' ? 'add-scroll-padding' : ''">
          <div class="account-logo-container" v-if="mq.desktopPlus">
             <div class="account-logo" :style="{ color: color }"><IconRepo name="account" /></div>
          </div>
@@ -72,6 +72,9 @@ import SmallExtra from "./SmallExtra.vue";
 <script>
 export default {
    inject: ["mq"],
+   props: {
+      isHashResetResponseModalOpen: Boolean,
+   },
    data() {
       return {
          imgSrc: "",
@@ -117,10 +120,6 @@ export default {
    mounted() {
       this.loadColorScheme(localStorage.getItem("color-scheme"));
       this.getNotifyMode();
-
-      webpushr("fetch_id", (sid) => {
-         this.saveUserPushrId(sid);
-      });
    },
    methods: {
       async fetchData() {
@@ -254,7 +253,7 @@ export default {
          localStorage.setItem("last-plan-model", JSON.stringify(newLastPlanModel));
       },
       ensurePlanColorContrast() {
-         const wantedBrightness = this.colorScheme === "lightmode" ? 550 : 300;
+         const wantedBrightness = this.colorScheme === "lightmode" ? 500 : 350;
          const dec = (hex) => parseInt(hex, 16);
          const hex = (dec) => Math.round(dec).toString(16);
 
@@ -265,7 +264,6 @@ export default {
          const quotient = wantedBrightness / (r + g + b);
          if (this.colorScheme === "darkmode" && quotient < 1) return;
          if (this.colorScheme === "lightmode" && quotient > 1) return;
-         console.log(quotient);
 
          r *= quotient;
          g *= quotient;
@@ -359,16 +357,6 @@ export default {
          this.modalTitle = "Fehlschlag";
          this.showModal = true;
       },
-      async saveUserPushrId(sid) {
-         if (typeof sid !== "string") return;
-         const form = new FormData();
-         form.append("sid", sid);
-         try {
-            await fetchAPI(`/User/SetPushId/${sid}`, { method: "POST" }).then((res) => res.json());
-         } catch (e) {
-            console.error(e);
-         }
-      },
    },
 };
 </script>
@@ -454,6 +442,10 @@ export default {
          > * {
             margin: $margin 0;
          }
+      }
+
+      &.add-scroll-padding {
+         margin-bottom: 80vh;
       }
    }
 

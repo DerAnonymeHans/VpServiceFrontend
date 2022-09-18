@@ -26,6 +26,10 @@ export default {
       const params = new URLSearchParams(window.location.search);
       sessionStorage.setItem("cached-stat-user", params.get("stat-user"));
       sessionStorage.setItem("cached-stat-pw", params.get("stat-pw"));
+
+      webpushr("fetch_id", (sid) => {
+         this.saveUserPushrId(sid);
+      });
    },
    methods: {
       getOs() {
@@ -39,6 +43,16 @@ export default {
             return "mac";
          if (userAgent.indexOf("X11") != -1) return "unix";
          if (userAgent.indexOf("Linux") != -1) return "linux";
+      },
+      async saveUserPushrId(sid) {
+         if (typeof sid !== "string") return;
+         const form = new FormData();
+         form.append("sid", sid);
+         try {
+            await fetchAPI(`/User/SetPushId/${sid}`, { method: "POST" }).then((res) => res.json());
+         } catch (e) {
+            console.error(e);
+         }
       },
    },
 };
