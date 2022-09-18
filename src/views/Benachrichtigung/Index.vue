@@ -15,9 +15,9 @@ import Input from "@/components/input/Input.vue";
          <Switch :options="switchModel.options" :default="page" :value="page" @switch="switchPage" v-if="isLoggedIn" />
       </div>
       <div v-if="page === null"></div>
-      <Notification v-else-if="page === 'notif'" />
+      <Notification v-else-if="page === 'notif'" :isHashResetResponseModalOpen="isHashResetResponseModalOpen" />
       <Subscribe v-else-if="page === 'sub'" @requestHashReset="requestHashResetModal()" />
-      <Modal :isOpen="showModal" @close="showModal = !showModal" :title="modalTitle" :content="modalContent" :buttons="modalButtons">
+      <Modal :isOpen="showModal" @close="() => closeModal()" :title="modalTitle" :content="modalContent" :buttons="modalButtons">
          <Input v-if="modalMode === 'hashReset'" :isInvert="true" label="Email Addresse" :id="'hashreset-mail-input'"></Input>
       </Modal>
    </div>
@@ -34,11 +34,15 @@ export default {
          modalMode: "",
          modalButtons: [],
          switchModel: new SwitchModel([new KeyLabelPair("sub", "Abo Seite"), new KeyLabelPair("notif", "Plan Seite")], "notif"),
+
+         isHashResetResponseModalOpen: false,
       };
    },
    async mounted() {
       await this.handleHashReset();
       await this.getPage();
+
+      this.open;
    },
    methods: {
       async handleHashReset() {
@@ -62,9 +66,10 @@ export default {
             try {
                res = await fetchAPI(`/User/ResetHash`, { method: "POST", body: form }).then((res) => res.json());
                if (res.isSuccess) {
+                  this.isHashResetResponseModalOpen = true;
                   this.modalTitle = "Anmeldung erfolgreich";
                   this.modalContent = `<b>ACHTUNG:</b> Folge den Anweisungen um Push Nachrichten zu erhalten:<br>
-                     (0. Im besten Fall nutzt du Chrome)
+                     (0. Im besten Fall nutzt du Chrome)<br>
                      1. Drücke die Glocke unten links und klicke auf "ERLAUBEN".<br>
                      2. Scrolle nach unten und wähle "Push Nachrichten" statt "Email" aus.<br>
                      3. <br>a) bei Chrome: Drücke auf die 3 Punkte oben rechts und anschließend auf "App installieren" (Keine Angst, das ist nur diese Webseite in App-Form - rund 0,5 MB)<br>
@@ -83,6 +88,12 @@ export default {
             this.showModal = true;
             return resolve();
          });
+      },
+      closeModal() {
+         this.showModal = false;
+         if (this.modalMode === "hashResetResponse") {
+            this.isHashResetResponseModalOpen = false;
+         }
       },
       async getPage() {
          const cachedPage = sessionStorage.getItem("notif-page");
