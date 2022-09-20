@@ -3,7 +3,7 @@
 <template>
    <div class="box plan-box" :style="{ borderTopColor: color }">
       <h4 class="weekday" :style="{ textDecorationColor: color }">{{ plan.affectedWeekday }}</h4>
-      <div class="announcements border-box">
+      <div class="announcements border-box" v-if="plan.announcements.length > 0">
          <span v-for="info in plan.announcements" :key="info">{{ info }}<br /></span>
       </div>
       <div class="missing-teachers border-box">Es fehlen: {{ plan.missingTeachers.join(",") }}</div>

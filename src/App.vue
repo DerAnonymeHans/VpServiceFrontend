@@ -26,10 +26,6 @@ export default {
       const params = new URLSearchParams(window.location.search);
       sessionStorage.setItem("cached-stat-user", params.get("stat-user"));
       sessionStorage.setItem("cached-stat-pw", params.get("stat-pw"));
-
-      webpushr("fetch_id", (sid) => {
-         this.saveUserPushrId(sid);
-      });
    },
    methods: {
       getOs() {
@@ -95,6 +91,43 @@ table {
 
    tr > td:first-child {
       border: 0px;
+   }
+}
+
+#allow-push-button {
+   position: fixed;
+   bottom: 15px;
+   left: 15px;
+   width: 50px;
+   aspect-ratio: 1 / 1;
+   background-color: rgba($accent, 0.9);
+   border-radius: 50%;
+   z-index: 2147483647;
+   display: grid;
+   place-items: center;
+   color: white;
+   filter: drop-shadow(0 2px 4px rgba(34, 36, 38, 0.35));
+   animation: push-button-beat 2s ease 0s infinite;
+
+   cursor: pointer;
+   transition: all 0.5s ease;
+
+   &:hover {
+      background-color: lighten(rgba($accent, 0.9), 5%);
+   }
+}
+
+@keyframes push-button-beat {
+   0% {
+      box-shadow: 0px 0px 0px 0px white, 0px 0px 0px 2px rgba($accent, 0.5);
+   }
+   50% {
+      box-shadow: 0px 0px 0px 0px white, 0px 0px 0px 11px rgba($accent, 0);
+   }
+}
+@media (prefers-reduced-motion) {
+   #allow-push-button {
+      animation: none;
    }
 }
 

@@ -45,7 +45,7 @@ export default {
    },
    methods: {
       onClick(e) {
-         if(this.mq.tabletMinus) return;
+         if (this.mq.tabletMinus) return;
          if (this.clickTime === null) {
             this.clickTime = Date.now();
             return;
@@ -91,6 +91,7 @@ export { Button };
    border-top: 1em solid $accent;
    box-sizing: border-box;
    overflow: auto;
+   color: $col-text !important;
 
    .head {
       :last-child {

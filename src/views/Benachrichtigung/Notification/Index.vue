@@ -56,6 +56,7 @@ import SmallExtra from "./SmallExtra.vue";
                   :invert="true"
                   :options="_switch.options"
                   :default="_switch.value"
+                  :value="_switch.value"
                   @switch="(to) => switchMode(key, to)"
                />
             </div>
@@ -119,7 +120,7 @@ export default {
    },
    mounted() {
       this.loadColorScheme(localStorage.getItem("color-scheme"));
-      this.getNotifyMode();
+      this.loadNotifyMode();
    },
    methods: {
       async fetchData() {
@@ -290,23 +291,25 @@ export default {
          localStorage.setItem("last-origin-datetime", "reload");
          this.fetchData();
       },
-      async getNotifyMode() {
+      async loadNotifyMode(mode = null) {
          try {
-            let res = await fetchAPI("/User/GetNotifyMode").then((res) => res.json());
-            if (res.isSuccess) {
-               const mode = res.body.toLowerCase() === "pwa" ? "pwa" : "mail";
-               const notifyModeModel = { ...this._switches.notifyMode };
-               notifyModeModel.value = mode;
-               delete this._switches.notifyMode;
-               await sleep(0);
-               this._switches = Object.assign(this._switches, {
-                  notifyMode: notifyModeModel,
-               });
-               await sleep(0);
-               this.isNotifyModeUpdated = true;
-               return;
+            if (mode === null) {
+               let res = await fetchAPI("/User/GetNotifyMode").then((res) => res.json());
+               if (res.isSuccess) {
+                  mode = res.body.toLowerCase() === "pwa" ? "pwa" : "mail";
+               }
             }
          } catch (e) {}
+         const notifyModeModel = { ...this._switches.notifyMode };
+         notifyModeModel.value = mode;
+         delete this._switches.notifyMode;
+         await sleep(0);
+         this._switches = Object.assign(this._switches, {
+            notifyMode: notifyModeModel,
+         });
+         await sleep(0);
+         this.isNotifyModeUpdated = true;
+         return;
       },
       switchMode(key, to) {
          switch (key) {
@@ -343,6 +346,28 @@ export default {
          this.ensurePlanColorContrast();
       },
       async changeNotifyMode(name) {
+         if (name === "pwa") {
+            window.dispatchEvent(new Event("allowpush"));
+
+            let i = 0;
+            // wait for interaction with notification prompt
+            while (true) {
+               i++;
+               if (Notification.permission === "granted") break;
+               if (Notification.permission === "denied") {
+                  alert("Wenn du die Benachrichtigung nicht akzeptiers, kannst du keine Push Nachrichten erhalten. ");
+                  this.loadNotifyMode("mail");
+                  return;
+               }
+               if (i === 30) {
+                  window.dispatchEvent(new Event("allowpush"));
+                  i = 0;
+               }
+
+               await sleep(500);
+            }
+         }
+
          try {
             let res = await fetchAPI(`/User/ChangeNotifyMode/${name}`, { method: "POST" }).then((res) => res.json());
             this.modalContent = res.message;

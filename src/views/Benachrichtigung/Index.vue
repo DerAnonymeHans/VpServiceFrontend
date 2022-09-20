@@ -69,11 +69,9 @@ export default {
                   this.isHashResetResponseModalOpen = true;
                   this.modalTitle = "Anmeldung erfolgreich";
                   this.modalContent = `<b>ACHTUNG:</b> Folge den Anweisungen um Push Nachrichten zu erhalten:<br>
-                     (0. Im besten Fall nutzt du Chrome)<br>
-                     1. Drücke die Glocke unten links und klicke auf "ERLAUBEN".<br>
-                     2. Scrolle nach unten und wähle "Push Nachrichten" statt "Email" aus.<br>
-                     3. <br>a) bei Chrome: Drücke auf die 3 Punkte oben rechts und anschließend auf "App installieren" (Keine Angst, das ist nur diese Webseite in App-Form - rund 0,5 MB)<br>
-                     b) sonst: Füge die Webseite als Verknüpfung zum Startbildschirm hinzu
+                     1. Scrolle nach unten und wähle "Push Nachrichten" statt "Email" aus und erlaube die Benachrichtigungen.<br>
+                     2. CHROME: Drücke auf die 3 Punkte oben rechts und anschließend auf "App installieren" (Keine Angst, das ist nur diese Webseite in App-Form - rund 0,5 MB)<br>
+                     SONST: Füge die Webseite zum Startbildschirm hinzu
                      `;
                   this.showModal = true;
                   sessionStorage.setItem("notif-page", "notif");

@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "build": "",
-    "build1": "vite build && workbox generateSW workbox-config.js && bash ./copyServiceWorker.sh",
+    "build1": "vite build",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
     "dev": "vite",
     "preview": "vite preview --port 4173",
@@ -11,6 +11,7 @@
     "buildrun": "npm run build1 && npm run start"
   },
   "dependencies": {
+    "body-parser": "^1.20.0",
     "chart.js": "^3.8.0",
     "express": "^4.18.1",
     "register-service-worker": "^1.7.2",
@@ -19,6 +20,7 @@
     "vue": "^3.2.36",
     "vue-router": "^4.0.15",
     "vue3-mq": "^3.1.0",
+    "web-push": "^3.5.0",
     "workbox": "^0.0.0"
   },
   "devDependencies": {

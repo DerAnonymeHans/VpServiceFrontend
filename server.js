@@ -1,13 +1,45 @@
-const express = require('express');
-const serveStatic = require('serve-static');
-const path = require('path');
+/** @format */
+
+const express = require("express");
+const serveStatic = require("serve-static");
+const bodyParser = require("body-parser");
+const webpush = require("web-push");
+const path = require("path");
 
 const app = express();
 
-app.use("/", serveStatic(path.join(__dirname, "/dist")))
-app.use("/Statistiken", serveStatic(path.join(__dirname, "/dist")))
-app.use("/Benachrichtigung", serveStatic(path.join(__dirname, "/dist")))
-app.use("/Mitmachen", serveStatic(path.join(__dirname, "/dist")))
+app.use(bodyParser.json());
+app.use(bodyParser.text());
+
+app.use("/", serveStatic(path.join(__dirname, "/dist")));
+app.use("/Statistiken", serveStatic(path.join(__dirname, "/dist")));
+app.use("/Benachrichtigung", serveStatic(path.join(__dirname, "/dist")));
+app.use("/Mitmachen", serveStatic(path.join(__dirname, "/dist")));
+
+const pubKey = "BDdFjo9vM6wT1xcsqEXKPYS5EkU7NmhBmVXxLoI_TaVXIsQBl31RbEgFmym2XLb-1HN0uYVWFV6_48pxt8LqVfY";
+const privKey = "xdTVJC5WR465QoMawut_EwLvHPOzBVmbS-AmKxl5Znc";
+
+webpush.setVapidDetails("mailto:vp.mailservice.kepler@gmail.com", pubKey, privKey);
+
+app.post("/SendPush", (req, res) => {
+   console.log("Push Notification requested for user: " + req.body.options.data);
+   let subscription, payload;
+   try {
+      if (req.body === undefined || req.body === null) throw new Error("Body is null or undefined");
+      subscription = JSON.parse(req.body.subscription);
+      payload = JSON.stringify(req.body.options);
+      if (subscription === undefined) throw new Error("Missing subscribtion object");
+      if (payload === undefined) throw new Error("Missing options object");
+   } catch (e) {
+      res.status(500).json(e);
+      return;
+   }
+   res.status(201).json({});
+
+   webpush.sendNotification(subscription, payload).then((res) => {
+      console.log("Send push notification.");
+   });
+});
 
 const port = process.env.PORT || 8080;
 app.listen(port);
