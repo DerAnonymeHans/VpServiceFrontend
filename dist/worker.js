@@ -2,7 +2,7 @@
 
 console.log("Service worker loaded");
 const CACHE_NAME = "kepleraner-cache-v1";
-const API_URL = "https://localhost:5001";
+const API_URL = "https://vp-service-api.herokuapp.com";
 
 self.addEventListener("push", (e) => {
    const data = e.data.json();

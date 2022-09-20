@@ -1,7 +1,7 @@
 /** @format */
 
 const PUBLIC_KEY = "BDdFjo9vM6wT1xcsqEXKPYS5EkU7NmhBmVXxLoI_TaVXIsQBl31RbEgFmym2XLb-1HN0uYVWFV6_48pxt8LqVfY";
-const API_URL = "https://localhost:5001";
+const API_URL = "https://vp-service-api.herokuapp.com";
 
 if ("serviceWorker" in navigator) {
    window.addEventListener("allowpush", (e) => {
