@@ -6,6 +6,7 @@ const bodyParser = require("body-parser");
 const webpush = require("web-push");
 const path = require("path");
 const { initializeApp } = require("firebase-admin/app");
+require("dotenv").config();
 
 const app = express();
 
@@ -17,13 +18,11 @@ app.use("/Statistiken", serveStatic(path.join(__dirname, "/dist")));
 app.use("/Benachrichtigung", serveStatic(path.join(__dirname, "/dist")));
 app.use("/Mitmachen", serveStatic(path.join(__dirname, "/dist")));
 
-const pubKey = "BDdFjo9vM6wT1xcsqEXKPYS5EkU7NmhBmVXxLoI_TaVXIsQBl31RbEgFmym2XLb-1HN0uYVWFV6_48pxt8LqVfY";
-const privKey = "xdTVJC5WR465QoMawut_EwLvHPOzBVmbS-AmKxl5Znc";
+const pubKey = process.env.PUSH_PUB_KEY;
+const privKey = process.env.PUSH_PRIV_KEY;
 
 webpush.setVapidDetails("mailto:vp.mailservice.kepler@gmail.com", pubKey, privKey);
-webpush.setGCMAPIKey(
-   "AAAAv2as4_s:APA91bEZ_GjwnS6WqmueSt8MUaN6kNodpWbdXoYXTApvmUn1lzFTgiP3rFQCuI6EmBq7CYQUkaGvgoGjTAkWsyP_NuL8AIZUwZrIRbEx17zrkuQsdLfIlC5h8RV6pnitRy7pb0yFMSJt"
-);
+webpush.setGCMAPIKey(process.env.GCM_SERVER_KEY);
 
 app.post("/SendPush", (req, res) => {
    console.log("Push Notification requested for user: " + req.body.options.data);
@@ -47,7 +46,7 @@ app.post("/SendPush", (req, res) => {
       })
       .catch((err) => {
          console.log(err);
-         res.status(200).json(err);
+         res.status(500).json(err);
       });
 });
 
