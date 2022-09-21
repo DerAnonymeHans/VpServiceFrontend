@@ -21,6 +21,7 @@ const pubKey = "BDdFjo9vM6wT1xcsqEXKPYS5EkU7NmhBmVXxLoI_TaVXIsQBl31RbEgFmym2XLb-
 const privKey = "xdTVJC5WR465QoMawut_EwLvHPOzBVmbS-AmKxl5Znc";
 
 webpush.setVapidDetails("mailto:vp.mailservice.kepler@gmail.com", pubKey, privKey);
+webpush.setGCMAPIKey("AIzaSyCB-m6SD1EVzEoYr117D-sPyWQ7tzb9LxA");
 
 app.post("/SendPush", (req, res) => {
    console.log("Push Notification requested for user: " + req.body.options.data);
