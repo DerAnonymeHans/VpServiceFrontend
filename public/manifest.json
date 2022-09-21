@@ -6,6 +6,7 @@
    "background_color": "#000",
    "theme_color": "#ff8ded",
    "orientation": "portrait-primary",
+   "gcm_sender_id": "822061360123",
    "icons": [
       {
          "src": "/img/icons/icon-76x76.png",

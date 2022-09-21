@@ -5,6 +5,7 @@ const serveStatic = require("serve-static");
 const bodyParser = require("body-parser");
 const webpush = require("web-push");
 const path = require("path");
+const { initializeApp } = require("firebase-admin/app");
 
 const app = express();
 
@@ -34,11 +35,17 @@ app.post("/SendPush", (req, res) => {
       res.status(500).json(e);
       return;
    }
-   res.status(201).json({});
 
-   webpush.sendNotification(subscription, payload).then((res) => {
-      console.log("Send push notification.");
-   });
+   webpush
+      .sendNotification(subscription, payload)
+      .then((pushRes) => {
+         console.log("Send push notification.");
+         res.status(200).json({});
+      })
+      .catch((err) => {
+         console.log(err);
+         res.status(200).json(err);
+      });
 });
 
 const port = process.env.PORT || 8080;
