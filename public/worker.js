@@ -12,6 +12,11 @@ self.addEventListener("push", (e) => {
    self.registration.showNotification(data.title, data);
 });
 
+self.addEventListener("notificationclick", (e) => {
+   e.notification.close();
+   e.waitUntil(clients.openWindow("https://kepleraner.herokuapp.com/Benachrichtigung"));
+});
+
 self.addEventListener("install", (e) => {
    e.waitUntil(
       caches.open(CACHE_NAME).then((cache) => {
