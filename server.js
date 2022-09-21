@@ -21,7 +21,9 @@ const pubKey = "BDdFjo9vM6wT1xcsqEXKPYS5EkU7NmhBmVXxLoI_TaVXIsQBl31RbEgFmym2XLb-
 const privKey = "xdTVJC5WR465QoMawut_EwLvHPOzBVmbS-AmKxl5Znc";
 
 webpush.setVapidDetails("mailto:vp.mailservice.kepler@gmail.com", pubKey, privKey);
-webpush.setGCMAPIKey("AIzaSyCB-m6SD1EVzEoYr117D-sPyWQ7tzb9LxA");
+webpush.setGCMAPIKey(
+   "AAAAv2as4_s:APA91bEZ_GjwnS6WqmueSt8MUaN6kNodpWbdXoYXTApvmUn1lzFTgiP3rFQCuI6EmBq7CYQUkaGvgoGjTAkWsyP_NuL8AIZUwZrIRbEx17zrkuQsdLfIlC5h8RV6pnitRy7pb0yFMSJt"
+);
 
 app.post("/SendPush", (req, res) => {
    console.log("Push Notification requested for user: " + req.body.options.data);
