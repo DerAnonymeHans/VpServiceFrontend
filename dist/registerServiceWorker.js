@@ -40,12 +40,11 @@ async function registerPush() {
       }
 
       if (Notification.permission === "granted") {
-         registration.pushManager.getSubscription().then((subscription) => {
-            if (subscription !== null && subscription !== undefined) {
-               updateSubscription(subscription);
-               return;
-            }
-         });
+         const subscription = await registration.pushManager.getSubscription();
+         if (subscription !== null && subscription !== undefined) {
+            updateSubscription(subscription);
+            return;
+         }
       }
 
       registration.pushManager
