@@ -42,6 +42,9 @@ self.addEventListener("activate", (e) => {
 });
 
 self.addEventListener("fetch", (e) => {
+   if (e.request.method !== "GET") return;
+   if (!e.request.url.includes("http://localhost:8080") && !e.request.url.includes("https://kepleraner")) return;
+
    console.log("SW: Responsing fetch");
    e.respondWith(
       fetch(e.request)

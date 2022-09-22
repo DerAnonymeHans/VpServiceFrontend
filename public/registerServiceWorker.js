@@ -4,46 +4,67 @@ const PUBLIC_KEY = "BDdFjo9vM6wT1xcsqEXKPYS5EkU7NmhBmVXxLoI_TaVXIsQBl31RbEgFmym2
 const API_URL = "https://vp-service-api.herokuapp.com";
 
 if ("serviceWorker" in navigator) {
-   window.addEventListener("allowpush", (e) => {
-      registerServiceWorkerAndPush();
+   window.addEventListener("registerpush", (e) => {
+      registerPush();
    });
 }
 
-async function registerServiceWorkerAndPush() {
+function registerServiceWorker() {
+   return new Promise((resolve, reject) => {
+      navigator.serviceWorker
+         .register("/worker.js", {
+            scope: "/",
+         })
+         .then((registration) => {
+            console.log("Service Worker registered");
+            return resolve(registration);
+         });
+   });
+}
+registerServiceWorker();
+
+async function registerPush() {
    if (Notification.permission === "denied") {
       alert(
          "Du hast Push Nachrichten blockiert. Bei Chrome musst du um sie zu erlauben auf das Schloss bei der URL klicken, anschließend auf Berechtigungen und Berechtigungen zurücksetzen."
       );
       return;
    }
+   navigator.serviceWorker.ready.then(async (registration) => {
+      if (registration === null || registration === undefined) {
+         registration = await registerServiceWorker();
+         if (registration === null || registration === undefined) {
+            alert("Der Service Worker funktioniert nicht.");
+            return;
+         }
+      }
 
-   navigator.serviceWorker
-      .register("/worker.js", {
-         scope: "/",
-      })
-      .then((registration) => {
-         console.log("Service Worker registered");
+      if (Notification.permission === "granted") {
+         const subscription = await registration.pushManager.getSubscription();
+         if (subscription !== null && subscription !== undefined) {
+            updateSubscription(subscription);
+            return;
+         }
+      }
 
-         registration.pushManager
-            .subscribe({
-               userVisibleOnly: true,
-               applicationServerKey: urlBase64ToUint8Array(PUBLIC_KEY),
-            })
-            .then(async (subscription) => {
-               console.log("Push registered");
+      registration.pushManager
+         .subscribe({
+            userVisibleOnly: true,
+            applicationServerKey: urlBase64ToUint8Array(PUBLIC_KEY),
+         })
+         .then(async (subscription) => {
+            console.log("Push registered");
 
-               updateSubscription(subscription);
-            });
-      });
+            updateSubscription(subscription);
+         });
+   });
 }
 
-navigator.serviceWorker.ready.then((reg) => {
-   reg.pushManager.getSubscription().then((subscription) => {
-      updateSubscription(subscription);
-   });
-});
-
 async function updateSubscription(subscription) {
+   if (subscription === null || subscription === undefined) {
+      alert("Bei der Anmeldung der Push Nachrichten ist etwas schief gelaufen.");
+      return;
+   }
    const form = new FormData();
    form.append("subscribtion", JSON.stringify(subscription));
 

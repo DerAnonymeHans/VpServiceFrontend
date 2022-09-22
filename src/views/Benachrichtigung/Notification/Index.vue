@@ -19,10 +19,6 @@ import SmallExtra from "./SmallExtra.vue";
             <b>{{ title }}</b> <br />
             <i>(vom {{ originDate }} um {{ originTime }} Uhr.)</i>
          </div>
-         <!-- <div class="box" v-if="information.length > 0">
-            <span v-for="info in information" :key="info">{{ info }}<br /></span>
-         </div> -->
-         <!-- <div class="box">Es fehlen: {{ missingTeachers.join(", ") }}</div> -->
          <div class="plan-box">
             <div v-for="plan in plans" :key="plan">
                <PlanComponent :color="color" :plan="plan" />
@@ -61,6 +57,9 @@ import SmallExtra from "./SmallExtra.vue";
                />
             </div>
             <button class="btn" @click="() => reload()">Neuladen</button>
+            <button class="btn" v-if="isPushButOnOtherDevice" @click="() => dispatchRegisterPushEvent()">
+               Erhalte Push Nachrichten auf diesem Gerät
+            </button>
          </div>
       </div>
       <details class="box qrcode-container">
@@ -110,6 +109,8 @@ export default {
          },
 
          isNotifyModeUpdated: false,
+         notifyMode: "",
+         isPushButOnOtherDevice: false,
 
          colorScheme: "darkmode",
       };
@@ -118,9 +119,10 @@ export default {
       localStorage.setItem("device-was-logged-in", "true");
       this.fetchData();
    },
-   mounted() {
+   async mounted() {
       this.loadColorScheme(localStorage.getItem("color-scheme"));
-      this.loadNotifyMode();
+      await this.loadNotifyMode();
+      await this.handleDeviceChange();
    },
    methods: {
       async fetchData() {
@@ -300,6 +302,7 @@ export default {
                }
             }
          } catch (e) {}
+         this.notifyMode = mode;
          const notifyModeModel = { ...this._switches.notifyMode };
          notifyModeModel.value = mode;
          delete this._switches.notifyMode;
@@ -347,7 +350,7 @@ export default {
       },
       async changeNotifyMode(name) {
          if (name === "pwa") {
-            window.dispatchEvent(new Event("allowpush"));
+            this.dispatchRegisterPushEvent();
 
             let i = 0;
             // wait for interaction with notification prompt
@@ -360,7 +363,7 @@ export default {
                   return;
                }
                if (i === 30) {
-                  window.dispatchEvent(new Event("allowpush"));
+                  this.dispatchRegisterPushEvent();
                   i = 0;
                }
 
@@ -381,6 +384,34 @@ export default {
          }
          this.modalTitle = "Fehlschlag";
          this.showModal = true;
+      },
+      async handleDeviceChange() {
+         if (this.notifyMode !== "pwa") return;
+         if (sessionStorage.getItem("rejected-device-change") === "true") {
+            this.isPushButOnOtherDevice = true;
+            return;
+         }
+
+         const response = await fetchAPI("/User/GetPushSubscribtion").then((res) => res.json());
+         if (!response.isSuccess) return;
+
+         const savedSubscription = response.body;
+         const subscription = await navigator.serviceWorker.ready.then((reg) => reg.pushManager.getSubscription().then((sub) => sub));
+         if (savedSubscription === JSON.stringify(subscription)) return;
+
+         const changeDevice = confirm(
+            "Du hast Push Benachrichtigungen eingestellt, jedoch werden diese zurzeit an ein anderes Gerät gesendet. Willst du stattdessen dieses Gerät verwenden?"
+         );
+         if (!changeDevice) {
+            this.isPushButOnOtherDevice = true;
+            sessionStorage.setItem("rejected-device-change", "true");
+            return;
+         }
+         this.dispatchRegisterPushEvent();
+      },
+      dispatchRegisterPushEvent() {
+         window.dispatchEvent(new Event("registerpush"));
+         this.isPushButOnOtherDevice = false;
       },
    },
 };
