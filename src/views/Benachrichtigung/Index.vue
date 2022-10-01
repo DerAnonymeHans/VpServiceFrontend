@@ -100,12 +100,13 @@ export default {
          }
       },
       async getPage() {
-         const cachedPage = sessionStorage.getItem("notif-page");
+         let cachedPage = sessionStorage.getItem("notif-page");
+         const params = new URLSearchParams(window.location.search);
+         if (params.get("page") !== null) cachedPage = params.get("page");
          try {
             let res = await fetchAPI("/User/IsAuthenticated").then((res) => res.json());
             if (res.body === true) {
                this.isLoggedIn = true;
-               this.page = cachedPage === "notif" || cachedPage === "sub" ? cachedPage : "notif";
                this.page = this.switchModel.options.findIndex((el) => el.key === cachedPage) === -1 ? "sub" : cachedPage;
                return;
             }

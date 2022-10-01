@@ -3,6 +3,7 @@
 import { fetchAPI, sleep } from "@/App.vue";
 import ScrollSelector, { Item } from "@/components/navigation/ScrollSelector.vue";
 import LernsaxSettings from "./settings/LernsaxSettings.vue";
+import LernsaxMails from "./mails/Mails.vue";
 </script>
 <template>
    <div class="lernsax-page" :class="mq.current">
@@ -11,6 +12,7 @@ import LernsaxSettings from "./settings/LernsaxSettings.vue";
       </div>
       <div class="content-space">
          <LernsaxSettings v-if="page === 'settings'" :methodOnMount="settingsMethodOnMount" />
+         <LernsaxMails v-if="page === 'email'" :methodOnMount="settingsMethodOnMount" />
       </div>
    </div>
 </template>
@@ -19,12 +21,14 @@ export default {
    inject: ["mq"],
    data() {
       return {
-         page: typeof localStorage.getItem("lernsax-page") !== "string" ? "" : localStorage.getItem("lernsax-page"),
+         page: "",
          items: [new Item("Einstellungen", "settings"), new Item("Email", "email")],
          settingsMethodOnMount: {},
       };
    },
    async beforeMount() {
+      this.page = this.getPage();
+
       const hasCreds = await this.hasValidCredentials();
       if (!hasCreds) {
          await sleep(500);
@@ -33,8 +37,14 @@ export default {
          await sleep(500);
          this.settingsMethodOnMount = null;
       }
+      this.dbSetup();
    },
    methods: {
+      getPage() {
+         const params = new URLSearchParams(window.location.search);
+         if (params.get("action") !== null) return params.get("action");
+         return typeof localStorage.getItem("lernsax-page") !== "string" ? "" : localStorage.getItem("lernsax-page");
+      },
       switchPage(page) {
          localStorage.setItem("lernsax-page", page);
          this.page = page;
@@ -42,6 +52,20 @@ export default {
       async hasValidCredentials() {
          const res = await fetchAPI("/Lernsax/HasValidCredentials").then((res) => res.json());
          return res.isSuccess ? res.body : false;
+      },
+      dbSetup() {
+         let request = window.indexedDB.open("LernsaxDB", 1);
+         request.onerror = (e) => {
+            return resolve();
+         };
+         request.onsuccess = (e) => {
+            window.lernsaxDB = e.target.result;
+         };
+         request.onupgradeneeded = (e) => {
+            window.lernsaxDB = e.target.result;
+            const store = window.lernsaxDB.createObjectStore("mails", { keyPath: "mailId" });
+            store.createIndex("mailBody", "mailBody", { unique: false });
+         };
       },
    },
 };
@@ -58,17 +82,17 @@ export default {
       width: 100%;
    }
 
-   &.ultrawide {
-   }
+   // &.ultrawide {
+   // }
 
-   &.ultrawide,
-   &.desktop {
-   }
+   // &.ultrawide,
+   // &.desktop {
+   // }
 
-   &.tablet {
-   }
+   // &.tablet {
+   // }
 
-   &.mobile {
-   }
+   // &.mobile {
+   // }
 }
 </style>
