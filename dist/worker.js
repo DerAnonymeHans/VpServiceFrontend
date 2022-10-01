@@ -7,14 +7,14 @@ const API_URL = "https://vp-service-api.herokuapp.com";
 self.addEventListener("push", (e) => {
    const data = e.data.json();
    console.log("SW: received push");
-   fetch(API_URL + "/User/ConfirmPush", { method: "POST", body: JSON.stringify(data.data) });
+   fetch(API_URL + "/User/ConfirmPush", { method: "POST", body: JSON.stringify(data.data.name) });
    console.log("SW:", data);
    self.registration.showNotification(data.title, data);
 });
 
 self.addEventListener("notificationclick", (e) => {
    e.notification.close();
-   e.waitUntil(clients.openWindow("https://kepleraner.herokuapp.com/Benachrichtigung"));
+   e.waitUntil(clients.openWindow(`https://kepleraner.herokuapp.com/${e.notification.data.action}`));
 });
 
 self.addEventListener("install", (e) => {
