@@ -276,31 +276,6 @@ main {
          margin: auto;
       }
    }
-
-   .content {
-      margin: 5vh auto;
-      margin-bottom: 0;
-   }
-   &.ultrawide {
-      .content {
-         width: 45vw;
-      }
-   }
-   &.desktop {
-      .content {
-         width: 60vw;
-      }
-   }
-   &.tablet {
-      .content {
-         width: 70vw;
-      }
-   }
-   &.mobile {
-      .content {
-         width: 95vw;
-      }
-   }
 }
 
 @media print {

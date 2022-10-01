@@ -9,7 +9,7 @@ import IconRepo from "@/repos/IconRepo.vue";
             <h3>{{ title }}</h3>
             <button class="btn-svg" @click="close()"><IconRepo name="close" /></button>
          </div>
-         <div class="content" v-html="content"></div>
+         <div class="modal-content" v-html="content"></div>
          <slot></slot>
          <div v-for="button in buttons" :key="button.name" class="button-container">
             <button :class="button.className" @click="close(button.onClick)">{{ button.text }}</button>
@@ -99,7 +99,7 @@ export { Button };
       }
    }
 
-   .content {
+   .modal-content {
       overflow: auto;
    }
 
@@ -123,7 +123,7 @@ export { Button };
       top: 20vh;
       left: 35vw;
       max-height: 60vh;
-      .content {
+      .modal-content {
          max-height: 35vh;
       }
    }
@@ -132,7 +132,7 @@ export { Button };
       top: 20vh;
       left: 30vw;
       max-height: 60vh;
-      .content {
+      .modal-content {
          max-height: 35vh;
       }
    }
@@ -141,7 +141,7 @@ export { Button };
       top: 30vh;
       left: 15vw;
       max-height: 55vh;
-      .content {
+      .modal-content {
          max-height: 30vh;
       }
    }
@@ -150,7 +150,7 @@ export { Button };
       bottom: 5vh;
       left: 5vw;
       max-height: 70vh;
-      .content {
+      .modal-content {
          max-height: 55vh;
       }
    }

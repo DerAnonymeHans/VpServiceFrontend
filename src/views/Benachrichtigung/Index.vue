@@ -3,6 +3,8 @@
 <script setup>
 import Subscribe from "./Subscribe/Index.vue";
 import Notification from "./Notification/Index.vue";
+import Lernsax from "./Lernsax/Index.vue";
+
 import { fetchAPI, sleep } from "@/App.vue";
 import Modal, { Button } from "@/components/modal/Modal.vue";
 import Switch, { SwitchModel } from "@/components/switch/Switch.vue";
@@ -10,13 +12,16 @@ import KeyLabelPair from "@/structs/KeyLabelPair.js";
 import Input from "@/components/input/Input.vue";
 </script>
 <template>
-   <div class="content">
+   <div class="main">
       <div class="center page-switch-container">
          <Switch :options="switchModel.options" :default="page" :value="page" @switch="switchPage" v-if="isLoggedIn" />
       </div>
       <div v-if="page === null"></div>
+
       <Notification v-else-if="page === 'notif'" :isHashResetResponseModalOpen="isHashResetResponseModalOpen" />
       <Subscribe v-else-if="page === 'sub'" @requestHashReset="requestHashResetModal()" />
+      <Lernsax v-else-if="page === 'lernsax'" />
+
       <Modal :isOpen="showModal" @close="() => closeModal()" :title="modalTitle" :content="modalContent" :buttons="modalButtons">
          <Input v-if="modalMode === 'hashReset'" :isInvert="true" label="Email Addresse" :id="'hashreset-mail-input'"></Input>
       </Modal>
@@ -33,7 +38,10 @@ export default {
          showModal: false,
          modalMode: "",
          modalButtons: [],
-         switchModel: new SwitchModel([new KeyLabelPair("sub", "Abo Seite"), new KeyLabelPair("notif", "Plan Seite")], "notif"),
+         switchModel: new SwitchModel(
+            [new KeyLabelPair("sub", "Abo Seite"), new KeyLabelPair("notif", "Plan Seite"), new KeyLabelPair("lernsax", "Lernsax")],
+            "notif"
+         ),
 
          isHashResetResponseModalOpen: false,
       };
@@ -41,8 +49,6 @@ export default {
    async mounted() {
       await this.handleHashReset();
       await this.getPage();
-
-      this.open;
    },
    methods: {
       async handleHashReset() {
@@ -100,6 +106,7 @@ export default {
             if (res.body === true) {
                this.isLoggedIn = true;
                this.page = cachedPage === "notif" || cachedPage === "sub" ? cachedPage : "notif";
+               this.page = this.switchModel.options.findIndex((el) => el.key === cachedPage) === -1 ? "sub" : cachedPage;
                return;
             }
          } catch {}
@@ -162,10 +169,11 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import "@/styles/_variables.scss";
-.content {
+.main {
    margin-top: 9vh;
 }
 .page-switch-container {
    background-color: $col-dark;
+   padding-bottom: $padding * 0.2;
 }
 </style>

@@ -21,6 +21,7 @@ import Thunder from "@/assets/icons/thunder.svg?component";
 import Label from "@/assets/icons/label.svg?component";
 import Lock from "@/assets/icons/lock.svg?component";
 import Account from "@/assets/icons/account.svg?component";
+import Email from "@/assets/icons/email.svg?component";
 </script>
 <template>
    <Gesamtzahlen v-if="name === 'gesamtzahlen'" />
@@ -45,6 +46,7 @@ import Account from "@/assets/icons/account.svg?component";
    <Lock v-if="name === 'lock'" />
    <Lock v-if="name === 'logout'" />
    <Account v-if="name === 'account'" />
+   <Email v-if="name === 'email'" />
 </template>
 <script>
 export default {

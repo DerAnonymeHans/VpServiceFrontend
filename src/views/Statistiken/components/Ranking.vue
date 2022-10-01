@@ -121,9 +121,11 @@ export default {
          const switchVals = {};
          for (let key in this._switches) switchVals[key] = this._switches[key].value;
          const options = new GenerationOptions(switchVals);
+         window.dispatchEvent(new Event("startloading"));
          this.rankList = await this.getRanklist(options);
          !this.disablePodest && this.doPodest();
          this.explanation = await this.getExplanation(options);
+         window.dispatchEvent(new Event("endloading"));
       },
       doPodest() {
          for (const [idx, place] of ["first", "second", "third"].entries()) {

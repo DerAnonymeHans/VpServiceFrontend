@@ -9,10 +9,7 @@
 <script>
 export default {
    props: {
-      type: {
-         type: String,
-         required: true,
-      },
+      type: String,
       label: {
          type: String,
          required: true,

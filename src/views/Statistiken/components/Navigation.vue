@@ -2,7 +2,7 @@
 
 <script setup>
 import Switch from "@/components/switch/Switch.vue";
-import ScrollSelector, { Item } from "./ScrollSelector.vue";
+import ScrollSelector, { Item } from "../../../components/navigation/ScrollSelector.vue";
 import KeyLabelPair from "@/structs/KeyLabelPair.js";
 </script>
 <template>

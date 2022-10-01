@@ -3,7 +3,7 @@
 <script setup>
 import Erklaerung from "./erklärung/Erklärung.vue";
 import Logout from "./logout/Logout.vue";
-import Settings from "./settings/Settings.vue";
+import Settings from "./settings/StatSettings.vue";
 </script>
 <template>
    <div>

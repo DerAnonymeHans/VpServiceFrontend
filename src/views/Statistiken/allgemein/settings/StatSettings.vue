@@ -1,28 +1,16 @@
 <!-- @format -->
 <script setup>
-import Setting, { SettingModel } from "./Setting.vue";
+import Settings, { SettingBlock, SettingModel } from "../../../../components/settings/Settings.vue";
 import KLP from "@/structs/KeyLabelPair.js";
 </script>
 <template>
-   <div class="box" v-for="block in settingBlocks" :key="block.title">
-      <h2>{{ block.title }}</h2>
-      <Setting
-         v-for="setting in block.settings"
-         v-bind:key="setting.key"
-         :_key="setting.key"
-         :name="setting.name"
-         :description="setting.desc"
-         :options="setting.options"
-         :defaultValue="setting.defaultVal"
-         @optionChange="optionChange"
-      />
-   </div>
+   <Settings :settings="settings" @settingChange="settingChange" />
 </template>
 <script>
 export default {
    data() {
       return {
-         settingBlocks: [
+         settings: [
             new SettingBlock("Cache Einstellungen", [
                new SettingModel("all-cache", "Cache", "Hier kannst du alle gecacheten Daten (siehe untere beiden Punkte) löschen.", [
                   new KLP("delete", "Löschen"),
@@ -53,7 +41,7 @@ export default {
       };
    },
    methods: {
-      optionChange(val) {
+      settingChange(val) {
          switch (val.option) {
             case "stat-cache":
                this.deleteStatCache();
@@ -81,26 +69,5 @@ export default {
       },
    },
 };
-class SettingBlock {
-   constructor(title, settings) {
-      this.title = title;
-      this.settings = settings;
-   }
-}
 </script>
-<style lang="scss" scoped>
-@import "@/styles/_variables.scss";
-.box {
-   margin-bottom: $margin;
-   h2 {
-      text-align: center;
-      color: $col-dark;
-      margin-top: 0;
-   }
-   > * {
-      &:not(:last-child) {
-         margin-bottom: $margin;
-      }
-   }
-}
-</style>
+<style lang="scss" scoped></style>

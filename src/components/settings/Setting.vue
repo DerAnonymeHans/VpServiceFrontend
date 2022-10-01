@@ -4,7 +4,7 @@ import Switch, { SwitchModel } from "@/components/switch/Switch.vue";
 </script>
 <template>
    <div :class="mq.current" class="setting">
-      <div class="content" :class="{ isSwitch: options.length > 1 }">
+      <div class="setting-content" :class="{ isSwitch: options.length > 1 }">
          <div class="text">
             <p class="name">{{ name }}</p>
             <p class="desc">{{ description }}</p>
@@ -42,16 +42,6 @@ export default {
       defaultValue: String,
    },
 };
-class SettingModel {
-   constructor(key, name, desc, options, defaultVal) {
-      this.key = key;
-      this.name = name;
-      this.desc = desc;
-      this.options = options;
-      this.defaultVal = defaultVal;
-   }
-}
-export { SettingModel };
 </script>
 <style lang="scss" scoped>
 @import "@/styles/_variables.scss";
@@ -59,7 +49,7 @@ export { SettingModel };
 @import "@/styles/components.scss";
 .setting {
    @include box;
-   .content {
+   .setting-content {
       display: grid;
 
       .text {
@@ -82,7 +72,7 @@ export { SettingModel };
 
    &.ultrawide,
    &.desktop {
-      .content {
+      .setting-content {
          display: grid;
          grid-template-columns: 5fr 1fr;
          align-items: center;

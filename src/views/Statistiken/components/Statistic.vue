@@ -91,6 +91,7 @@ export default {
 
          if (this.chart !== undefined) this.chart.destroy();
 
+         window.dispatchEvent(new Event("startloading"));
          this.chart = new Chart(this.$refs.chart, {
             type: this.chartType,
             options: {
@@ -110,7 +111,7 @@ export default {
             `
                Der beobachtete Zeitraum beträgt ${await this.fetchStat("/RecordedDays/Count")} Tage. Alle Angaben sind ohne Gewähr.
             `;
-
+         window.dispatchEvent(new Event("endloading"));
          window.scrollTo(0, top);
       },
       async switchMode(key, value) {

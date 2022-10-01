@@ -7,13 +7,22 @@ import Footer from "@/components/footer/Footer.vue";
 </script>
 
 <template>
-   <Navbar />
-   <RouterView />
-   <Footer />
+   <span class="mq" :class="mq.current">
+      <div v-if="isLoading" id="loading-screen"></div>
+      <Navbar />
+      <RouterView />
+      <Footer />
+   </span>
 </template>
 
 <script>
 export default {
+   inject: ["mq"],
+   data() {
+      return {
+         isLoading: false,
+      };
+   },
    provide() {
       return {
          os: this.getOs(),
@@ -26,6 +35,15 @@ export default {
       const params = new URLSearchParams(window.location.search);
       sessionStorage.setItem("cached-stat-user", params.get("stat-user"));
       sessionStorage.setItem("cached-stat-pw", params.get("stat-pw"));
+   },
+   mounted() {
+      window.addEventListener("startloading", () => {
+         this.isLoading = true;
+         setTimeout(() => (this.isLoading = false), 7000);
+      });
+      window.addEventListener("endloading", () => {
+         this.isLoading = false;
+      });
    },
    methods: {
       getOs() {
@@ -94,43 +112,6 @@ table {
    }
 }
 
-#allow-push-button {
-   position: fixed;
-   bottom: 15px;
-   left: 15px;
-   width: 50px;
-   aspect-ratio: 1 / 1;
-   background-color: rgba($accent, 0.9);
-   border-radius: 50%;
-   z-index: 2147483647;
-   display: grid;
-   place-items: center;
-   color: white;
-   filter: drop-shadow(0 2px 4px rgba(34, 36, 38, 0.35));
-   animation: push-button-beat 2s ease 0s infinite;
-
-   cursor: pointer;
-   transition: all 0.5s ease;
-
-   &:hover {
-      background-color: lighten(rgba($accent, 0.9), 5%);
-   }
-}
-
-@keyframes push-button-beat {
-   0% {
-      box-shadow: 0px 0px 0px 0px white, 0px 0px 0px 2px rgba($accent, 0.5);
-   }
-   50% {
-      box-shadow: 0px 0px 0px 0px white, 0px 0px 0px 11px rgba($accent, 0);
-   }
-}
-@media (prefers-reduced-motion) {
-   #allow-push-button {
-      animation: none;
-   }
-}
-
 ::-webkit-scrollbar {
    width: 10px;
    background-color: $col-dark;
@@ -159,5 +140,66 @@ table {
 }
 .print {
    display: none;
+}
+
+#loading-screen {
+   background-color: rgba($col-dark, 0.1);
+   z-index: 2000000000;
+   position: fixed;
+   inset: 0;
+   transition: all 0.5s ease;
+   display: grid;
+   place-items: center;
+
+   cursor: progress;
+
+   &::before {
+      content: "";
+      animation: 1s linear infinite spinner;
+      animation-play-state: inherit;
+      border: solid 5px #cfd0d1;
+      border-bottom-color: $accent;
+      border-radius: 50%;
+      height: min(8vh, 8vw);
+      aspect-ratio: 1;
+      position: absolute;
+      will-change: transform;
+   }
+}
+
+@keyframes spinner {
+   0% {
+      transform: rotate(0deg);
+   }
+   100% {
+      transform: rotate(360deg);
+   }
+}
+
+.mq {
+   .content {
+      margin: 5vh auto;
+      margin-bottom: 0;
+   }
+   &.ultrawide {
+      .content {
+         width: 45vw;
+      }
+   }
+   &.desktop {
+      .content {
+         width: 60vw;
+      }
+   }
+   &.tablet {
+      .content {
+         width: 70vw;
+      }
+   }
+   &.mobile {
+      .content {
+         width: 95vw;
+      }
+   }
 }
 </style>
