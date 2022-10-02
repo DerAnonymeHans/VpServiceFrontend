@@ -11,7 +11,11 @@ import LernsaxMails from "./mails/Mails.vue";
          <ScrollSelector @select="(item) => switchPage(item.key)" :default="page" :items="items" />
       </div>
       <div class="content-space">
-         <LernsaxSettings v-if="page === 'settings'" :methodOnMount="settingsMethodOnMount" />
+         <LernsaxSettings
+            v-if="page === 'settings'"
+            :methodOnMount="settingsMethodOnMount"
+            @changeColorScheme="(e) => $emit('changeColorScheme', e)"
+         />
          <LernsaxMails v-if="page === 'email'" :methodOnMount="settingsMethodOnMount" />
       </div>
    </div>
@@ -42,7 +46,12 @@ export default {
    methods: {
       getPage() {
          const params = new URLSearchParams(window.location.search);
-         if (params.get("action") !== null) return params.get("action");
+         const action = params.get("action");
+         if (action !== null) {
+            params.delete("action");
+            window.history.pushState("", "", window.location.origin + window.location.pathname + "?" + params.toString());
+            return action;
+         }
          return typeof localStorage.getItem("lernsax-page") !== "string" ? "" : localStorage.getItem("lernsax-page");
       },
       switchPage(page) {
@@ -75,6 +84,8 @@ export default {
 @import "@/styles/helper.scss";
 
 .lernsax-page {
+   background-color: var(--bg);
+   min-height: 100vh;
    .scroll-selector {
       background-color: $col-dark;
       padding: $padding * 0.5 0;

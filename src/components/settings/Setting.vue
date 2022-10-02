@@ -54,6 +54,7 @@ export default {
 
       .text {
          display: grid;
+         width: 100%;
          .name {
             font-weight: bold;
             color: $col-dark;

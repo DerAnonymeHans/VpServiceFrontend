@@ -3,7 +3,17 @@
 <template>
    <div :class="{ invert: isInvert }">
       <label>{{ label }}</label>
-      <input :id="id" :type="type" :name="name" :value="value" :min="min" :max="max" @input="(e) => $emit('input', e.target.value)" />
+      <input
+         :id="id"
+         :type="type"
+         :name="name"
+         :value="value"
+         :min="min"
+         :max="max"
+         @input="(e) => $emit('input', e.target.value)"
+         @focus="(e) => $emit('focus', e)"
+         @blur="(e) => $emit('blur', e)"
+      />
    </div>
 </template>
 <script>

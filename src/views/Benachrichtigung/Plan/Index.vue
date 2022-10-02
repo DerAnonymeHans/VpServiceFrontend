@@ -120,7 +120,6 @@ export default {
       this.fetchData();
    },
    async mounted() {
-      this.loadColorScheme(localStorage.getItem("color-scheme"));
       await this.loadNotifyMode();
       await this.handleDeviceChange();
    },
@@ -255,25 +254,6 @@ export default {
          const newLastPlanModel = this.makePlans(global, grade)[0];
          localStorage.setItem("last-plan-model", JSON.stringify(newLastPlanModel));
       },
-      ensurePlanColorContrast() {
-         const wantedBrightness = this.colorScheme === "lightmode" ? 500 : 350;
-         const dec = (hex) => parseInt(hex, 16);
-         const hex = (dec) => Math.round(dec).toString(16);
-
-         let r = dec(this.color.slice(1, 3)),
-            g = dec(this.color.slice(3, 5)),
-            b = dec(this.color.slice(5, 7));
-
-         const quotient = wantedBrightness / (r + g + b);
-         if (this.colorScheme === "darkmode" && quotient < 1) return;
-         if (this.colorScheme === "lightmode" && quotient > 1) return;
-
-         r *= quotient;
-         g *= quotient;
-         b *= quotient;
-
-         this.color = `#${hex(r)}${hex(g)}${hex(b)}`;
-      },
       isPlanNew() {
          return new Promise(async (resolve, reject) => {
             try {
@@ -318,35 +298,35 @@ export default {
          switch (key) {
             case "color":
                this.colorScheme = to;
-               this.loadColorScheme(to);
+               this.changeColorScheme(to);
                break;
             case "notifyMode":
                this.isNotifyModeUpdated && this.changeNotifyMode(to);
                break;
          }
       },
-      loadColorScheme(name) {
-         localStorage.setItem("color-scheme", name);
-         const dark = {
-            bg: "#111",
-            "bg-medium": "#222",
-            "col-dark": "#333",
-            "col-light": "#444",
-            font: "#ccc",
-         };
-         const light = {
-            bg: "#fff",
-            "bg-medium": "#eee",
-            "col-light": "#ddd",
-            "col-dark": "#ccc",
-            font: "#000",
-         };
-         const scheme = name === "lightmode" ? light : dark;
-         for (const key in scheme) {
-            this.$refs.page.style.setProperty(`--${key}`, scheme[key]);
-         }
-
+      changeColorScheme(name) {
+         this.$emit("changeColorScheme", name);
          this.ensurePlanColorContrast();
+      },
+      ensurePlanColorContrast() {
+         const wantedBrightness = this.colorScheme === "lightmode" ? 500 : 350;
+         const dec = (hex) => parseInt(hex, 16);
+         const hex = (dec) => Math.round(dec).toString(16);
+
+         let r = dec(this.color.slice(1, 3)),
+            g = dec(this.color.slice(3, 5)),
+            b = dec(this.color.slice(5, 7));
+
+         const quotient = wantedBrightness / (r + g + b);
+         if (this.colorScheme === "darkmode" && quotient < 1) return;
+         if (this.colorScheme === "lightmode" && quotient > 1) return;
+
+         r *= quotient;
+         g *= quotient;
+         b *= quotient;
+
+         this.color = `#${hex(r)}${hex(g)}${hex(b)}`;
       },
       async changeNotifyMode(name) {
          if (name === "pwa") {
@@ -419,11 +399,11 @@ export default {
 <style lang="scss">
 @import "@/styles/_variables.scss";
 .notif-page {
-   --bg: #111;
-   --bg-medium: #222;
-   --col-light: #444;
-   --col-dark: #333;
-   --font: #ccc;
+   // --bg: #111;
+   // --bg-medium: #222;
+   // --col-light: #444;
+   // --col-dark: #333;
+   // --font: #ccc;
 
    background-color: var(--bg);
    padding-top: 2vh;

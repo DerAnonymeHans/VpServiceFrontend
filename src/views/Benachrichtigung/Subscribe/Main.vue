@@ -35,7 +35,7 @@ export default {
          await sleep(500);
          this.scrollToForm();
          params.delete("scroll");
-         window.history.pushState("", "", window.location.origin + window.location.pathname + params.toString());
+         window.history.pushState("", "", window.location.origin + window.location.pathname + "?" + params.toString());
       }
    },
    methods: {

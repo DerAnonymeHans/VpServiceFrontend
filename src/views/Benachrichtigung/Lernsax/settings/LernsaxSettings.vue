@@ -7,7 +7,7 @@ import Modal, { Button as ModalButton } from "@/components/modal/Modal.vue";
 import Input from "@/components/input/Input.vue";
 </script>
 <template>
-   <div class="content">
+   <div class="content lernsax-settings">
       <Settings :settings="settings" @settingChange="settingChange" />
       <Modal :isOpen="showModal" @close="() => closeModal()" :title="modalTitle" :content="modalContent" :buttons="modalButtons">
          <div v-if="modalMode === 'change-creds'">
@@ -19,6 +19,7 @@ import Input from "@/components/input/Input.vue";
 </template>
 <script>
 export default {
+   inject: ["colorScheme"],
    props: {
       methodOnMount: Object,
    },
@@ -57,14 +58,21 @@ export default {
          ],
       };
    },
+   computed: {
+      scheme() {
+         return this.colorScheme();
+      },
+   },
    async beforeMount() {
       await this.loadServices();
+      await this.loadLaterSettings();
       await sleep(100);
       this.loadCompleted = true;
       if (typeof this.methodOnMount?.value === "string" && typeof this.methodOnMount?.option === "string") {
          this.settingChange(this.methodOnMount);
       }
    },
+   mounted() {},
    methods: {
       closeModal() {
          this.modalMode = "";
@@ -86,18 +94,20 @@ export default {
             case "delete-data":
                this.deleteAll();
                break;
+            case "change-colorscheme":
+               this.$emit("changeColorScheme", val.value);
+               break;
          }
       },
       async loadServices() {
          const res = await fetchAPI("/Lernsax/SubscribedServices").then((res) => res.json());
          this.subbedServices = res.body;
-         await this.loadServiceSettings();
       },
       async getServiceStatus(service) {
          const serviceEnumIdx = this.services.indexOf(service);
          return this.subbedServices.includes(serviceEnumIdx) ? "activate" : "deactivate";
       },
-      async loadServiceSettings() {
+      async loadLaterSettings() {
          const serviceSettings = new SettingBlock("Services", [
             new SettingModel(
                "mail-service",
@@ -107,7 +117,16 @@ export default {
                await this.getServiceStatus("mail")
             ),
          ]);
-         this.settings = [serviceSettings, ...this.settings];
+         const appearanceSettings = new SettingBlock("Aussehen", [
+            new SettingModel(
+               "change-colorscheme",
+               "Farbschema",
+               "Hier kannst du zwischen Hell- und Dunkelmodus wechseln.",
+               [new KLP("darkmode", "Dunkelmodus"), new KLP("lightmode", "Hellmodus")],
+               this.scheme
+            ),
+         ]);
+         this.settings = [...this.settings, serviceSettings, appearanceSettings];
       },
       async de_activateService(service, method) {
          const serviceEnumIdx = this.services.indexOf(service);
@@ -213,5 +232,25 @@ class ServiceMethod {
 <style lang="scss" scoped>
 .content {
    padding-bottom: 3vh;
+}
+</style>
+<style lang="scss">
+@import "@/styles/_variables.scss";
+.lernsax-settings {
+   .box {
+      border: none;
+   }
+   .box,
+   .setting {
+      p {
+         color: var(--font) !important;
+      }
+      background-color: var(--bg-medium);
+      border-color: var(--col-dark);
+
+      h2 {
+         color: $accent;
+      }
+   }
 }
 </style>

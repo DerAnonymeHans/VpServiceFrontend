@@ -57,7 +57,7 @@ export default {
       // const params = new URLSearchParams(window.location.search);
       // if (params.get("codeModal") === "true") {
       //    params.delete("codeModal");
-      //    window.history.pushState("", "", window.location.origin + window.location.pathname + params.toString());
+      //    window.history.pushState("", "", window.location.origin + window.location.pathname + "?" + params.toString());
       //    this.enterKeyModal();
       // }
    },

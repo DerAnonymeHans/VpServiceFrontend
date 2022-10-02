@@ -11,11 +11,13 @@ import { fetchAPI, sleep } from "@/App.vue";
             <p class="datetime">{{ dateTime }}</p>
          </div>
       </div>
-      <div class="mail-body-container" v-if="open">
-         <hr />
-         <div class="mail-body" v-html="body"></div>
-         <button class="btn-border center close-btn" @click="closeMail">Schließen</button>
-      </div>
+      <transition name="height-fade">
+         <div class="mail-body-container" v-if="open">
+            <hr />
+            <div class="mail-body" v-html="body"></div>
+            <button class="btn-border center close-btn" @click="closeMail">Schließen</button>
+         </div>
+      </transition>
    </div>
 </template>
 <script>
@@ -43,7 +45,7 @@ export default {
          isOpening && this.loadBody();
          this.$emit("toggleOpen", { id: this.id, isClosing: this.open, isOpening: !this.open });
 
-         await sleep(100);
+         await sleep(550);
          if (isOpening) {
             window.scrollBy({ top: this.$refs.mail.getBoundingClientRect().top - window.innerHeight * 0.1, behavior: "smooth" });
          }
@@ -86,12 +88,18 @@ export default {
 @import "@/styles/_variables.scss";
 .box {
    padding: $padding * 0.5;
+   background-color: var(--bg-medium);
+   border-color: var(--bg-medium);
 }
 
 .mail {
    margin-bottom: $margin * 0.5;
+   color: var(--font);
    p {
       margin: $margin * 0.2 0;
+   }
+   hr {
+      border-color: var(--col-light);
    }
    .subject {
       font-weight: bold;
@@ -108,6 +116,9 @@ export default {
 
    .close-btn {
       margin: $margin 0;
+      background-color: var(--bg-medium);
+      border-color: var(--col-light);
+      color: var(--font);
    }
 }
 </style>

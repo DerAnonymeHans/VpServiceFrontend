@@ -1,8 +1,10 @@
 <!-- @format -->
 
 <script setup>
+import { computed } from "vue";
+
 import Subscribe from "./Subscribe/Index.vue";
-import Notification from "./Notification/Index.vue";
+import Plan from "./Plan/Index.vue";
 import Lernsax from "./Lernsax/Index.vue";
 
 import { fetchAPI, sleep } from "@/App.vue";
@@ -12,15 +14,15 @@ import KeyLabelPair from "@/structs/KeyLabelPair.js";
 import Input from "@/components/input/Input.vue";
 </script>
 <template>
-   <div class="main">
+   <div class="main" ref="notif">
       <div class="center page-switch-container">
          <Switch :options="switchModel.options" :default="page" :value="page" @switch="switchPage" v-if="isLoggedIn" />
       </div>
       <div v-if="page === null"></div>
 
-      <Notification v-else-if="page === 'notif'" :isHashResetResponseModalOpen="isHashResetResponseModalOpen" />
+      <Plan v-else-if="page === 'plan'" :isHashResetResponseModalOpen="isHashResetResponseModalOpen" @changeColorScheme="loadColorScheme" />
       <Subscribe v-else-if="page === 'sub'" @requestHashReset="requestHashResetModal()" />
-      <Lernsax v-else-if="page === 'lernsax'" />
+      <Lernsax v-else-if="page === 'lernsax'" @changeColorScheme="loadColorScheme" />
 
       <Modal :isOpen="showModal" @close="() => closeModal()" :title="modalTitle" :content="modalContent" :buttons="modalButtons">
          <Input v-if="modalMode === 'hashReset'" :isInvert="true" label="Email Addresse" :id="'hashreset-mail-input'"></Input>
@@ -39,16 +41,23 @@ export default {
          modalMode: "",
          modalButtons: [],
          switchModel: new SwitchModel(
-            [new KeyLabelPair("sub", "Abo Seite"), new KeyLabelPair("notif", "Plan Seite"), new KeyLabelPair("lernsax", "Lernsax")],
-            "notif"
+            [new KeyLabelPair("sub", "Abo Seite"), new KeyLabelPair("plan", "Plan Seite"), new KeyLabelPair("lernsax", "Lernsax")],
+            "plan"
          ),
 
          isHashResetResponseModalOpen: false,
+         colorScheme: "darkmode",
+      };
+   },
+   provide() {
+      return {
+         colorScheme: () => this.colorScheme,
       };
    },
    async mounted() {
       await this.handleHashReset();
       await this.getPage();
+      this.loadColorScheme(localStorage.getItem("color-scheme"));
    },
    methods: {
       async handleHashReset() {
@@ -57,7 +66,7 @@ export default {
             const key = params.get("code");
             if (key === null) return resolve();
             params.delete("code");
-            window.history.pushState("", "", window.location.origin + window.location.pathname + params.toString());
+            window.history.pushState("", "", window.location.origin + window.location.pathname + "?" + params.toString());
             await this.resetHash(key);
             return resolve();
          });
@@ -80,7 +89,7 @@ export default {
                      SONST: Füge die Webseite zum Startbildschirm hinzu
                      `;
                   this.showModal = true;
-                  sessionStorage.setItem("notif-page", "notif");
+                  sessionStorage.setItem("notif-page", "plan");
                   return resolve();
                }
                this.modalTitle = "Anmeldung fehlgeschlagen";
@@ -102,7 +111,11 @@ export default {
       async getPage() {
          let cachedPage = sessionStorage.getItem("notif-page");
          const params = new URLSearchParams(window.location.search);
-         if (params.get("page") !== null) cachedPage = params.get("page");
+         if (params.get("page") !== null) {
+            cachedPage = params.get("page");
+            params.delete("page");
+            window.history.pushState("", "", window.location.origin + window.location.pathname + "?" + params.toString());
+         }
          try {
             let res = await fetchAPI("/User/IsAuthenticated").then((res) => res.json());
             if (res.body === true) {
@@ -118,7 +131,6 @@ export default {
          sessionStorage.setItem("notif-page", page);
          this.page = page;
       },
-
       requestHashResetModal() {
          this.modalTitle = "Neu anmelden";
          this.modalContent = `Wenn du dich bereits einmal angemeldet hast und nun auf die Vertretungsplandaten zugreifen möchtest bist du hier richtig. Wenn du auf den Knopf drückst, erhälst du eine Email, mit einem Link, der dich wieder anmeldet.<br><br>
@@ -164,6 +176,28 @@ export default {
          ];
          this.modalTitle = "Fehlschlag";
          this.showModal = true;
+      },
+      loadColorScheme(name) {
+         this.colorScheme = name === "lightmode" ? "lightmode" : "darkmode";
+         localStorage.setItem("color-scheme", this.colorScheme);
+         const dark = {
+            bg: "#181818",
+            "bg-medium": "#222",
+            "col-dark": "#333",
+            "col-light": "#444",
+            font: "#ccc",
+         };
+         const light = {
+            bg: "#fff",
+            "bg-medium": "#eee",
+            "col-light": "#ddd",
+            "col-dark": "#ccc",
+            font: "#000",
+         };
+         const scheme = name === "lightmode" ? light : dark;
+         for (const key in scheme) {
+            this.$refs.notif.style.setProperty(`--${key}`, scheme[key]);
+         }
       },
    },
 };

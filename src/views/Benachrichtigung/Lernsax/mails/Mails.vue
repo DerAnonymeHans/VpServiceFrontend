@@ -1,12 +1,28 @@
 <!-- @format -->
 <script setup>
-import { fetchAPI } from "@/App.vue";
+import { fetchAPI, sleep } from "@/App.vue";
 import Mail from "./Mail.vue";
+import Input from "@/components/input/Input.vue";
 </script>
 <template>
    <div class="content">
+      <Input
+         label="Suchen..."
+         :isInvert="scheme === 'lightmode'"
+         @focus="startSearching"
+         @blur="(e) => e.target.value.length === 0 && endSearching()"
+         @input="inputSearch"
+      />
+      <transition name="height-fade" mode="out-in">
+         <div class="search-options" v-if="isSearching">
+            <div class="flex search-buttons">
+               <button class="btn" @click="searchBodies">Im Text suchen</button>
+               <button class="btn" @click="endSearching">Abbrechen</button>
+            </div>
+         </div>
+      </transition>
       <div class="mails">
-         <div v-for="mailHead in heads" :key="mailHead.id">
+         <div v-for="mailHead in renderedMailHeads" :key="mailHead.id">
             <fieldset v-if="typeof mailHead.timeLabel === 'string'">
                <legend>{{ mailHead.timeLabel }}</legend>
             </fieldset>
@@ -21,20 +37,30 @@ import Mail from "./Mail.vue";
             />
          </div>
       </div>
-      <div class="bottom">
+      <footer>
          <button class="btn scroll-top-btn" @click="scrollToTop">Nach oben</button>
-      </div>
+      </footer>
    </div>
 </template>
 <script>
 export default {
+   inject: ["colorScheme"],
    data() {
       return {
-         heads: JSON.parse(localStorage.getItem("ls-service-mail-heads")),
+         allMailHeads: JSON.parse(localStorage.getItem("ls-service-mail-heads")),
+         renderedMailHeads: JSON.parse(localStorage.getItem("ls-service-mail-heads")),
+         isSearching: false,
+         searchString: "",
       };
    },
    beforeMount() {
       this.loadMailHeads();
+   },
+   mounted() {},
+   computed: {
+      scheme() {
+         return this.colorScheme();
+      },
    },
    methods: {
       async loadMailHeads() {
@@ -63,11 +89,44 @@ export default {
 
             head.dateTime = new Intl.DateTimeFormat("de-DE", { dateStyle: "short", timeStyle: "short" }).format(date);
          }
-         this.heads = res.body;
-         localStorage.setItem("ls-service-mail-heads", JSON.stringify(this.heads));
+         this.renderedMailHeads = res.body;
+         this.allMailHeads = res.body;
+         localStorage.setItem("ls-service-mail-heads", JSON.stringify(this.allMailHeads));
       },
-      handleToggleOpen(e) {
-         this.heads = this.heads.map((head) => {
+      startSearching(e) {
+         this.isSearching = true;
+         e.target.value.length > 0 && this.inputSearch(e.target.value);
+      },
+      inputSearch(val) {
+         if (typeof val !== "string" || !this.isSearching) return;
+         this.searchString = val;
+         val = val.toLowerCase();
+         this.renderedMailHeads = this.allMailHeads.filter(
+            (head) => head.subject.toLowerCase().includes(val) || head.sender.toLowerCase().includes(val) || head.dateTime.toLowerCase().includes(val)
+         );
+      },
+      endSearching() {
+         this.isSearching = false;
+         this.renderedMailHeads = [...this.allMailHeads];
+      },
+      async searchBodies() {
+         window.dispatchEvent(new Event("startloading"));
+         const form = new FormData();
+         form.append("search", this.searchString.toLowerCase());
+         try {
+            const res = await fetchAPI("/Lernsax/Service/Mail/SearchBody", { method: "POST", body: form }).then((res) => res.json());
+            window.dispatchEvent(new Event("endloading"));
+            if (res.isSuccess) {
+               console.log(this.allMailHeads);
+               this.renderedMailHeads = res.body.map((id) => this.allMailHeads.find((head) => head.id === id));
+               return;
+            }
+         } catch {}
+         this.renderedMailHeads = [];
+         window.dispatchEvent(new Event("endloading"));
+      },
+      async handleToggleOpen(e) {
+         this.renderedMailHeads = this.renderedMailHeads.map((head) => {
             head.open = false;
             if (e.isOpening && e.id === head.id) {
                head.open = true;
@@ -91,21 +150,52 @@ Date.prototype.addDays = function (days) {
 @import "@/styles/_variables.scss";
 .content {
    padding-bottom: $padding * 4;
-
-   .bottom {
+   header {
+      background-color: $col-dark;
+   }
+   footer {
       width: 100%;
       display: grid;
       place-items: center;
       margin: 8vh 0;
+      position: static;
+      background: none;
    }
-
    fieldset {
       border: none;
-      border-top: 1px dotted $col-text;
+      border-top: 1px dotted var(--col-dark);
       legend {
          margin: auto;
-         color: $col-text;
+         color: var(--font);
       }
    }
+   .btn {
+      background-color: var(--bg-medium);
+      color: var(--font);
+      border: 2px solid var(--col-light);
+   }
+   .search-options {
+      .search-buttons {
+         padding: $padding;
+         margin: auto;
+         width: fit-content;
+
+         > * {
+            margin-inline: $margin * 0.5;
+         }
+      }
+   }
+}
+</style>
+<style lang="scss">
+.height-fade-enter-active,
+.height-fade-leave-active {
+   transition: all 0.5s;
+   max-height: 500px;
+}
+.height-fade-enter-from,
+.height-fade-leave-to {
+   opacity: 0;
+   max-height: 0px;
 }
 </style>
