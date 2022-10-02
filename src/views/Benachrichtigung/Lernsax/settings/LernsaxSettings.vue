@@ -238,18 +238,18 @@ class ServiceMethod {
 @import "@/styles/_variables.scss";
 .lernsax-settings {
    .box {
-      border: none;
+      border: none !important;
    }
    .box,
    .setting {
       p {
          color: var(--font) !important;
       }
-      background-color: var(--bg-medium);
-      border-color: var(--col-dark);
+      background-color: var(--bg-medium) !important;
+      border-color: var(--col-dark) !important;
 
       h2 {
-         color: $accent;
+         color: $accent !important;
       }
    }
 }
