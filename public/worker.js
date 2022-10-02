@@ -14,7 +14,7 @@ self.addEventListener("push", (e) => {
 self.addEventListener("notificationclick", (e) => {
    e.notification.close();
    console.log(e.notification);
-   e.waitUntil(clients.openWindow(`https://kepleraner.herokuapp.com/${e.notification.data.Action}`));
+   e.waitUntil(clients.openWindow(`https://kepleraner.herokuapp.com${e.notification.data.Action}`));
 });
 
 self.addEventListener("install", (e) => {
