@@ -5,11 +5,11 @@ const CACHE_NAME = "kepleraner-cache-v1";
 const API_URL = "https://vp-service-api.herokuapp.com";
 
 self.addEventListener("push", (e) => {
-   const data = e.data.json();
-   console.log("SW: received push");
-   fetch(API_URL + "/User/ConfirmPush", { method: "POST", body: JSON.stringify(data.data.name) });
-   console.log("SW:", data);
-   self.registration.showNotification(data.title, data);
+   const options = e.data.json();
+   options.data = JSON.parse(options.data);
+   console.log("SW: received push", options);
+   fetch(API_URL + "/User/ConfirmPush", { method: "POST", body: JSON.stringify(options.data.name) });
+   self.registration.showNotification(options.title, options);
 });
 
 self.addEventListener("notificationclick", (e) => {
