@@ -101,7 +101,7 @@ export default {
       },
       async loadServices() {
          const res = await fetchAPI("/Lernsax/SubscribedServices").then((res) => res.json());
-         this.subbedServices = res.body;
+         this.subbedServices = Array.isArray(res.body) ? res.body : [];
       },
       async getServiceStatus(service) {
          const serviceEnumIdx = this.services.indexOf(service);
