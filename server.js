@@ -25,7 +25,7 @@ webpush.setVapidDetails("mailto:vp.mailservice.kepler@gmail.com", pubKey, privKe
 webpush.setGCMAPIKey(process.env.GCM_SERVER_KEY);
 
 app.post("/SendPush", (req, res) => {
-   console.log("Push Notification requested for user: " + req.body.options.data);
+   console.log("Push Notification requested for user: " + JSON.stringify(req.body.options.data));
    let subscription, payload;
    try {
       if (req.body === undefined || req.body === null) throw new Error("Body is null or undefined");
