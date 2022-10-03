@@ -254,20 +254,16 @@ export default {
          const newLastPlanModel = this.makePlans(global, grade)[0];
          localStorage.setItem("last-plan-model", JSON.stringify(newLastPlanModel));
       },
-      isPlanNew() {
-         return new Promise(async (resolve, reject) => {
-            try {
-               const lastOriginDatetime = localStorage.getItem("last-origin-datetime");
-               const lastAffectedDate = localStorage.getItem("last-affected-date");
-               let res = await fetchAPI(`/Notification/IsNewPlan/${encodeURIComponent(`${lastOriginDatetime}-${lastAffectedDate}`)}`).then((res) =>
-                  res.json()
-               );
-               if (res.isSuccess) {
-                  return resolve(res.body);
-               }
-            } catch (e) {}
-            return resolve(true);
-         });
+      async isPlanNew() {
+         try {
+            const lastOriginDatetime = localStorage.getItem("current-plan-id");
+            let res = await fetchAPI(`/Notification/CurrentPlanId`).then((res) => res.json());
+            if (res.isSuccess) {
+               localStorage.setItem("current-plan-id", res.body);
+               return lastOriginDatetime !== res.body;
+            }
+         } catch (e) {}
+         return true;
       },
       reload() {
          localStorage.setItem("last-origin-datetime", "reload");
