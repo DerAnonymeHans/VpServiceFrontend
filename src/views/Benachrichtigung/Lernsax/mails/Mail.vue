@@ -1,6 +1,7 @@
 <!-- @format -->
 <script setup>
 import { fetchAPI, sleep } from "@/App.vue";
+import MailBody from "./MailBody.vue";
 </script>
 <template>
    <div class="mail box" ref="mail">
@@ -14,8 +15,17 @@ import { fetchAPI, sleep } from "@/App.vue";
       <transition name="height-fade">
          <div class="mail-body-container" v-if="open">
             <hr />
-            <div class="mail-body" v-html="body"></div>
-            <button class="btn-border center close-btn" @click="closeMail">Schließen</button>
+            <button class="btn-border center" v-if="isImproved" @click="toggleRawBody">
+               {{ displayRaw ? "Verbessert anzeigen" : "Original anzeigen" }}
+            </button>
+            <div class="mail-bodies">
+               <div v-if="displayRaw" v-html="rawBody"></div>
+               <MailBody :number="0" :bodies="bodies" v-else />
+            </div>
+            <div class="btn-container flex">
+               <button class="btn-border center" @click="openLernsax"><a>Lernsax öffnen</a></button>
+               <button class="btn-border center" @click="closeMail">Schließen</button>
+            </div>
          </div>
       </transition>
    </div>
@@ -32,7 +42,10 @@ export default {
    },
    data() {
       return {
-         body: "",
+         rawBody: "",
+         bodies: [],
+         isImproved: false,
+         displayRaw: false,
       };
    },
    async mounted() {
@@ -50,23 +63,35 @@ export default {
             window.scrollBy({ top: this.$refs.mail.getBoundingClientRect().top - window.innerHeight * 0.1, behavior: "smooth" });
          }
       },
+      async closeMail() {
+         window.scrollBy({ top: this.$refs.mail.getBoundingClientRect().top - window.innerHeight * 0.1, behavior: "smooth" });
+         this.toggleOpen();
+      },
       async loadBody() {
+         this.displayRaw = localStorage.getItem("ls-service-mail-displayRaw") === "true" ? true : false;
          try {
-            this.body = await this.getFromDb(this.id);
+            this.rawBody = await this.getFromDb(this.id);
+            this.bodies = this.splitRawBody(this.rawBody);
             return;
          } catch {}
 
          const res = await fetchAPI(`/Lernsax/Service/Mail/MailBody/${this.id}`).then((res) => res.json());
          if (res.isSuccess) {
-            this.body = res.body;
-            window.lernsaxDB.transaction(["mails"], "readwrite").objectStore("mails").add({ mail: this.body, mailId: this.id });
+            this.rawBody = res.body;
+            this.bodies = this.splitRawBody(this.rawBody);
+            window.lernsaxDB.transaction(["mails"], "readwrite").objectStore("mails").add({ mail: this.rawBody, mailId: this.id });
             return;
          }
-         this.body = "***Leider ist etwas schief gelaufen.*** (<- nicht die eigentliche Email)";
+         this.rawBody = "***Leider ist etwas schief gelaufen.*** (<- nicht die eigentliche Email)";
+         this.bodies = [];
       },
-      async closeMail() {
-         window.scrollBy({ top: this.$refs.mail.getBoundingClientRect().top - window.innerHeight * 0.1, behavior: "smooth" });
-         this.toggleOpen();
+      splitRawBody(rawBody) {
+         const bodies = rawBody.replaceAll("<q>", "").replaceAll("</q>", "").split("-----Original Message-----");
+         for (let i = 1; i < bodies.length; i++) {
+            bodies[i] = bodies[i].replaceAll(`<br>${"&gt;".repeat(i)}`, "<br>");
+         }
+         if (bodies.length > 1) this.isImproved = true;
+         return bodies;
       },
       getFromDb(mailId) {
          return new Promise(async (resolve, reject) => {
@@ -80,6 +105,13 @@ export default {
                reject();
             };
          });
+      },
+      openLernsax() {
+         window.open("https://www.lernsax.de/wws/9.php#/wws/105592.php");
+      },
+      toggleRawBody() {
+         localStorage.setItem("ls-service-mail-displayRaw", !this.displayRaw);
+         this.displayRaw = !this.displayRaw;
       },
    },
 };
@@ -114,8 +146,18 @@ export default {
       }
    }
 
-   .close-btn {
-      margin: $margin 0;
+   .btn-container {
+      margin-top: $margin * 0.5;
+
+      > * {
+         margin-right: $margin * 0.5;
+
+         &:last-child {
+            margin-right: 0;
+         }
+      }
+   }
+   .btn-border {
       background-color: var(--bg-medium);
       border-color: var(--col-light);
       color: var(--font);

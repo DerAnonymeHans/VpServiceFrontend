@@ -66,7 +66,6 @@ export default {
       async loadMailHeads() {
          const res = await fetchAPI("/Lernsax/Service/Mail/Heads").then((res) => res.json());
          let lastLabel;
-         const todaysDate = new Date(Date.now()).getDate();
          for (let i = 0; i < res.body.length; i++) {
             const head = res.body[i];
             head.open = false;
@@ -75,8 +74,8 @@ export default {
             const date = new Date(Date.parse(head.dateTime));
 
             let label;
-            if (date.getDate() === todaysDate) label = "heute";
-            else if (date.addDays(1).getDate() === todaysDate) label = "gestern";
+            if (date.addDays(1).valueOf() > Date.now()) label = "heute";
+            else if (date.addDays(2).valueOf() === Date.now()) label = "gestern";
             else if (date.addDays(8).valueOf() > Date.now()) label = "diese Woche";
             else if (date.addDays(31).valueOf() > Date.now()) label = "älter als eine Woche";
             else if (date.addDays(365).valueOf() > Date.now()) label = "älter als ein Monat";
@@ -93,6 +92,7 @@ export default {
          this.allMailHeads = res.body;
          localStorage.setItem("ls-service-mail-heads", JSON.stringify(this.allMailHeads));
       },
+
       startSearching(e) {
          this.isSearching = true;
          e.target.value.length > 0 && this.inputSearch(e.target.value);
