@@ -204,6 +204,8 @@ export default {
       async deleteAll() {
          if (!confirm("Bist du sicher, dass du alle deine Lernsaxdaten von Kepleraner löschen willst?")) return;
          window.dispatchEvent(new Event("startloading"));
+         await window.lernsaxDB.transaction(["mails"], "readwrite").objectStore("mails").clear();
+         localStorage.setItem("ls-service-mail-heads", "");
          try {
             const res = await fetchAPI("/Lernsax/All", { method: "DELETE" }).then((res) => res.json());
             this.modalTitle = "Fehlschlag";

@@ -54,9 +54,12 @@ export default {
          colorScheme: () => this.colorScheme,
       };
    },
-   async mounted() {
+   async beforeMount() {
+      await this.isAuthenticated();
       await this.handleHashReset();
       await this.getPage();
+   },
+   async mounted() {
       this.loadColorScheme(localStorage.getItem("color-scheme"));
    },
    methods: {
@@ -80,7 +83,7 @@ export default {
             let res;
             try {
                res = await fetchAPI(`/User/ResetHash`, { method: "POST", body: form }).then((res) => res.json());
-               if (res.isSuccess) {
+               if (res.isSuccess || this.isLoggedIn) {
                   this.isHashResetResponseModalOpen = true;
                   this.modalTitle = "Anmeldung erfolgreich";
                   this.modalContent = `<b>ACHTUNG:</b> Folge den Anweisungen um Push Nachrichten zu erhalten:<br>
@@ -90,6 +93,7 @@ export default {
                      `;
                   this.showModal = true;
                   sessionStorage.setItem("notif-page", "plan");
+                  await this.isAuthenticated();
                   return resolve();
                }
                this.modalTitle = "Anmeldung fehlgeschlagen";
@@ -116,16 +120,27 @@ export default {
             params.delete("page");
             window.history.pushState("", "", window.location.origin + window.location.pathname + "?" + params.toString());
          }
+         if (this.isLoggedIn) {
+            this.page = this.switchModel.options.findIndex((el) => el.key === cachedPage) === -1 ? "sub" : cachedPage;
+            return;
+         }
+         this.page = "sub";
+      },
+      async isAuthenticated() {
+         if (!navigator.onLine) {
+            this.isLoggedIn = localStorage.getItem("user-login-status") === "true";
+            return;
+         }
          try {
             let res = await fetchAPI("/User/IsAuthenticated").then((res) => res.json());
-            if (res.body === true) {
-               this.isLoggedIn = true;
-               this.page = this.switchModel.options.findIndex((el) => el.key === cachedPage) === -1 ? "sub" : cachedPage;
+            if (res.isSuccess === true) {
+               this.isLoggedIn = res.body;
+               localStorage.setItem("user-login-status", "true");
                return;
             }
          } catch {}
+         localStorage.setItem("user-login-status", "false");
          this.isLoggedIn = false;
-         this.page = "sub";
       },
       switchPage(page) {
          sessionStorage.setItem("notif-page", page);

@@ -39,6 +39,7 @@ export default {
       dateTime: { type: String, required: true },
       id: { type: String, required: true },
       preLoad: { type: Boolean, required: true },
+      wasOpen: { type: Boolean, required: true },
    },
    data() {
       return {
@@ -52,20 +53,47 @@ export default {
       await sleep(1000);
       this.preLoad && this.loadBody();
    },
+   updated() {
+      if (this.wasOpen) {
+         this.closeMail(false);
+      }
+   },
    methods: {
       async toggleOpen() {
          const isOpening = !this.open;
+
          isOpening && this.loadBody();
-         this.$emit("toggleOpen", { id: this.id, isClosing: this.open, isOpening: !this.open });
+
+         this.$emit("toggleOpen", {
+            id: this.id,
+            isClosing: this.open,
+            isOpening: !this.open,
+            setWasOpen: true,
+         });
 
          await sleep(550);
          if (isOpening) {
             window.scrollBy({ top: this.$refs.mail.getBoundingClientRect().top - window.innerHeight * 0.1, behavior: "smooth" });
          }
       },
-      async closeMail() {
-         window.scrollBy({ top: this.$refs.mail.getBoundingClientRect().top - window.innerHeight * 0.1, behavior: "smooth" });
-         this.toggleOpen();
+      async closeMail(toggle = true) {
+         const rect = this.$refs.mail.getBoundingClientRect();
+         const scrollToTop = rect.top - window.innerHeight * 0.1;
+         const scrollByHeight = -(this.$refs.mail.getBoundingClientRect().height - 80);
+         let scrollBy = Math.abs(scrollToTop) < Math.abs(scrollByHeight) ? scrollToTop : scrollByHeight;
+
+         if (this.$refs.mail.offsetTop + rect.height > document.documentElement.scrollHeight - rect.height && toggle) {
+            scrollBy = scrollByHeight;
+         }
+         window.scrollBy({ top: scrollBy, behavior: "smooth" });
+
+         toggle &&
+            this.$emit("toggleOpen", {
+               id: this.id,
+               isClosing: this.open,
+               isOpening: !this.open,
+               setWasOpen: false,
+            });
       },
       async loadBody() {
          this.displayRaw = localStorage.getItem("ls-service-mail-displayRaw") === "true" ? true : false;
@@ -73,7 +101,13 @@ export default {
             this.rawBody = await this.getFromDb(this.id);
             this.bodies = this.splitRawBody(this.rawBody);
             return;
-         } catch {}
+         } catch {
+            if (!navigator.onLine) {
+               this.rawBody = "Die Email kann nicht geladen werden, weil du offline bist.";
+               this.bodies = [this.rawBody];
+               return;
+            }
+         }
 
          const res = await fetchAPI(`/Lernsax/Service/Mail/MailBody/${this.id}`).then((res) => res.json());
          if (res.isSuccess) {
@@ -82,7 +116,7 @@ export default {
             window.lernsaxDB.transaction(["mails"], "readwrite").objectStore("mails").add({ mail: this.rawBody, mailId: this.id });
             return;
          }
-         this.rawBody = "***Leider ist etwas schief gelaufen.*** (<- nicht die eigentliche Email)";
+         this.rawBody = "***Leider ist etwas schief gelaufen. Bitte öffne die Email in Lernsax.***";
          this.bodies = [];
       },
       splitRawBody(rawBody) {

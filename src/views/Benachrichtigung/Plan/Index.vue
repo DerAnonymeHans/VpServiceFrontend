@@ -226,7 +226,9 @@ export default {
                this.modalContent = res.message;
             } catch (e) {
                this.modalTitle = "Fehlschlag";
-               this.modalContent = "Leider ist etwas schief gelaufen";
+               this.modalContent = !navigator.isOnline
+                  ? "Du bist offline. Deswegen werden gespeicherte Daten angezeigt, die veraltet sein können."
+                  : "Leider ist etwas schief gelaufen";
             }
             this.showModal = true;
             return reject();

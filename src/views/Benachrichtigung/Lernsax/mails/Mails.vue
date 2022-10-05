@@ -22,6 +22,7 @@ import Input from "@/components/input/Input.vue";
          </div>
       </transition>
       <div class="mails">
+         <p class="no-mails-found" v-if="renderedMailHeads.length === 0">Es wurden keine Emails gefunden...</p>
          <div v-for="mailHead in renderedMailHeads" :key="mailHead.id">
             <fieldset v-if="typeof mailHead.timeLabel === 'string'">
                <legend>{{ mailHead.timeLabel }}</legend>
@@ -32,6 +33,7 @@ import Input from "@/components/input/Input.vue";
                :dateTime="mailHead.dateTime"
                :id="mailHead.id"
                :open="mailHead.open"
+               :wasOpen="mailHead.wasOpen"
                :preLoad="mailHead.preLoad"
                @toggleOpen="handleToggleOpen"
             />
@@ -69,6 +71,7 @@ export default {
          for (let i = 0; i < res.body.length; i++) {
             const head = res.body[i];
             head.open = false;
+            head.wasOpen = false;
             head.preLoad = i < 3;
 
             const date = new Date(Date.parse(head.dateTime));
@@ -127,6 +130,10 @@ export default {
       },
       async handleToggleOpen(e) {
          this.renderedMailHeads = this.renderedMailHeads.map((head) => {
+            head.wasOpen = false;
+            if (head.open) {
+               head.wasOpen = e.setWasOpen;
+            }
             head.open = false;
             if (e.isOpening && e.id === head.id) {
                head.open = true;
@@ -184,6 +191,14 @@ Date.prototype.addDays = function (days) {
             margin-inline: $margin * 0.5;
          }
       }
+   }
+   .no-mails-found {
+      margin: auto;
+      width: fit-content;
+      color: var(--font);
+      background-color: var(--bg-medium);
+      padding: $padding;
+      border-radius: $border-radius;
    }
 }
 </style>

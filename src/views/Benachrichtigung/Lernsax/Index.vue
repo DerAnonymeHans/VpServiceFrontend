@@ -32,6 +32,7 @@ export default {
    },
    async beforeMount() {
       this.page = this.getPage();
+      this.dbSetup();
 
       const hasCreds = await this.hasValidCredentials();
       if (!hasCreds) {
@@ -41,7 +42,6 @@ export default {
          await sleep(500);
          this.settingsMethodOnMount = null;
       }
-      this.dbSetup();
    },
    methods: {
       getPage() {
