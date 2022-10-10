@@ -243,6 +243,10 @@ export default {
 
          // if last plan is affecting today
          if (new Date().getDate() === parseInt(lastPlanModel?.affectedDate.slice(0, 2))) {
+            // to set last plan when changes in the morning
+            if (gradeModel?.listOfTables[0].affectedDate === lastPlanModel?.listOfTables[0].affectedDate) {
+               lastPlanModel = this.setLastPlan(globalModel, gradeModel);
+            }
             lastPlanModel.affectedWeekday += " (heute)";
             return lastPlanModel;
          }
@@ -255,6 +259,7 @@ export default {
          grade.listOfTables = [grade.listOfTables[0]];
          const newLastPlanModel = this.makePlans(global, grade)[0];
          localStorage.setItem("last-plan-model", JSON.stringify(newLastPlanModel));
+         return newLastPlanModel;
       },
       async isPlanNew() {
          try {
