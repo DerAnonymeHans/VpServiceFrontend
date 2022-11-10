@@ -16,7 +16,7 @@
             <th>Raum</th>
             <th>Info</th>
          </tr>
-         <tr v-for="row in plan.rows" :key="row" :style="{ color: row.hasChange ? color : '' }">
+         <tr v-for="row in plan.rows" :key="row" :style="{ color: row.hasChange ? (row.isDeleted ? 'red' : color) : '' }">
             <td>{{ row.row.klasse }}</td>
             <td>{{ row.row.stunde }}</td>
             <td>{{ row.row.fach }}</td>
