@@ -64,6 +64,8 @@ export default {
    async mounted() {
       await sleep(1000);
       this.preLoad && this.loadBody();
+      this.mailSubjectToSend = "Re:" + this.subject;
+      console.log(this.subject);
    },
    updated() {
       if (this.wasOpen) {
@@ -204,8 +206,6 @@ export default {
       color: $accent;
    }
    .flex {
-      .sender {
-      }
       .datetime {
          font-style: italic;
          margin-left: auto;
