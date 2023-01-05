@@ -78,7 +78,7 @@ export default {
    data() {
       return {
          imgSrc: "",
-         qrCodeSrc: `${import.meta.env.VITE_API_URL}/Notification/QrCode`,
+         qrCodeSrc: `${import.meta.env.VITE_API_URL}/api/Notification/QrCode`,
          globalExtra: "",
          grade: "",
 
@@ -138,13 +138,14 @@ export default {
 
          this.userName = user.userName || "Kepleraner";
          this.artworkName = global.artwork?.name || "";
-         this.imgSrc = `${import.meta.env.VITE_API_URL}/Notification/Artwork/${this.artworkName}/${this.userName}`;
+         this.imgSrc = `${import.meta.env.VITE_API_URL}/api/Notification/Artwork/${this.artworkName}/${this.userName}`;
          this.globalExtra = global.globalExtra || "Moin";
 
          this.tempMax = global.weather.tempMax;
          this.tempMin = global.weather.tempMin;
 
          this.plans = this.makePlans(global, grade);
+         console.log(this.plans);
 
          this.originDate = this.plans[0].originDate;
          this.originTime = this.plans[0].originTime;
@@ -212,7 +213,7 @@ export default {
          return new Promise(async (resolve, reject) => {
             if (useCachedData) {
                const json = localStorage.getItem(`${name}-model`);
-               if (json.length > 0) {
+               if (json?.length > 0) {
                   return resolve(JSON.parse(json));
                }
             }
@@ -241,10 +242,11 @@ export default {
             lastPlanModel = JSON.parse(lastPlanModel);
          }
 
+         console.log(lastPlanModel);
          // if last plan is affecting today
          if (new Date().getDate() === parseInt(lastPlanModel?.affectedDate.slice(0, 2))) {
             // to set last plan when changes in the morning
-            if (gradeModel?.listOfTables[0].affectedDate === lastPlanModel?.listOfTables[0].affectedDate) {
+            if (gradeModel?.listOfTables[0].affectedDate === lastPlanModel?.affectedDate) {
                lastPlanModel = this.setLastPlan(globalModel, gradeModel);
             }
             lastPlanModel.affectedWeekday += " (heute)";

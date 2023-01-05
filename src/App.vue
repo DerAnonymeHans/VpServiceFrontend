@@ -71,7 +71,7 @@ export default {
    },
 };
 const URL = import.meta.env.VITE_API_URL;
-const fetchAPI = (path, obj = {}) => fetch(URL + path, Object.assign({ credentials: "include" }, obj));
+const fetchAPI = (path, obj = {}) => fetch(`${URL}/api${path}`, Object.assign({ credentials: "include" }, obj));
 
 const sleep = (ms) => new Promise((resolve, reject) => setTimeout(resolve, ms));
 

@@ -24,7 +24,7 @@ export default {
    },
    methods: {
       getUserCount() {
-         fetchAPI("/GetUserCount")
+         fetchAPI("/User/UserCount")
             .then((res) => res.json())
             .then((res) => {
                if (res.isSuccess) this.userCount = res.body;

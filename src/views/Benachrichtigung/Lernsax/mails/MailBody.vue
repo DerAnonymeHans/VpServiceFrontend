@@ -32,24 +32,29 @@ export default {
          const body = this.bodies[0];
          if (this.number === 0) {
             this.head = null;
-            this.body = body;
+            this.body = body?.replaceAll("\r\n", "<br>");
             return;
          }
-         const indexBreaks = body.indexOf("<br> <br> <br>");
-         this.head = this.improveHead(body.slice(0, indexBreaks));
-         this.body = body.slice(indexBreaks + 9);
+         const splitted = body.split("\r\n");
+         this.head = this.improveHead(splitted.slice(1, 7).join("|"));
+         this.body = splitted
+            .slice(7)
+            .join("<br>")
+            .split("<br>" + ">".repeat(this.number))
+            .join("<br>")
+            .slice(this.number - 1);
       },
       improveHead(headRaw) {
-         console.log(headRaw);
          const stringSurroundedBy = (string, start, end) => {
             const startIdx = string.indexOf(start);
             return string.slice(startIdx + start.length, string.indexOf(end, startIdx + start.length));
          };
-         const splitted = headRaw.split("<br>");
-         const from = stringSurroundedBy(splitted[1], "From: &quot;", "&quot;");
-         const to = stringSurroundedBy(splitted[3], "To: &quot;", "&quot;");
-         const dateTime = splitted[2].slice(7);
-         const subject = splitted[4].slice(10);
+         let splitted = headRaw.split("|");
+         if (splitted.length === 1) splitted = headRaw.split("\r\n");
+         const from = stringSurroundedBy(splitted[0], 'From: "', '"');
+         const to = stringSurroundedBy(splitted[2], 'To: "', '"');
+         const dateTime = splitted[1].slice(9);
+         const subject = splitted[3].slice(9);
          return `
             <b>${subject}</b><br>
             Von <u>${from}</u> an <u>${to}</u><br>

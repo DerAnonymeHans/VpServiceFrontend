@@ -7,7 +7,7 @@
          <span v-for="info in plan.announcements" :key="info">{{ info }}<br /></span>
       </div>
       <div class="missing-teachers border-box">Es fehlen: {{ plan.missingTeachers.join(",") }}</div>
-      <table v-if="plan.rows.length > 0">
+      <table v-if="plan.rows?.length > 0">
          <tr>
             <th>Klasse</th>
             <th>Stunde</th>

@@ -8,16 +8,24 @@ import MailBody from "./MailBody.vue";
       <div class="mail-head" @click="toggleOpen">
          <p class="subject">{{ subject }}</p>
          <div class="flex">
-            <p class="sender">{{ sender }}</p>
+            <p class="sender">{{ senderDisplayName.length > 0 ? senderDisplayName : sender }}</p>
             <p class="datetime">{{ dateTime }}</p>
          </div>
       </div>
       <transition name="height-fade">
          <div class="mail-body-container" v-if="open">
             <hr />
-            <button class="btn-border center" v-if="isImproved" @click="toggleRawBody">
-               {{ displayRaw ? "Verbessert anzeigen" : "Original anzeigen" }}
-            </button>
+            <div class="btn-container flex">
+               <button class="btn-border center" v-if="isImproved" @click="toggleRawBody">
+                  {{ displayRaw ? "Verbessert anzeigen" : "Original anzeigen" }}
+               </button>
+               <button class="btn-border center" @click="toggleAnswer">{{ isAnswering ? "Abbrechen" : "Antworten" }}</button>
+            </div>
+            <div v-if="isAnswering" class="answering-container">
+               <input v-model="mailSubjectToSend" type="text" placeholder="Betreff" />
+               <textarea v-model="mailBodyToSend" placeholder="Text"></textarea>
+               <button class="btn-focus center send-btn" @click="sendAnswer">Antworten</button>
+            </div>
             <div class="mail-bodies">
                <div v-if="displayRaw" v-html="rawBody"></div>
                <MailBody :number="0" :bodies="bodies" v-else />
@@ -36,6 +44,7 @@ export default {
       open: { type: Boolean, required: true },
       subject: { type: String, required: true },
       sender: { type: String, required: true },
+      senderDisplayName: { type: String },
       dateTime: { type: String, required: true },
       id: { type: String, required: true },
       preLoad: { type: Boolean, required: true },
@@ -47,6 +56,9 @@ export default {
          bodies: [],
          isImproved: false,
          displayRaw: false,
+         isAnswering: false,
+         mailBodyToSend: "",
+         mailSubjectToSend: "",
       };
    },
    async mounted() {
@@ -147,6 +159,26 @@ export default {
          localStorage.setItem("ls-service-mail-displayRaw", !this.displayRaw);
          this.displayRaw = !this.displayRaw;
       },
+      toggleAnswer() {
+         this.isAnswering = !this.isAnswering;
+      },
+      async sendAnswer() {
+         const res = await fetchAPI(`/Lernsax/Service/Mail/Send`, {
+            method: "POST",
+            body: JSON.stringify({
+               receiver: this.sender,
+               subject: this.mailSubjectToSend,
+               body: this.mailBodyToSend,
+            }),
+         }).then((res) => res.json());
+         if (res.isSuccess) {
+            this.$emit("showModal", { title: "Erfolg", content: "Die Email wurde erfolgreich versendet." });
+            this.mailBodyToSend = "";
+            this.mailSubjectToSend = "";
+            return;
+         }
+         this.$emit("showModal", { title: "Fehlschlag", content: res.message });
+      },
    },
 };
 </script>
@@ -195,6 +227,39 @@ export default {
       background-color: var(--bg-medium);
       border-color: var(--col-light);
       color: var(--font);
+   }
+}
+
+.answering-container {
+   margin: $margin;
+   margin-inline: 0;
+   textarea,
+   input {
+      width: 100%;
+      box-sizing: border-box;
+      background: var(--bg-medium);
+      border: 2px solid var(--col-light);
+      font-size: 11pt;
+      color: var(--font);
+      font-family: Arial, Helvetica, sans-serif;
+      resize: vertical;
+
+      &:focus {
+         outline: 1px solid $accent;
+      }
+   }
+   input {
+      height: 2em;
+      margin-bottom: $margin;
+   }
+   textarea {
+      height: 50vh;
+   }
+   .send-btn {
+      width: fit-content;
+      padding: $padding * 0.5;
+      padding-inline: $padding;
+      margin: auto;
    }
 }
 </style>

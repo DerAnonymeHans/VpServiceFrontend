@@ -2,19 +2,20 @@
 
 console.log("Service worker loaded");
 const CACHE_NAME = "kepleraner-cache-v1";
-const API_URL = "https://vp-service-api.herokuapp.com";
+// const API_URL = "https://vp-service-api.herokuapp.com";
+const API_URL = "";
 
 self.addEventListener("push", (e) => {
    const options = e.data.json();
    console.log("SW: received push", options);
-   fetch(API_URL + "/User/ConfirmPush", { method: "POST", body: options.data.UserName });
+   fetch(API_URL + "/api/User/ConfirmPush", { method: "POST", body: options.data.UserName });
    self.registration.showNotification(options.title, options);
 });
 
 self.addEventListener("notificationclick", (e) => {
    e.notification.close();
    console.log(e.notification);
-   e.waitUntil(clients.openWindow(`https://kepleraner.herokuapp.com${e.notification.data.Action}`));
+   e.waitUntil(clients.openWindow(`https://kepleraner.onrender.com${e.notification.data.Action}`));
 });
 
 self.addEventListener("install", (e) => {
@@ -43,9 +44,10 @@ self.addEventListener("activate", (e) => {
 
 self.addEventListener("fetch", (e) => {
    if (e.request.method !== "GET") return;
-   if (!e.request.url.includes("http://localhost:8080") && !e.request.url.includes("https://kepleraner")) return;
+   if (e.request.url.includes("api")) return;
+   // if (!e.request.url.includes("http://localhost:8080") && !e.request.url.includes("https://kepleraner")) return;
 
-   console.log("SW: Responsing fetch");
+   console.log("SW: Responsing fetch", e);
    e.respondWith(
       fetch(e.request)
          .then((res) => {

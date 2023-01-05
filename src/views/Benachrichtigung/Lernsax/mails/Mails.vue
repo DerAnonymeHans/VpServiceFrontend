@@ -3,6 +3,7 @@
 import { fetchAPI, sleep } from "@/App.vue";
 import Mail from "./Mail.vue";
 import Input from "@/components/input/Input.vue";
+import Modal, { Button } from "@/components/modal/Modal.vue";
 </script>
 <template>
    <div class="content">
@@ -29,6 +30,7 @@ import Input from "@/components/input/Input.vue";
             </fieldset>
             <Mail
                :sender="mailHead.sender"
+               :senderDisplayName="mailHead.senderDisplayName"
                :subject="mailHead.subject"
                :dateTime="mailHead.dateTime"
                :id="mailHead.id"
@@ -36,6 +38,7 @@ import Input from "@/components/input/Input.vue";
                :wasOpen="mailHead.wasOpen"
                :preLoad="mailHead.preLoad"
                @toggleOpen="handleToggleOpen"
+               @showModal="handleShowModal"
             />
          </div>
       </div>
@@ -43,19 +46,28 @@ import Input from "@/components/input/Input.vue";
          <button class="btn scroll-top-btn" @click="scrollToTop">Nach oben</button>
       </footer>
    </div>
+   <Modal :isOpen="showModal" @close="showModal = !showModal" :title="modalTitle" :content="modalContent" :buttons="[]" />
 </template>
 <script>
 export default {
    inject: ["colorScheme"],
    data() {
       return {
-         allMailHeads: JSON.parse(localStorage.getItem("ls-service-mail-heads")),
-         renderedMailHeads: JSON.parse(localStorage.getItem("ls-service-mail-heads")),
+         allMailHeads: [], // JSON.parse(localStorage.getItem("ls-service-mail-heads") ?? "[]"),
+         renderedMailHeads: [], //JSON.parse(localStorage.getItem("ls-service-mail-heads")),
          isSearching: false,
          searchString: "",
+
+         showModal: false,
+         modalTitle: "",
+         modalContent: "",
       };
    },
    beforeMount() {
+      try {
+         this.allMailHeads = JSON.parse(localStorage.getItem("ls-service-mail-heads"));
+         this.renderedMailHeads = JSON.parse(localStorage.getItem("ls-service-mail-heads"));
+      } catch {}
       this.loadMailHeads();
    },
    mounted() {},
@@ -77,8 +89,8 @@ export default {
             const date = new Date(Date.parse(head.dateTime));
 
             let label;
-            if (date.addDays(1).valueOf() > Date.now()) label = "heute";
-            else if (date.addDays(2).valueOf() === Date.now()) label = "gestern";
+            if (date.addDays(1).valueOf() > Date.now()) label = "ein Tag";
+            else if (date.addDays(2).valueOf() === Date.now()) label = "zwei Tage";
             else if (date.addDays(8).valueOf() > Date.now()) label = "diese Woche";
             else if (date.addDays(31).valueOf() > Date.now()) label = "älter als eine Woche";
             else if (date.addDays(365).valueOf() > Date.now()) label = "älter als ein Monat";
@@ -140,6 +152,11 @@ export default {
             }
             return head;
          });
+      },
+      handleShowModal(e) {
+         this.showModal = true;
+         this.modalTitle = e.title;
+         this.modalContent = e.content;
       },
       scrollToTop() {
          window.scrollTo({ top: 0, behavior: "smooth" });

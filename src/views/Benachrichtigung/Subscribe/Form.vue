@@ -66,7 +66,7 @@ export default {
          e.preventDefault();
          const formdata = new FormData(e.target);
          formdata.append("notify-mode", this.notifyMode);
-         fetchAPI("/Subscribe", { method: "POST", body: formdata })
+         fetchAPI("/User/Subscribe", { method: "POST", body: formdata })
             .then((res) => res.json())
             .then((res) => {
                if (res.isSuccess) {
