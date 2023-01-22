@@ -17,6 +17,7 @@ app.use("/", serveStatic(path.join(__dirname, "/dist")));
 app.use("/Statistiken", serveStatic(path.join(__dirname, "/dist")));
 app.use("/Benachrichtigung", serveStatic(path.join(__dirname, "/dist")));
 app.use("/Mitmachen", serveStatic(path.join(__dirname, "/dist")));
+app.use("/Abirechner", serveStatic(path.join(__dirname, "/dist")));
 
 const pubKey = process.env.PUSH_PUB_KEY;
 const privKey = process.env.PUSH_PRIV_KEY;

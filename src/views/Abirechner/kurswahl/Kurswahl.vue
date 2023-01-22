@@ -39,7 +39,7 @@ import VerifiedIcon from "@/components/warning/VerifiedIcon.vue";
          </div>
          <div class="selectors">
             <div class="label-select-container" v-for="i in numberOfGkNawi" :key="i">
-               <div class="label">Naturwissenschaft {{ i + (SubjectGetter.getSubject(this.kurswahl.lk2)?.field === Field.science ? 1 : 0) }}</div>
+               <div class="label">Naturwissenschaft {{ i + (SubjectGetter.getSubject(kurswahl.lk2)?.field === Field.science ? 1 : 0) }}</div>
                <select
                   class="select"
                   name="naturwissenschaften-1"
@@ -51,9 +51,7 @@ import VerifiedIcon from "@/components/warning/VerifiedIcon.vue";
             </div>
 
             <div class="label-select-container" v-for="i in numberOfGkLangs" :key="i">
-               <div class="label">
-                  Sprache {{ i + (SubjectGetter.getSubject(this.kurswahl.lk2)?.specificField === SpecificField.language ? 1 : 0) }}
-               </div>
+               <div class="label">Sprache {{ i + (SubjectGetter.getSubject(kurswahl.lk2)?.specificField === SpecificField.language ? 1 : 0) }}</div>
                <select
                   class="select"
                   name="sprachen-1"
