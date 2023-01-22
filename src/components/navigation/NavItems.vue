@@ -11,6 +11,9 @@
       <RouterLink to="/Benachrichtigung" @click="$emit('select')">Benachrichtigung</RouterLink>
    </div>
    <div>
+      <RouterLink to="/Abirechner" @click="$emit('select')">Abirechner</RouterLink>
+   </div>
+   <div>
       <RouterLink to="/Mitmachen" @click="$emit('select')">Mitmachen</RouterLink>
    </div>
 </template>

@@ -91,6 +91,17 @@ nav {
       }
    }
 
+   &.tablet {
+      padding: $padding * 0.5 !important;
+      .nav-item-container {
+         > div {
+            &:not(:last-child) {
+               margin-inline: $margin * 0.5 !important;
+            }
+         }
+      }
+   }
+
    &.desktop,
    &.tablet,
    &.ultrawide {
@@ -100,7 +111,7 @@ nav {
          align-items: center;
 
          > div {
-            margin: 0 $margin;
+            margin-inline: $margin;
 
             &:last-child {
                border: 1px solid $col-medium;

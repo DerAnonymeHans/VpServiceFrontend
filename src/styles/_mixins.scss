@@ -7,3 +7,11 @@
    background-color: rgba($col-medium, 0.3);
    color: $col-text;
 }
+@mixin section {
+   @include box;
+   h4 {
+      margin-top: 0;
+      color: $accent;
+   }
+   margin: $margin 0;
+}

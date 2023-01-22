@@ -130,3 +130,16 @@
    color: $col-dark;
    border-color: $col-light;
 }
+
+.label-select-container {
+   display: grid;
+   grid-template-columns: 2fr 1fr;
+   margin: $margin * 0.5 0;
+   background-color: $col-medium;
+   padding: 3px;
+   border-radius: $border-radius;
+   border: 1px solid $col-text-sec;
+   .select {
+      max-width: 150px;
+   }
+}
