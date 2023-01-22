@@ -8,6 +8,7 @@ import KeyLabelPair from "@/structs/KeyLabelPair.js";
 import IconRepo from "@/repos/IconRepo.vue";
 import Modal from "@/components/modal/Modal.vue";
 import VerifiedIcon from "@/components/warning/VerifiedIcon.vue";
+import SubjectOptions from "../components/SubjectOptions.vue";
 </script>
 <template>
    <div>
@@ -25,7 +26,7 @@ import VerifiedIcon from "@/components/warning/VerifiedIcon.vue";
             <div class="label-select-container">
                <div class="label">P3</div>
                <select class="select" name="p3-1" :value="exams.p3" @change="(e) => setAndRemoveDuplicate(`p3`, e.target.value)">
-                  <option v-for="sub in p3s" :key="sub.name" :value="sub.name" :class="{ duplicate: sub.duplicate }">{{ sub.name }}</option>
+                  <SubjectOptions :subjects="p3s" />
                </select>
             </div>
          </div>
@@ -37,13 +38,13 @@ import VerifiedIcon from "@/components/warning/VerifiedIcon.vue";
             <div class="label-select-container">
                <div class="label">P4</div>
                <select class="select" name="p4" :value="exams.p4" @change="(e) => setAndRemoveDuplicate(`p4`, e.target.value)">
-                  <option v-for="sub in p4s" :key="sub.name" :value="sub.name" :class="{ duplicate: sub.duplicate }">{{ sub.name }}</option>
+                  <SubjectOptions :subjects="p4s" />
                </select>
             </div>
             <div class="label-select-container">
                <div class="label">P5</div>
                <select class="select" name="p5" :value="exams.p5" @change="(e) => setAndRemoveDuplicate(`p5`, e.target.value)">
-                  <option v-for="sub in p5s" :key="sub.name" :value="sub.name" :class="{ duplicate: sub.duplicate }">{{ sub.name }}</option>
+                  <SubjectOptions :subjects="p5s" />
                </select>
             </div>
          </div>

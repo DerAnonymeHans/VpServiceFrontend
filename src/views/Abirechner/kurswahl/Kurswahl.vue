@@ -6,6 +6,7 @@ import Switch from "@/components/switch/Switch.vue";
 import KeyLabelPair from "@/structs/KeyLabelPair.js";
 import IconRepo from "@/repos/IconRepo.vue";
 import VerifiedIcon from "@/components/warning/VerifiedIcon.vue";
+import SubjectOptions from "../components/SubjectOptions.vue";
 </script>
 <template>
    <div :class="mq.current" class="container">
@@ -22,7 +23,7 @@ import VerifiedIcon from "@/components/warning/VerifiedIcon.vue";
             <div class="label-select-container">
                <div class="label">Leistungskurs 2</div>
                <select class="select" name="leistungskurs-2" v-model="kurswahl.lk2" @change="(e) => setAndRemoveDuplicate('lk2', e.target.value)">
-                  <option v-for="sub in lk2" :key="sub.name" :value="sub.name" :class="{ duplicate: sub.duplicate }">{{ sub.name }}</option>
+                  <SubjectOptions :subjects="lk2" />
                </select>
             </div>
             <div class="label-select-container">
@@ -46,7 +47,7 @@ import VerifiedIcon from "@/components/warning/VerifiedIcon.vue";
                   :value="kurswahl[`nawi${i}`]"
                   @change="(e) => setAndRemoveDuplicate(`nawi${i}`, e.target.value)"
                >
-                  <option v-for="sub in nawi" :key="sub.name" :value="sub.name" :class="{ duplicate: sub.duplicate }">{{ sub.name }}</option>
+                  <SubjectOptions :subjects="nawi" />
                </select>
             </div>
 
@@ -58,7 +59,7 @@ import VerifiedIcon from "@/components/warning/VerifiedIcon.vue";
                   :value="kurswahl[`lang${i}`]"
                   @change="(e) => setAndRemoveDuplicate(`lang${i}`, e.target.value)"
                >
-                  <option v-for="sub in langs" :key="sub.name" :value="sub.name" :class="{ duplicate: sub.duplicate }">{{ sub.name }}</option>
+                  <SubjectOptions :subjects="langs" />
                </select>
             </div>
          </div>
@@ -79,7 +80,7 @@ import VerifiedIcon from "@/components/warning/VerifiedIcon.vue";
                   :value="kurswahl[`gewi${i}`]"
                   @change="(e) => setAndRemoveDuplicate(`gewi${i}`, e.target.value)"
                >
-                  <option v-for="sub in gewi" :key="sub.name" :value="sub.name" :class="{ duplicate: sub.duplicate }">{{ sub.name }}</option>
+                  <SubjectOptions :subjects="gewi" />
                </select>
             </div>
          </div>
@@ -96,9 +97,7 @@ import VerifiedIcon from "@/components/warning/VerifiedIcon.vue";
                   :value="kurswahl[`art_music`]"
                   @change="(e) => setAndRemoveDuplicate(`art_music`, e.target.value)"
                >
-                  <option v-for="sub in art_music" :key="sub.name" :value="sub.name" :class="{ duplicate: sub.duplicate }">
-                     {{ sub.name }}
-                  </option>
+                  <SubjectOptions :subjects="art_music" />
                </select>
             </div>
 
@@ -110,9 +109,7 @@ import VerifiedIcon from "@/components/warning/VerifiedIcon.vue";
                   :value="kurswahl[`reli_ethic`]"
                   @change="(e) => setAndRemoveDuplicate(`reli_ethic`, e.target.value)"
                >
-                  <option v-for="sub in reli_ethic" :key="sub.name" :value="sub.name" :class="{ duplicate: sub.duplicate }">
-                     {{ sub.name }}
-                  </option>
+                  <SubjectOptions :subjects="reli_ethic" />
                </select>
             </div>
 
