@@ -49,7 +49,9 @@ import Kurs from "./Kurs.vue";
 
       <section>
          <h4>Schnitt berechnen</h4>
-         <p v-if="numberOfEndedYears !== 4">Nicht belegte Halbjahre werden mit Hilfe des Durchschnitts der vorherigen Halbjahre ausgerechnet</p>
+         <p v-if="numberOfEndedYears < 5">
+            Noch nicht belegte Halbjahre und Prüfungen werden mit Hilfe des Durchschnitts der vorherigen Halbjahre ausgerechnet
+         </p>
          <div class="center">
             <button class="btn-focus" @click="calculateAbischnitt">Abischnitt berechnen</button>
          </div>
@@ -133,7 +135,7 @@ export default {
          for (const key in this.einbringen) {
             const kurs = this.einbringen[key];
             let averagePoints = 0;
-            for (let i = 1; i <= this.numberOfEndedYears; i++) {
+            for (let i = 1; i <= this.numberOfEndedYears && i <= 4; i++) {
                if (typeof kurs.years[i].points === "number") {
                   averagePoints += kurs.years[i].points;
                   continue;
@@ -145,7 +147,7 @@ export default {
             for (let i = this.numberOfEndedYears + 1; i <= 4; i++) {
                kurs.years[i].points = averagePoints;
             }
-            if (kurs.exam !== null) {
+            if (kurs.exam !== null && this.numberOfEndedYears !== 5) {
                kurs.examPoints = averagePoints;
             }
          }
@@ -159,9 +161,9 @@ export default {
          const bringeNJahreEin = (kurs, jahre, typ = "pflicht") => {
             const years = Object.values(kurs.years);
             // NOTE: sorting is for some reason alwas ascending
-            years.sort((a, b) => a.points - b.points);
+            years.sort((a, b) => b.points - a.points);
             for (let i = 0; i < jahre; i++) {
-               years[3 - i].einbringen = typ;
+               years[i].einbringen = typ;
             }
          };
 
@@ -209,11 +211,9 @@ export default {
                   countOfEingebrachteNawis++;
                }
 
-               nawis = nawis
-                  .sort((a, b) => {
-                     return this.sumYears(a.years) - this.sumYears(b.years);
-                  })
-                  .reverse();
+               nawis = nawis.sort((a, b) => {
+                  return this.sumYears(b.years) - this.sumYears(a.years);
+               });
 
                for (let i = 0; countOfEingebrachteNawis < 2; i++) {
                   bringeAlleJahreEin(nawis[i]);
@@ -319,7 +319,7 @@ export default {
          const toSave = {};
          for (const key in this.einbringen) {
             toSave[key] = [];
-            for (let i = 1; i <= this.numberOfEndedYears && i < 5; i++) {
+            for (let i = 1; i <= this.numberOfEndedYears && i <= 4; i++) {
                toSave[key].push(this.einbringen[key].years[i].points);
             }
             if (this.numberOfEndedYears === 5) toSave[key].push(this.einbringen[key].examPoints);
